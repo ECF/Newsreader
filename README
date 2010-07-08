@@ -1,4 +1,4 @@
-Description
+The Salvo Newsreader
 
 The Salvo project can be used to communicate through newsgroups. It provides and underlying decoupled API to access news servers and provide offline storage of newsgroup articles. Asking questions and receiving answers are integrated into the workbench.
 
