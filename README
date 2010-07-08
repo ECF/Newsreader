@@ -1,0 +1,28 @@
+Description
+
+The Salvo project can be used to communicate through newsgroups. It provides and underlying decoupled API to access news servers and provide offline storage of newsgroup articles. Asking questions and receiving answers are integrated into the workbench.
+
+Background
+
+A traditional medium for asking questions and communicating with peers and experts is through the NNTP protocol commonly referred to as newsgroups but also known as USENET or Newsnet. The NNTP is a client/server protocol which enables publishing of articles or posts which mostly come in the form of Questions, Answers and Announcements. These articles are mostly plain text but can be posted in HTML or MIME format and can also include images or other binary objects.
+
+Newsgroups are a low level entry for communication and have distinct advantages above other means of communication. Newsgroups are often used for asking questions and the articles are seen by a large number of people over a long period of time. Other means of asking questions are IRC (Internet Chat) and mailing lists. The advantage over IRC is that newsgroups are asynchronous and the advantage over mailing lists is that a larger group of persons is addressed and that there is less effort to participate.
+
+However, access to this powerful medium is mostly through a plug-in in e-mail clients and with tools like Salvo and other possible contributions from the ECF, time has come to put a dot on the I in IDE.
+
+Salvo
+
+Salvo, the proposed project, is a newsreader program that can be used to communicate through newsgroups. There are three goals in this project.
+
+Be a Duck
+Salvo will be used for accessing newsgroups and posting and reading articles. Of course, there will be numerous additions to make the Q&A experience in newsgroups as comfortable as possible. Several enhancements, not found in traditional newsreader programs have already been implemented such as subject highlighting for easy recognition of thread participation and offline reading.
+
+Integrate
+How nice would it be if users could ask questions right from the workbench and be notified if answers arrived. There is already a good example of how such a thing would be implemented by the "Report of Bug" feature of Mylyn. Ideally, this project would be part of a new top level project as defined by bug 279383
+
+Be an Eclipse project
+The project is build of several plug-ins and in such a way that the code can be used to access resources without needing the UI so that these parts can be re-used in other projects. The local storage module is currently file system based but could be swapped for a database implementation. The main tree can be integrated in any Navigator framework based view.
+
+Aware Workbench
+
+There is a lot of buzz about binding the Eclipse consumers to the Eclipse providers. The Aware Workbench knows what the user is doing and knows the questions asked and bugs reported. The workbench will notify us as soon as answers arrive. There is demand for knowing our users so that we can engage in business with them, and/or, bridge the gap by providing ready to access, non-intrusive, commercial and technical information.
