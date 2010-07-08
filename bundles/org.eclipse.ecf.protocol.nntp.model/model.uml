@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Package xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/2.1.0/UML" xmi:id="_DgHTMfXWEd2C7rB2kUdR4Q" name="com.weltevree.salvo.core">
+  <elementImport xmi:id="_DikKQPXWEd2C7rB2kUdR4Q">
+    <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+  </elementImport>
+  <elementImport xmi:id="_DisGEPXWEd2C7rB2kUdR4Q">
+    <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+  </elementImport>
+  <elementImport xmi:id="_DistIPXWEd2C7rB2kUdR4Q">
+    <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#UnlimitedNatural"/>
+  </elementImport>
+  <elementImport xmi:id="_DistIfXWEd2C7rB2kUdR4Q">
+    <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+  </elementImport>
+  <packagedElement xmi:type="uml:Class" xmi:id="_TfLX8PXWEd2C7rB2kUdR4Q" name="IServer"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_WIYO0PXWEd2C7rB2kUdR4Q" name="ISubscribedNewsGroup">
+    <generalization xmi:id="_XMPekPXhEd2yvtRr7QwOdw" general="_ZGm2UPXdEd2yvtRr7QwOdw"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_aU7HwPXWEd2C7rB2kUdR4Q" name="subscribedGroups" memberEnd="_aU8V4PXWEd2C7rB2kUdR4Q _aU888vXWEd2C7rB2kUdR4Q EPackage-annotations">
+    <ownedEnd xmi:id="_aU8V4PXWEd2C7rB2kUdR4Q" name="src" type="_TfLX8PXWEd2C7rB2kUdR4Q" association="_aU7HwPXWEd2C7rB2kUdR4Q">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_aU888fXWEd2C7rB2kUdR4Q" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_aU888PXWEd2C7rB2kUdR4Q" value="1"/>
+    </ownedEnd>
+    <ownedEnd xmi:id="_aU888vXWEd2C7rB2kUdR4Q" name="dst" type="_WIYO0PXWEd2C7rB2kUdR4Q" aggregation="composite" association="_aU7HwPXWEd2C7rB2kUdR4Q">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_aU889PXWEd2C7rB2kUdR4Q" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_aU888_XWEd2C7rB2kUdR4Q" value="1"/>
+    </ownedEnd>
+    <ownedEnd xmi:id="EPackage-annotations" name="annotations" association="_aU7HwPXWEd2C7rB2kUdR4Q">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="EPackage-annotations-_upperValue" value="*"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="EPackage-annotations-_lowerValue"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_PUqC0PXXEd2C7rB2kUdR4Q" name="IServerConection"/>
+  <packagedElement xmi:type="uml:Association" xmi:id="_W7KhMPXXEd2C7rB2kUdR4Q" name="subscribedNewsGroup" memberEnd="_W7MWYPXXEd2C7rB2kUdR4Q _W7MWY_XXEd2C7rB2kUdR4Q">
+    <ownedEnd xmi:id="_W7MWYPXXEd2C7rB2kUdR4Q" name="src" type="_TfLX8PXWEd2C7rB2kUdR4Q" association="_W7KhMPXXEd2C7rB2kUdR4Q">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_W7MWYvXXEd2C7rB2kUdR4Q" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_W7MWYfXXEd2C7rB2kUdR4Q" value="1"/>
+    </ownedEnd>
+    <ownedEnd xmi:id="_W7MWY_XXEd2C7rB2kUdR4Q" name="dst" type="_WIYO0PXWEd2C7rB2kUdR4Q" aggregation="composite" association="_W7KhMPXXEd2C7rB2kUdR4Q">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_W7M9cfXXEd2C7rB2kUdR4Q" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_W7M9cPXXEd2C7rB2kUdR4Q" value="1"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_bjHjwPXXEd2C7rB2kUdR4Q" name="serverConnection" memberEnd="_bjIx4PXXEd2C7rB2kUdR4Q _bjJY8vXXEd2C7rB2kUdR4Q">
+    <ownedEnd xmi:id="_bjIx4PXXEd2C7rB2kUdR4Q" name="src" type="_TfLX8PXWEd2C7rB2kUdR4Q" association="_bjHjwPXXEd2C7rB2kUdR4Q">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_bjJY8fXXEd2C7rB2kUdR4Q" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_bjJY8PXXEd2C7rB2kUdR4Q" value="1"/>
+    </ownedEnd>
+    <ownedEnd xmi:id="_bjJY8vXXEd2C7rB2kUdR4Q" name="dst" type="_PUqC0PXXEd2C7rB2kUdR4Q" aggregation="composite" association="_bjHjwPXXEd2C7rB2kUdR4Q">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_bjJY9PXXEd2C7rB2kUdR4Q" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_bjJY8_XXEd2C7rB2kUdR4Q" value="1"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_ZGm2UPXdEd2yvtRr7QwOdw" name="INewsGroup"/>
+  <packagedElement xmi:type="uml:Association" xmi:id="_nARtIPXjEd2yvtRr7QwOdw" name="newsgroups" memberEnd="_nAS7QPXjEd2yvtRr7QwOdw _nATiUPXjEd2yvtRr7QwOdw">
+    <ownedEnd xmi:id="_nAS7QPXjEd2yvtRr7QwOdw" name="src" type="_PUqC0PXXEd2C7rB2kUdR4Q" association="_nARtIPXjEd2yvtRr7QwOdw">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_nAS7QvXjEd2yvtRr7QwOdw" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_nAS7QfXjEd2yvtRr7QwOdw" value="1"/>
+    </ownedEnd>
+    <ownedEnd xmi:id="_nATiUPXjEd2yvtRr7QwOdw" name="dst" type="_ZGm2UPXdEd2yvtRr7QwOdw" aggregation="composite" association="_nARtIPXjEd2yvtRr7QwOdw">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_nATiUvXjEd2yvtRr7QwOdw" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_nATiUfXjEd2yvtRr7QwOdw" value="1"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_sEq0EPXjEd2yvtRr7QwOdw" name="IStore"/>
+  <packagedElement xmi:type="uml:Association" xmi:id="_uELNsPXjEd2yvtRr7QwOdw" name="servers" memberEnd="_uELNsfXjEd2yvtRr7QwOdw _uEL0wfXjEd2yvtRr7QwOdw">
+    <ownedEnd xmi:id="_uELNsfXjEd2yvtRr7QwOdw" name="src" type="_sEq0EPXjEd2yvtRr7QwOdw" association="_uELNsPXjEd2yvtRr7QwOdw">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_uEL0wPXjEd2yvtRr7QwOdw" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_uELNsvXjEd2yvtRr7QwOdw" value="1"/>
+    </ownedEnd>
+    <ownedEnd xmi:id="_uEL0wfXjEd2yvtRr7QwOdw" name="dst" type="_2i9YECRrEd6EUPuQaNHBog" aggregation="composite" association="_uELNsPXjEd2yvtRr7QwOdw">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_uEL0w_XjEd2yvtRr7QwOdw" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_uEL0wvXjEd2yvtRr7QwOdw" value="1"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_2i9YECRrEd6EUPuQaNHBog" name="IServerStoreFacade"/>
+</uml:Package>

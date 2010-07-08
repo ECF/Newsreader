@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.pde.ui.RuntimeWorkbench">
+<booleanAttribute key="append.args" value="true"/>
+<stringAttribute key="application" value="org.eclipse.ecf.salvo.application.application"/>
+<booleanAttribute key="askclear" value="true"/>
+<booleanAttribute key="automaticAdd" value="false"/>
+<booleanAttribute key="automaticValidate" value="false"/>
+<stringAttribute key="bootstrap" value=""/>
+<stringAttribute key="checked" value="[NONE]"/>
+<booleanAttribute key="clearConfig" value="false"/>
+<booleanAttribute key="clearws" value="true"/>
+<booleanAttribute key="clearwslog" value="false"/>
+<stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/salvo.product"/>
+<booleanAttribute key="default" value="false"/>
+<booleanAttribute key="includeOptional" value="false"/>
+<stringAttribute key="location" value="${workspace_loc}/../runtime-salvo.product"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog -console"/>
+<stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xms40m -Xmx256m -Dsalvo.debug=true"/>
+<stringAttribute key="pde.version" value="3.3"/>
+<stringAttribute key="product" value="org.eclipse.ecf.salvo.application.product"/>
+<stringAttribute key="productFile" value="\org.eclipse.ecf.salvo.application\salvo.product"/>
+<booleanAttribute key="restart" value="false"/>
+<stringAttribute key="selected_target_plugins" value="org.eclipse.core.databinding.property@default:default,org.eclipse.core.runtime@default:true,org.eclipse.core.databinding@default:default,org.eclipse.ui.views@default:default,org.eclipse.equinox.common@default:default,org.eclipse.equinox.util@default:default,org.eclipse.core.commands@default:default,org.eclipse.ui.forms@default:default,org.eclipse.equinox.security@default:default,org.eclipse.help@default:default,org.eclipse.equinox.security.win32.x86@default:default,org.eclipse.core.contenttype@default:default,org.eclipse.jface@default:default,org.eclipse.equinox.preferences@default:default,org.eclipse.jface.databinding@default:default,org.eclipse.core.databinding.observable@default:default,org.eclipse.equinox.registry@default:default,org.eclipse.ui.navigator@default:default,org.eclipse.swt@default:default,org.eclipse.osgi@default:default,org.junit4@default:default,org.eclipse.ui@default:default,org.eclipse.equinox.ds@default:true,org.eclipse.ui.workbench@default:default,org.eclipse.equinox.security.ui@default:default,org.eclipse.core.jobs@default:default,org.hamcrest.core@default:default,org.eclipse.core.expressions@default:default,org.eclipse.core.databinding.beans@default:default,com.ibm.icu@default:default,org.eclipse.swt.win32.win32.x86*3.6.0.v3650b@default:default,org.eclipse.core.runtime.compatibility.registry@default:default,org.eclipse.osgi.services@default:default,org.eclipse.equinox.app@default:default,"/>
+<stringAttribute key="selected_workspace_plugins" value="org.eclipse.ecf.salvo.ui@default:default,org.eclipse.ecf.protocol.nntp.model@default:default,org.eclipse.ecf.services.quotes.starwars@default:true,org.eclipse.ecf.services.quotes@default:true,org.eclipse.ecf.protocol.nntp.store.derby@default:default,org.eclipse.ecf.salvo.ui.navigator@default:default,org.eclipse.ecf.services.quotes.eclipsetwitter@default:true,org.eclipse.ecf.salvo.application@default:default,org.eclipse.ecf.protocol.nntp.core@default:default,org.eclipse.ecf.services.quotes.oldskool@default:true,org.eclipse.ecf.protocol.nntp.store.filesystem@default:default,org.apache.mime4j@default:default,org.eclipse.ecf.provider.nntp.security@default:default,"/>
+<booleanAttribute key="show_selected_only" value="false"/>
+<booleanAttribute key="tracing" value="false"/>
+<booleanAttribute key="useCustomFeatures" value="false"/>
+<booleanAttribute key="useDefaultConfig" value="true"/>
+<booleanAttribute key="useDefaultConfigArea" value="true"/>
+<booleanAttribute key="useProduct" value="true"/>
+<booleanAttribute key="usefeatures" value="false"/>
+</launchConfiguration>

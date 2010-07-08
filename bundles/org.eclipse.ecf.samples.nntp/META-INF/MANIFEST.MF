@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: nntp Samples
+Bundle-SymbolicName: org.eclipse.ecf.samples.nntp
+Bundle-Version: 0.7.0.qualifier
+Bundle-Activator: org.eclipse.ecf.samples.nntp.Activator
+Bundle-Vendor: eclipse,org
+Bundle-RequiredExecutionEnvironment: CDC-1.1/Foundation-1.1,
+ J2SE-1.4
+Import-Package: org.apache.james.mime4j.codec,
+ org.eclipse.ecf.protocol.nntp.core;version="0.5.0",
+ org.eclipse.ecf.protocol.nntp.model;version="0.5.0",
+ org.eclipse.ecf.protocol.nntp.store.filesystem,
+ org.osgi.framework;version="1.3.0"
+Bundle-ActivationPolicy: lazy
+Export-Package: org.eclipse.ecf.samples.nntp

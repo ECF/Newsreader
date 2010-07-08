@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Star Wars Quotes Service
+Bundle-SymbolicName: org.eclipse.ecf.services.quotes.starwars
+Bundle-Version: 0.7.0.qualifier
+Bundle-Vendor: eclipse.org
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1
+Service-Component: OSGI-INF/starWarsQuotesService.xml
+Export-Package: org.eclipse.ecf.services.quotes.starwars
+Import-Package: org.eclipse.ecf.services.quotes

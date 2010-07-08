@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?><!--
+    Copyright (c) 2009 Weltevree Beheer BV, Nederland (34187613)                   
+                                                                         
+    All rights reserved. This program and the accompanying materials     
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at             
+    http://www.eclipse.org/legal/epl-v10.html                            
+                                                                         
+    Contributors:                                                        
+       Wim Jongman - initial API and implementation
+ -->
+
+<fragment> 
+   <extension
+         point="org.eclipse.ui.navigator.navigatorContent">
+      <navigatorContent
+            contentProvider="org.eclipse.ecf.salvo.ui.internal.provider.NewsContentProvider"
+            id="org.eclipse.ecf.salvo.ui.navigator.internal.views.newsserverview.content"
+            labelProvider="org.eclipse.ecf.salvo.ui.internal.provider.NewsLabelProvider"
+            name="News Servers">
+         <triggerPoints>
+            <instanceof
+                  value="org.eclipse.ecf.salvo.ui.internal.resources.ISalvoResource">
+            </instanceof>
+         </triggerPoints>
+      </navigatorContent>
+   </extension>
+   <extension
+         point="org.eclipse.ui.navigator.viewer">
+      <viewer
+            viewerId="org.eclipse.ecf.salvo.ui.navigator.internal.views.newsserverview">
+         <popupMenu
+               allowsPlatformContributions="true"
+               id="org.eclipse.ecf.salvo.ui.navigator.internal.views.newsserverview.popup">
+            <insertionPoint
+                  name="additions"
+                  separator="true">
+            </insertionPoint>
+         </popupMenu>
+      </viewer>
+      <viewerContentBinding
+            viewerId="org.eclipse.ecf.salvo.ui.navigator.internal.views.newsserverview">
+         <includes>
+            <contentExtension
+                  pattern="org.eclipse.ecf.salvo.ui.navigator.internal.views.newsserverview.content">
+            </contentExtension>
+         </includes>
+      </viewerContentBinding>
+   </extension>
+     <extension
+         point="org.eclipse.ui.views">
+      <view
+            category="org.eclipse.ecf.salvo.ui.category1"
+            class="org.eclipse.ecf.salvo.ui.navigator.internal.views.GroupView"
+            icon="icons/transmit.gif"
+            id="org.eclipse.ecf.salvo.ui.navigator.internal.views.newsserverview"
+            name="News Sources"
+            restorable="true">
+      </view>
+         </extension>
+           <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.eclipse.ecf.salvo.application.perspective">
+         <view
+               id="org.eclipse.ecf.salvo.ui.navigator.internal.views.newsserverview"
+               minimized="false"
+               relationship="stack"
+               relative="org.eclipse.ecf.salvo.application.left">
+         </view>
+       </perspectiveExtension>
+         </extension>
+</fragment>

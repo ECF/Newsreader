@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Security
+Bundle-SymbolicName: org.eclipse.ecf.provider.nntp.security
+Bundle-Version: 0.7.0.qualifier
+Bundle-Vendor: Eclipse
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1
+Import-Package: org.eclipse.ecf.protocol.nntp.core;version="0.6.0",
+ org.eclipse.ecf.protocol.nntp.model;version="0.6.0",
+ org.eclipse.equinox.security.storage;version="1.0.0"
+Export-Package: org.eclipse.ecf.provider.nntp.security

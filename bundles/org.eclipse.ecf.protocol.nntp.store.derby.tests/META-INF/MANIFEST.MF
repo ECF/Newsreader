@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Derby Tests
+Bundle-SymbolicName: org.eclipse.ecf.tests.protocol.nntp.store.derby.tests
+Bundle-Version: 0.7.0.qualifier
+Bundle-Vendor: eclipse.org
+Fragment-Host: org.eclipse.ecf.protocol.nntp.store.derby;bundle-version="0.7.0"
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Require-Bundle: org.junit4
+Export-Package: org.eclipse.ecf.protocol.nntp.store.derby.internal;x-internal:=true
+Import-Package: org.eclipse.ecf.protocol.nntp.core;version="0.6.0",
+ org.eclipse.ecf.protocol.nntp.model;version="0.6.0",
+ org.eclipse.ecf.provider.nntp.security

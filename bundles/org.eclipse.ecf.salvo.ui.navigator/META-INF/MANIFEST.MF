@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Navigator
+Bundle-SymbolicName: org.eclipse.ecf.salvo.ui.navigator;singleton:=true
+Bundle-Version: 0.7.0.qualifier
+Bundle-Vendor: WELTEVREE
+Fragment-Host: org.eclipse.ecf.salvo.ui;bundle-version="0.5.0"
+Require-Bundle: org.eclipse.ui.navigator;bundle-version="3.4.0"
+Bundle-RequiredExecutionEnvironment: J2SE-1.5,
+ JavaSE-1.6
+Import-Package: org.eclipse.core.runtime,
+ org.eclipse.ecf.protocol.nntp.core;version="0.5.0",
+ org.eclipse.ecf.protocol.nntp.model;version="0.5.0"
+Export-Package: org.eclipse.ecf.salvo.ui.navigator.internal.views;x-internal:=true

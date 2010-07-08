@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Salvo Filesystem Store Tests
+Bundle-SymbolicName: org.eclipse.ecf.protocol.nntp.store.filesystem.tests
+Bundle-Version: 0.7.0.qualifier
+Bundle-Vendor: eclipse.org
+Fragment-Host: org.eclipse.ecf.protocol.nntp.store.filesystem;bundle-version="0.6.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.junit4;bundle-version="4.5.0"
