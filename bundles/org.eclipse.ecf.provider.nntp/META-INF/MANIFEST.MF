@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: ECF nntp Provider
 Bundle-SymbolicName: org.eclipse.ecf.provider.nntp;singleton:=true
 Bundle-Version: 0.7.0.qualifier
-Bundle-Vendor: Eclipse.org
+Bundle-Vendor: Eclipse ECF
 Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1,
  CDC-1.1/Foundation-1.1,
  JRE-1.1,

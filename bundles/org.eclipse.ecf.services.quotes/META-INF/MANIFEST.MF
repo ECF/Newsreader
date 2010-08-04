@@ -3,6 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Quotes Services
 Bundle-SymbolicName: org.eclipse.ecf.services.quotes
 Bundle-Version: 0.7.0.qualifier
-Bundle-Vendor: eclipse.org
+Bundle-Vendor: Eclipse ECF
 Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.0
 Export-Package: org.eclipse.ecf.services.quotes

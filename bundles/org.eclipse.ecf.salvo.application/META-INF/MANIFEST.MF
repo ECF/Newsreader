@@ -4,7 +4,7 @@ Bundle-Name: Application Plug-in
 Bundle-SymbolicName: org.eclipse.ecf.salvo.application;singleton:=true
 Bundle-Version: 0.7.0.qualifier
 Bundle-Activator: org.eclipse.ecf.salvo.application.internal.Activator
-Bundle-Vendor: WELTEVREE
+Bundle-Vendor: Eclipse ECF
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ecf.protocol.nntp.model;bundle-version="0.5.0"

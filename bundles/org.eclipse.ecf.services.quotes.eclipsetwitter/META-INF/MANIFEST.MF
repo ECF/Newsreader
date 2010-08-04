@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Eclipsetwitter
 Bundle-SymbolicName: org.eclipse.ecf.services.quotes.eclipsetwitter
 Bundle-Version: 0.7.0.qualifier
-Bundle-Vendor: eclipse.org
+Bundle-Vendor: Eclipse ECF
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Import-Package: org.eclipse.ecf.services.quotes
 Service-Component: OSGI-INF/quoteService.xml

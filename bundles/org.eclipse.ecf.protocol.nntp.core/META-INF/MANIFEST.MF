@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Core Plug-in
 Bundle-SymbolicName: org.eclipse.ecf.protocol.nntp.core;singleton:=true
 Bundle-Version: 0.7.0.qualifier
-Bundle-Vendor: WELTEVREE
+Bundle-Vendor: Eclipse ECF
 Require-Bundle: org.eclipse.ecf.protocol.nntp.model;bundle-version="0.5.0"
 Bundle-RequiredExecutionEnvironment: CDC-1.1/Foundation-1.1,
  J2SE-1.2,
