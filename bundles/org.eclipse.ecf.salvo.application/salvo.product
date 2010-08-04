@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Salvo Product File" id="org.eclipse.ecf.salvo.application.product" application="org.eclipse.ecf.salvo.application.application" version="0.7.0" useFeatures="false" includeLaunchers="true">
+<product name="Salvo Product File" id="org.eclipse.ecf.salvo.application.product" application="org.eclipse.ecf.salvo.application.application" version="0.7.0" useFeatures="true" includeLaunchers="true">
 
    <configIni use="default">
    </configIni>
@@ -32,84 +32,16 @@
    </vm>
 
    <plugins>
-      <plugin id="com.ibm.icu"/>
-      <plugin id="org.apache.mime4j"/>
-      <plugin id="org.eclipse.core.commands"/>
-      <plugin id="org.eclipse.core.contenttype"/>
-      <plugin id="org.eclipse.core.databinding"/>
-      <plugin id="org.eclipse.core.databinding.beans"/>
-      <plugin id="org.eclipse.core.databinding.observable"/>
-      <plugin id="org.eclipse.core.databinding.property"/>
-      <plugin id="org.eclipse.core.expressions"/>
-      <plugin id="org.eclipse.core.jobs"/>
-      <plugin id="org.eclipse.core.runtime"/>
-      <plugin id="org.eclipse.core.runtime.compatibility.registry" fragment="true"/>
-      <plugin id="org.eclipse.ecf.protocol.nntp.core"/>
-      <plugin id="org.eclipse.ecf.protocol.nntp.model"/>
-      <plugin id="org.eclipse.ecf.protocol.nntp.store.derby"/>
-      <plugin id="org.eclipse.ecf.protocol.nntp.store.filesystem"/>
-      <plugin id="org.eclipse.ecf.provider.nntp.security"/>
-      <plugin id="org.eclipse.ecf.salvo.application"/>
-      <plugin id="org.eclipse.ecf.salvo.ui"/>
-      <plugin id="org.eclipse.ecf.salvo.ui.navigator" fragment="true"/>
-      <plugin id="org.eclipse.ecf.services.quotes"/>
-      <plugin id="org.eclipse.ecf.services.quotes.eclipsetwitter"/>
-      <plugin id="org.eclipse.ecf.services.quotes.oldskool"/>
-      <plugin id="org.eclipse.ecf.services.quotes.starwars"/>
-      <plugin id="org.eclipse.equinox.app"/>
-      <plugin id="org.eclipse.equinox.common"/>
-      <plugin id="org.eclipse.equinox.ds"/>
-      <plugin id="org.eclipse.equinox.preferences"/>
-      <plugin id="org.eclipse.equinox.registry"/>
-      <plugin id="org.eclipse.equinox.security"/>
-      <plugin id="org.eclipse.equinox.security.macosx" fragment="true"/>
-      <plugin id="org.eclipse.equinox.security.ui"/>
-      <plugin id="org.eclipse.equinox.security.win32.x86" fragment="true"/>
-      <plugin id="org.eclipse.equinox.util"/>
-      <plugin id="org.eclipse.help"/>
-      <plugin id="org.eclipse.jface"/>
-      <plugin id="org.eclipse.jface.databinding"/>
-      <plugin id="org.eclipse.osgi"/>
-      <plugin id="org.eclipse.osgi.services"/>
-      <plugin id="org.eclipse.swt"/>
-      <plugin id="org.eclipse.swt.carbon.macosx" fragment="true"/>
-      <plugin id="org.eclipse.swt.cocoa.macosx" fragment="true"/>
-      <plugin id="org.eclipse.swt.cocoa.macosx.x86_64" fragment="true"/>
-      <plugin id="org.eclipse.swt.gtk.linux.ppc" fragment="true"/>
-      <plugin id="org.eclipse.swt.gtk.linux.s390" fragment="true"/>
-      <plugin id="org.eclipse.swt.gtk.linux.s390x" fragment="true"/>
-      <plugin id="org.eclipse.swt.gtk.linux.x86" fragment="true"/>
-      <plugin id="org.eclipse.swt.gtk.linux.x86_64" fragment="true"/>
-      <plugin id="org.eclipse.swt.gtk.solaris.sparc" fragment="true"/>
-      <plugin id="org.eclipse.swt.gtk.solaris.x86" fragment="true"/>
-      <plugin id="org.eclipse.swt.motif.aix.ppc" fragment="true"/>
-      <plugin id="org.eclipse.swt.motif.hpux.PA_RISC" fragment="true"/>
-      <plugin id="org.eclipse.swt.motif.hpux.ia64_32" fragment="true"/>
-      <plugin id="org.eclipse.swt.motif.linux.x86" fragment="true"/>
-      <plugin id="org.eclipse.swt.motif.solaris.sparc" fragment="true"/>
-      <plugin id="org.eclipse.swt.photon.qnx.x86" fragment="true"/>
-      <plugin id="org.eclipse.swt.win32.win32.x86" fragment="true"/>
-      <plugin id="org.eclipse.swt.win32.win32.x86_64" fragment="true"/>
-      <plugin id="org.eclipse.swt.wpf.win32.x86" fragment="true"/>
-      <plugin id="org.eclipse.ui"/>
-      <plugin id="org.eclipse.ui.carbon" fragment="true"/>
-      <plugin id="org.eclipse.ui.cocoa" fragment="true"/>
-      <plugin id="org.eclipse.ui.forms"/>
-      <plugin id="org.eclipse.ui.navigator"/>
-      <plugin id="org.eclipse.ui.views"/>
-      <plugin id="org.eclipse.ui.workbench"/>
-      <plugin id="org.hamcrest.core"/>
-      <plugin id="org.junit4"/>
    </plugins>
 
+   <features>
+      <feature id="org.eclipse.ecf.salvo.feature" version="0.7.0.qualifier"/>
+      <feature id="org.eclipse.rcp" version="3.6.0.v20100519-9OArFKvFtsd7WLUKh-DcYTS"/>
+      <feature id="org.eclipse.platform" version="3.6.0.v20100602-9gF78GpqFt6trOGhL60z0oEx3fz-JKNwxPY"/>
+   </features>
+
    <configurations>
-      <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="0" />
-      <plugin id="org.eclipse.ecf.protocol.nntp.store.derby" autoStart="true" startLevel="0" />
-      <plugin id="org.eclipse.ecf.services.quotes" autoStart="true" startLevel="0" />
-      <plugin id="org.eclipse.ecf.services.quotes.eclipsetwitter" autoStart="true" startLevel="0" />
-      <plugin id="org.eclipse.ecf.services.quotes.oldskool" autoStart="true" startLevel="0" />
-      <plugin id="org.eclipse.ecf.services.quotes.starwars" autoStart="true" startLevel="0" />
-      <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.ecf.provider.nntp.store.filesystem" autoStart="true" startLevel="2" />
    </configurations>
 
 </product>
