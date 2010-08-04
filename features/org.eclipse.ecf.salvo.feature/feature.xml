@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.ecf.salvo.feature"
+      label="Salvo Newsreader"
+      version="0.7.0.qualifier"
+      provider-name="Eclipse ECF">
+
+   <description url="http://www.example.com/description">
+      [Enter Feature Description here.]
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <includes
+         id="org.eclipse.ecf.protocol.nntp.store.derby.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.ecf.protocol.nntp.store.filesystem.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.ecf.provider.nntp.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.ecf.salvo.ui.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.ecf.services.quotes.feature"
+         version="0.0.0"/>
+
+</feature>
