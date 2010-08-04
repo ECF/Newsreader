@@ -14,6 +14,7 @@ package org.eclipse.ecf.protocol.nntp.core.internal;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.ecf.protocol.nntp.core.Debug;
 import org.eclipse.ecf.protocol.nntp.core.StringUtils;
 import org.eclipse.ecf.protocol.nntp.model.IArticle;
 import org.eclipse.ecf.protocol.nntp.model.INewsgroup;
@@ -74,7 +75,8 @@ public class Article implements IArticle {
 	}
 
 	public String[] getHeaderAttributeValues() {
-		return (String[]) headerAttributes.values().toArray(new String[headerAttributes.size()]);
+		return (String[]) headerAttributes.values().toArray(
+				new String[headerAttributes.size()]);
 	}
 
 	public String getMessageId() {
@@ -90,8 +92,8 @@ public class Article implements IArticle {
 	}
 
 	public String[] getReferences() {
-		String[] result = StringUtils.split2(getHeaderAttributeValue(
-				"References:").trim(), SALVO.SPACE);
+		String[] result = StringUtils.split2(
+				getHeaderAttributeValue("References:").trim(), SALVO.SPACE);
 
 		if (result.length == 0)
 			return new String[0];
@@ -127,14 +129,20 @@ public class Article implements IArticle {
 	}
 
 	public int getSize() {
-		return Integer
-				.valueOf(((String) headerAttributes.get("Bytes:")).trim())
-				.intValue();
+		try {
+			return Integer.valueOf(
+					((String) headerAttributes.get("Bytes:")).trim())
+					.intValue();
+		} catch (Exception e) {
+			Debug.log(getClass(), "Bytes in article not filled: "
+					+ headerAttributes.get("Bytes:"));
+			return 0;
+		}
 	}
 
 	public String getFullUserName() {
 
-		// 
+		//
 		// Simplistic implementation of rfc850
 		//
 
@@ -178,7 +186,8 @@ public class Article implements IArticle {
 	}
 
 	public String[] getHeaderAttributes() {
-		return (String[]) headerAttributes.keySet().toArray(new String[headerAttributes.size()]);
+		return (String[]) headerAttributes.keySet().toArray(
+				new String[headerAttributes.size()]);
 	}
 
 	public boolean isMine() {
