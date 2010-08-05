@@ -9,7 +9,6 @@
 		<dependency name="org.eclipse.equinox.concurrent" componentType="osgi.bundle"/>
 		<!-- tests -->
 		<dependency name="org.eclipse.jdt" componentType="eclipse.feature"/>
-		<dependency name="org.eclipse.ecf.tests.protocol.nntp.store.derby.tests" componentType="osgi.bundle"/>
 		<dependency name="org.eclipse.ecf.tests.provider.nntp" componentType="osgi.bundle"/>
 	</dependencies>
 	<generators>
