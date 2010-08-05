@@ -26,6 +26,7 @@ import org.eclipse.ecf.protocol.nntp.model.INewsgroup;
 import org.eclipse.ecf.protocol.nntp.model.ISecureStore;
 import org.eclipse.ecf.protocol.nntp.model.IServer;
 import org.eclipse.ecf.protocol.nntp.model.IStore;
+import org.eclipse.ecf.protocol.nntp.model.IStoreFactory;
 import org.eclipse.ecf.protocol.nntp.model.NNTPIOException;
 import org.eclipse.ecf.protocol.nntp.model.SALVO;
 import org.eclipse.ecf.protocol.nntp.model.StoreException;
@@ -86,7 +87,8 @@ public class ArticleDAOTest {
 	@Before
 	public void setUp() throws Exception {
 		
-		store = StoreFactory.createStore(SALVO.SALVO_HOME + SALVO.SEPARATOR
+		final IStoreFactory sf = new StoreFactory();
+		store = sf.createStore(SALVO.SALVO_HOME + SALVO.SEPARATOR
 				+ "StoreTestDerby");
 		store.setSecureStore(new ISecureStore() {
 			HashMap<String, String> mappie = new HashMap<String, String>();
