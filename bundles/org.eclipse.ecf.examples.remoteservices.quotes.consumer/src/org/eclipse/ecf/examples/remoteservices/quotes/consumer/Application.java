@@ -2,14 +2,19 @@ package org.eclipse.ecf.examples.remoteservices.quotes.consumer;
 
 import java.lang.reflect.Method;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.ecf.services.quotes.QuoteService;
+import org.eclipse.ecf.services.quotes.QuoteServiceAsync;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
+import org.eclipse.equinox.concurrent.future.IFuture;
 import org.eclipse.swt.widgets.Display;
 import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceListener;
 import org.osgi.framework.ServiceReference;
 
+@SuppressWarnings("restriction")
 public class Application implements IApplication {
 
 	private ConsumerUI ui;
@@ -37,11 +42,14 @@ public class Application implements IApplication {
 
 			@Override
 			public void serviceChanged(final ServiceEvent event) {
-
+				
 				/*
 				 * Do only for registrations
 				 */
 				if (event.getType() == ServiceEvent.REGISTERED) {
+					String label = "";
+					String text = "";
+					int value = 0;
 
 					try {
 						Object obj = Activator.getContext().getService(event.getServiceReference());
@@ -53,41 +61,74 @@ public class Application implements IApplication {
 
 						/*
 						 * If we know this service
+						 * 
+						 * Only call expensive getAllQuotes() on async proxy
 						 */
-						if (obj instanceof QuoteService) {
+						if (obj instanceof QuoteServiceAsync) {
+							final QuoteServiceAsync service = (QuoteServiceAsync) Activator.getContext().getService(
+									event.getServiceReference());
+							final IFuture future = service.getAllQuotesAsync();
+							int i = 0;
+							while(!future.isDone()) {
+								// burn some CPU cycles to show async invocation
+								System.out.println("i + 1 = " + i++);
+							}
+							
+							final IStatus status = future.getStatus();
+							if(status.isOK()) {
+								label = "Async invocation succeeded";
+								try {
+									StringBuffer buf = new StringBuffer();
+									String[] values = (String[]) future.get();
+									for (int j = 0; j < values.length; j++) {
+										String string = values[j];
+										buf.append(string);
+										buf.append("\n");
+									}
+									text = buf.toString();
+									value = 1;
+								// checked exceptions do suck	
+								} catch (OperationCanceledException e) {
+									// will never happen since status is OK
+									e.printStackTrace();
+								} catch (InterruptedException e) {
+									// will never happen since status is OK
+									e.printStackTrace();
+								}
+							} else {
+								label = "Async invocation failed";
+								text = status.getException().getMessage();
+								value = -1;
+							}
+						} else if (obj instanceof QuoteService) {
+							// this is bad because called inside a framework thread we should no block for long
 							final QuoteService service = (QuoteService) Activator.getContext().getService(
 									event.getServiceReference());
 
-							final String sLabel = service.getServiceDescription();
-							final String sQuote = service.getRandomQuote();
-
-							Display.getDefault().asyncExec(new Runnable() {
-
-								@Override
-								public void run() {
-									ui.getLabel().setText(sLabel);
-									ui.getStyledText().setText(sQuote);
-									ui.getDispatcher().setValue(1);
-									ui.redraw();
-
-								}
-							});
-
+							label = service.getServiceDescription();
+							text = service.getRandomQuote();
+							value = 1;
 						}
 					} catch (final Exception e) {
+						label = e.getLocalizedMessage();
+						text = "";
+						value = -1;
+					}
+					// update ui
+					if(value != 0) {
+						final String fLabel = label;
+						final String fText = text;
+						final int fValue = value;
 						Display.getDefault().asyncExec(new Runnable() {
-
 							@Override
 							public void run() {
-								ui.getLabel().setText(e.getLocalizedMessage() + "");
-								ui.getStyledText().setText("");
-								ui.getDispatcher().setValue(-1);
+								ui.getLabel().setText(fLabel);
+								ui.getStyledText().setText(fText);
+								ui.getDispatcher().setValue(fValue);
 								ui.redraw();
-
 							}
 						});
 					}
-
 				}
 			}
 

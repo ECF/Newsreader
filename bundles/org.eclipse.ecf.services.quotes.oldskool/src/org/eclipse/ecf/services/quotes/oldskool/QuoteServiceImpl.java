@@ -62,6 +62,12 @@ public class QuoteServiceImpl implements QuoteService {
 	}
 
 	public String[] getAllQuotes() {
+		try {
+			// wait so that the client runs into a timeoutexception
+			Thread.sleep(40000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		return QUOTES;
 	}
 }
