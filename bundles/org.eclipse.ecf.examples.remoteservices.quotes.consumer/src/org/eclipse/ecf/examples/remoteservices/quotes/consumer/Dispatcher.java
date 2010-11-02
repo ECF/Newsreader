@@ -41,6 +41,7 @@ public abstract class Dispatcher {
 				clip.loop(loop);
 
 			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 	}
