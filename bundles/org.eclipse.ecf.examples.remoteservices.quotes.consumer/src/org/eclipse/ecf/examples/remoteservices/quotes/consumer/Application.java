@@ -69,14 +69,27 @@ public class Application implements IApplication {
 									event.getServiceReference());
 							final IFuture future = service.getAllQuotesAsync();
 							int i = 0;
+							
+							// get the name synchronously
+							QuoteService qs = (QuoteService) service;
+							final String serviceDescription = qs.getServiceDescription();
+							
+							// burn some CPU cycles to show async invocation
 							while(!future.isDone()) {
-								// burn some CPU cycles to show async invocation
-								System.out.println("i + 1 = " + i++);
+								final int cycle = i++;
+								Display.getDefault().asyncExec(new Runnable() {
+									@Override
+									public void run() {
+										ui.getLabel().setText("waiting for " + serviceDescription + " counting cycles: " + cycle);
+										ui.redraw();
+									}
+								});
+								Thread.sleep(100);
 							}
 							
 							final IStatus status = future.getStatus();
 							if(status.isOK()) {
-								label = "Async invocation succeeded";
+								label = "Async invocation succeeded on " + serviceDescription;
 								try {
 									StringBuffer buf = new StringBuffer();
 									String[] values = (String[]) future.get();
