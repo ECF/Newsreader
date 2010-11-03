@@ -48,18 +48,8 @@ public class Application implements IApplication {
 				 * Do only for registrations
 				 */
 				if (event.getType() == ServiceEvent.REGISTERED) {
-					String label = "";
-					String text = "";
-					int value = 0;
-
-					try {
 						Object obj = Activator.getContext().getService(event.getServiceReference());
-
-						/*
-						 * Post all the information we have on this service
-						 */
 						fillInfo(event.getServiceReference(), obj);
-
 						
 						/*
 						 * If we know this service
@@ -71,95 +61,115 @@ public class Application implements IApplication {
 							final QuoteServiceAsync service = (QuoteServiceAsync) Activator.getContext().getService(
 									event.getServiceReference());
 							
-							// presentation
+							/*
+							 * Decide which invocation style to use
+							 */
 							boolean useCallback = false;
 							if(useCallback) {
 								useCallbackParadigm(service);
 							} else {
-								
-								final IFuture future = service.getAllQuotesAsync();
-
-								// get the name synchronously
-								QuoteService qs = (QuoteService) service;
-								final String serviceDescription = qs.getServiceDescription();
-
-								// burn some CPU cycles to show async invocation
-								int i = 0;
-								while (!future.isDone()) {
-									final int cycle = i++;
-									Display.getDefault().asyncExec(new Runnable() {
-										@Override
-										public void run() {
-											ui.getLabel().setText(
-													"waiting for " + serviceDescription + " counting cycles: " + cycle);
-											ui.redraw();
-										}
-									});
-									Thread.sleep(100);
-								}
-
-								final IStatus status = future.getStatus();
-								if (status.isOK()) {
-									label = "Future invocation succeeded on " + serviceDescription;
-									try {
-										StringBuffer buf = new StringBuffer();
-										String[] values = (String[]) future.get();
-										for (int j = 0; j < values.length; j++) {
-											String string = values[j];
-											buf.append(string);
-											buf.append("\n");
-										}
-										text = buf.toString();
-										value = 1;
-										// checked exceptions do suck
-									} catch (OperationCanceledException e) {
-										// will never happen since status is OK
-										e.printStackTrace();
-									} catch (InterruptedException e) {
-										// will never happen since status is OK
-										e.printStackTrace();
-									}
-								} else {
-									label = "Future invocation failed";
-									text = status.getException().getMessage();
-									value = -1;
-								}
+								useFutureParadigm(service);
 							}
-						  } else if (obj instanceof QuoteService) {
-							// this is bad because called inside a framework thread we should no block for long
+							
+							
+					} else if (obj instanceof QuoteService) {
+						try {
+							// this is bad because called inside a framework
+							// thread we should no block for long
 							final QuoteService service = (QuoteService) Activator.getContext().getService(
 									event.getServiceReference());
-
-							label = service.getServiceDescription();
-							text = service.getRandomQuote();
-							value = 1;
-						}
-					} catch (final Exception e) {
-						if(e instanceof ServiceException) {
-							ServiceException se = (ServiceException) e;
-							if(se.getType() == ServiceException.REMOTE) {
-								System.out.println("Remote ServiceException caught");
+							// update ui
+							updateUI(service.getServiceDescription(), service.getRandomQuote(), 1);
+						} catch (final Exception e) {
+							// catch all possible exceptions	
+							if (e instanceof ServiceException) {
+								ServiceException se = (ServiceException) e;
+								if (se.getType() == ServiceException.REMOTE) {
+									System.err.println("Remote ServiceException caught: ");
+									e.printStackTrace();
+								}
 							}
+							// update ui
+							updateUI(e.getLocalizedMessage(), "", -1);
 						}
-						label = e.getLocalizedMessage();
-						text = "";
-						value = -1;
 					}
-					// update ui
-					if(value != 0) {
-						final String fLabel = label;
-						final String fText = text;
-						final int fValue = value;
+				}
+			}
+
+			private void useFutureParadigm(final QuoteServiceAsync service) {
+				try {
+					String text = "";
+					final IFuture future = service.getAllQuotesAsync();
+					
+					// burn some CPU cycles to show async invocation
+					int i = 0;
+					while (!future.isDone()) {
+						final int cycle = i++;
+						final String serviceDesc = getServiceDesc(service);
 						Display.getDefault().asyncExec(new Runnable() {
 							@Override
 							public void run() {
-								ui.getLabel().setText(fLabel == null ? "" : fLabel);
-								ui.getStyledText().setText(fText == null ? "" : fText);
-								ui.getDispatcher().setValue(fValue);
+								ui.getLabel().setText(
+										"waiting for " + serviceDesc + " counting cycles: " + cycle);
 								ui.redraw();
 							}
 						});
+						// give the client some rest
+						try {
+							Thread.sleep(100);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
 					}
+					
+					final IStatus status = future.getStatus();
+					if (status.isOK()) {
+						try {
+							StringBuffer buf = new StringBuffer();
+							String[] values = (String[]) future.get();
+							for (int j = 0; j < values.length; j++) {
+								String string = values[j];
+								buf.append(string);
+								buf.append("\n");
+							}
+							text = buf.toString();
+							// checked exceptions do suck
+						} catch (OperationCanceledException e) {
+							// will never happen since status is OK
+							e.printStackTrace();
+						} catch (InterruptedException e) {
+							// will never happen since status is OK
+							e.printStackTrace();
+						}
+						updateUI("Future invocation succeeded on " + getServiceDesc(service), text, 1);
+					} else {
+						updateUI("Future invocation failed", status.getException().getMessage(), -1);
+					}
+				} catch (Exception e) {
+					updateUI("Future invocation failed", e.getMessage(), -1);
+				}
+			}
+
+			// get the name synchronously
+			private String getServiceDesc(QuoteServiceAsync service) {
+				QuoteService qs = (QuoteService) service;
+				return qs.getServiceDescription();
+			}
+
+			private void updateUI(String label, String text, int value) {
+				if(value != 0) {
+					final String fLabel = label;
+					final String fText = text;
+					final int fValue = value;
+					Display.getDefault().asyncExec(new Runnable() {
+						@Override
+						public void run() {
+							ui.getLabel().setText(fLabel == null ? "" : fLabel);
+							ui.getStyledText().setText(fText == null ? "" : fText);
+							ui.getDispatcher().setValue(fValue);
+							ui.redraw();
+						}
+					});
 				}
 			}
 

@@ -93,7 +93,7 @@ public class ConsumerUI extends Shell {
 
 		gilloscope = new OSGilloscope(composite_2, SWT.NONE);
 		GridData gd_gilloscope = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
-		gd_gilloscope.heightHint = 100;
+		gd_gilloscope.heightHint = 200;
 		gilloscope.setLayoutData(gd_gilloscope);
 
 		Composite composite_1 = new Composite(composite_2, SWT.BORDER);
@@ -176,7 +176,8 @@ public class ConsumerUI extends Shell {
 			public OSGilloscope getGilloscope() {
 				return gilloscope;
 			};
-
+			
+			
 			@Override
 			public boolean isServiceActive() {
 				return active >= 0;

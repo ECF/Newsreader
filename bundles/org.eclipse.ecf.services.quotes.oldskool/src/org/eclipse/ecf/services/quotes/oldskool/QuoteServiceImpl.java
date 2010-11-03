@@ -62,6 +62,7 @@ public class QuoteServiceImpl implements QuoteService {
 	}
 
 	public String[] getAllQuotes() {
+//		throw new NullPointerException("Bang!!! Something is broken.");
 		try {
 			// wait so that the client runs into a timeoutexception
 			Thread.sleep(40000);
