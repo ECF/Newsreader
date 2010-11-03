@@ -157,14 +157,20 @@ public class ConsumerUI extends Shell {
 		setSize(450, 381);
 
 		dispatcher = new Dispatcher() {
-
+			
+			private int active = 0;
+			
 			@Override
 			public void setValue(int value) {
-				if (isSoundRequired())
-					clipper.playClip(getActiveSoundfile(), 0);
-
-				getGilloscope().setValues(OSGilloscope.HEARTBEAT);
-
+				active = value;
+				if (value == 1) {
+					if (isSoundRequired()) {
+						clipper.playClip(getActiveSoundfile(), 1);
+					}
+					getGilloscope().setValues(OSGilloscope.HEARTBEAT);
+//				} else if (isSoundRequired() ){
+//					clipper.playClip(getInactiveSoundfile(), 0);
+				}
 			}
 
 			public OSGilloscope getGilloscope() {
@@ -173,8 +179,15 @@ public class ConsumerUI extends Shell {
 
 			@Override
 			public boolean isServiceActive() {
-				return true;
+				return active >= 0;
 			}
+			public boolean isSoundRequired() {
+				return true;
+			};
+			
+			public String getActiveSoundfile() {
+				return "/home/markus/eclipse/github/Newsreader/bundles/org.eclipse.ecf.examples.remoteservices.quotes.consumer/wav/Beep.wav";
+			};
 		};
 
 		dispatcher.dispatch();
