@@ -168,8 +168,8 @@ public class ConsumerUI extends Shell {
 						clipper.playClip(getActiveSoundfile(), 1);
 					}
 					getGilloscope().setValues(OSGilloscope.HEARTBEAT);
-//				} else if (isSoundRequired() ){
-//					clipper.playClip(getInactiveSoundfile(), 0);
+				} else if (isSoundRequired()){
+					clipper.playClip(getInactiveSoundfile(), 20);
 				}
 			}
 
@@ -186,6 +186,9 @@ public class ConsumerUI extends Shell {
 			};
 			
 			public String getActiveSoundfile() {
+				return "/home/markus/eclipse/github/Newsreader/bundles/org.eclipse.ecf.examples.remoteservices.quotes.consumer/wav/Beep.wav";
+			};
+			public String getInactiveSoundfile() {
 				return "/home/markus/eclipse/github/Newsreader/bundles/org.eclipse.ecf.examples.remoteservices.quotes.consumer/wav/Beep.wav";
 			};
 		};
