@@ -11,6 +11,7 @@ import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.equinox.concurrent.future.IFuture;
 import org.eclipse.swt.widgets.Display;
 import org.osgi.framework.ServiceEvent;
+import org.osgi.framework.ServiceException;
 import org.osgi.framework.ServiceListener;
 import org.osgi.framework.ServiceReference;
 
@@ -59,61 +60,72 @@ public class Application implements IApplication {
 						 */
 						fillInfo(event.getServiceReference(), obj);
 
+						
 						/*
 						 * If we know this service
 						 * 
 						 * Only call expensive getAllQuotes() on async proxy
 						 */
-						if (obj instanceof QuoteServiceAsync) {
+						boolean useAsync = true;
+						if (obj instanceof QuoteServiceAsync && useAsync) {
 							final QuoteServiceAsync service = (QuoteServiceAsync) Activator.getContext().getService(
 									event.getServiceReference());
-							final IFuture future = service.getAllQuotesAsync();
-							int i = 0;
 							
-							// get the name synchronously
-							QuoteService qs = (QuoteService) service;
-							final String serviceDescription = qs.getServiceDescription();
-							
-							// burn some CPU cycles to show async invocation
-							while(!future.isDone()) {
-								final int cycle = i++;
-								Display.getDefault().asyncExec(new Runnable() {
-									@Override
-									public void run() {
-										ui.getLabel().setText("waiting for " + serviceDescription + " counting cycles: " + cycle);
-										ui.redraw();
-									}
-								});
-								Thread.sleep(100);
-							}
-							
-							final IStatus status = future.getStatus();
-							if(status.isOK()) {
-								label = "Async invocation succeeded on " + serviceDescription;
-								try {
-									StringBuffer buf = new StringBuffer();
-									String[] values = (String[]) future.get();
-									for (int j = 0; j < values.length; j++) {
-										String string = values[j];
-										buf.append(string);
-										buf.append("\n");
-									}
-									text = buf.toString();
-									value = 1;
-								// checked exceptions do suck	
-								} catch (OperationCanceledException e) {
-									// will never happen since status is OK
-									e.printStackTrace();
-								} catch (InterruptedException e) {
-									// will never happen since status is OK
-									e.printStackTrace();
-								}
+							// presentation
+							boolean useCallback = false;
+							if(useCallback) {
+								useCallbackParadigm(service);
 							} else {
-								label = "Async invocation failed";
-								text = status.getException().getMessage();
-								value = -1;
+								
+								final IFuture future = service.getAllQuotesAsync();
+
+								// get the name synchronously
+								QuoteService qs = (QuoteService) service;
+								final String serviceDescription = qs.getServiceDescription();
+
+								// burn some CPU cycles to show async invocation
+								int i = 0;
+								while (!future.isDone()) {
+									final int cycle = i++;
+									Display.getDefault().asyncExec(new Runnable() {
+										@Override
+										public void run() {
+											ui.getLabel().setText(
+													"waiting for " + serviceDescription + " counting cycles: " + cycle);
+											ui.redraw();
+										}
+									});
+									Thread.sleep(100);
+								}
+
+								final IStatus status = future.getStatus();
+								if (status.isOK()) {
+									label = "Future invocation succeeded on " + serviceDescription;
+									try {
+										StringBuffer buf = new StringBuffer();
+										String[] values = (String[]) future.get();
+										for (int j = 0; j < values.length; j++) {
+											String string = values[j];
+											buf.append(string);
+											buf.append("\n");
+										}
+										text = buf.toString();
+										value = 1;
+										// checked exceptions do suck
+									} catch (OperationCanceledException e) {
+										// will never happen since status is OK
+										e.printStackTrace();
+									} catch (InterruptedException e) {
+										// will never happen since status is OK
+										e.printStackTrace();
+									}
+								} else {
+									label = "Future invocation failed";
+									text = status.getException().getMessage();
+									value = -1;
+								}
 							}
-						} else if (obj instanceof QuoteService) {
+						  } else if (obj instanceof QuoteService) {
 							// this is bad because called inside a framework thread we should no block for long
 							final QuoteService service = (QuoteService) Activator.getContext().getService(
 									event.getServiceReference());
@@ -123,6 +135,12 @@ public class Application implements IApplication {
 							value = 1;
 						}
 					} catch (final Exception e) {
+						if(e instanceof ServiceException) {
+							ServiceException se = (ServiceException) e;
+							if(se.getType() == ServiceException.REMOTE) {
+								System.out.println("Remote ServiceException caught");
+							}
+						}
 						label = e.getLocalizedMessage();
 						text = "";
 						value = -1;
@@ -135,14 +153,20 @@ public class Application implements IApplication {
 						Display.getDefault().asyncExec(new Runnable() {
 							@Override
 							public void run() {
-								ui.getLabel().setText(fLabel);
-								ui.getStyledText().setText(fText);
+								ui.getLabel().setText(fLabel == null ? "" : fLabel);
+								ui.getStyledText().setText(fText == null ? "" : fText);
 								ui.getDispatcher().setValue(fValue);
 								ui.redraw();
 							}
 						});
 					}
 				}
+			}
+
+			private void useCallbackParadigm(final QuoteServiceAsync service) {
+				// create a callback to handle the async invocation
+				MyAsyncCallback<String[]> callback = new MyAsyncCallback<String[]>(ui);
+				service.getAllQuotesAsync(callback);
 			}
 
 			private void fillInfo(ServiceReference s, Object obj) {
