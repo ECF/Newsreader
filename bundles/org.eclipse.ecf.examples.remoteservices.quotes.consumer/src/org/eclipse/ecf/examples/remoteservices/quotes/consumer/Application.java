@@ -66,9 +66,9 @@ public class Application implements IApplication {
 							 */
 							boolean useCallback = false;
 							if(useCallback) {
-								useCallbackParadigm(service);
+								useCallbackInvocation(service);
 							} else {
-								useFutureParadigm(service);
+								useFutureInvocation(service);
 							}
 							
 							
@@ -96,8 +96,7 @@ public class Application implements IApplication {
 				}
 			}
 
-			private void useFutureParadigm(final QuoteServiceAsync service) {
-				try {
+			private void useFutureInvocation(final QuoteServiceAsync service) {
 					String text = "";
 					final IFuture future = service.getAllQuotesAsync();
 					
@@ -110,7 +109,7 @@ public class Application implements IApplication {
 							@Override
 							public void run() {
 								ui.getLabel().setText(
-										"waiting for " + serviceDesc + " counting cycles: " + cycle);
+										"waiting for " + serviceDesc + "... since: " + cycle);
 								ui.redraw();
 							}
 						});
@@ -133,21 +132,15 @@ public class Application implements IApplication {
 								buf.append("\n");
 							}
 							text = buf.toString();
-							// checked exceptions do suck
 						} catch (OperationCanceledException e) {
-							// will never happen since status is OK
-							e.printStackTrace();
+							updateUI("Future invocation failed on " + getServiceDesc(service), e.getMessage(), -1);
 						} catch (InterruptedException e) {
-							// will never happen since status is OK
-							e.printStackTrace();
+							updateUI("Future invocation failed on " + getServiceDesc(service), e.getMessage(), -1);
 						}
 						updateUI("Future invocation succeeded on " + getServiceDesc(service), text, 1);
 					} else {
-						updateUI("Future invocation failed", status.getException().getMessage(), -1);
+						updateUI("Future invocation failed on " + getServiceDesc(service), status.getException().getMessage(), -1);
 					}
-				} catch (Exception e) {
-					updateUI("Future invocation failed", e.getMessage(), -1);
-				}
 			}
 
 			// get the name synchronously
@@ -173,7 +166,7 @@ public class Application implements IApplication {
 				}
 			}
 
-			private void useCallbackParadigm(final QuoteServiceAsync service) {
+			private void useCallbackInvocation(final QuoteServiceAsync service) {
 				// create a callback to handle the async invocation
 				MyAsyncCallback<String[]> callback = new MyAsyncCallback<String[]>(ui);
 				service.getAllQuotesAsync(callback);
