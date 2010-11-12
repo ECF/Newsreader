@@ -33,4 +33,7 @@ public class Activator implements BundleActivator {
 		Activator.context = null;
 	}
 
+	public static BundleContext getBundleContext() {
+		return context;
+	}
 }

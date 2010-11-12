@@ -187,10 +187,10 @@ public class ConsumerUI extends Shell {
 			};
 			
 			public String getActiveSoundfile() {
-				return "/home/markus/eclipse/github/Newsreader/bundles/org.eclipse.ecf.examples.remoteservices.quotes.consumer/wav/Beep.wav";
+				return "/wav/Beep.wav";
 			};
 			public String getInactiveSoundfile() {
-				return "/home/markus/eclipse/github/Newsreader/bundles/org.eclipse.ecf.examples.remoteservices.quotes.consumer/wav/Beep.wav";
+				return "/wav/Flatline.wav";
 			};
 		};
 
