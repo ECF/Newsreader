@@ -50,7 +50,7 @@ public class Activator extends AbstractUIPlugin implements ServiceListener {
 
 	@Override
 	public void start(BundleContext context) throws Exception {
-		
+
 		// Other init
 		super.start(context);
 		this.context = context;
@@ -64,8 +64,10 @@ public class Activator extends AbstractUIPlugin implements ServiceListener {
 		// Find running stores
 		ServiceReference[] serviceReferences = context.getServiceReferences(
 				IStoreFactory.class.getName(), null);
-		for (ServiceReference serviceReference : serviceReferences) {
-			registerStore(serviceReference);
+		if (serviceReferences != null) {
+			for (ServiceReference serviceReference : serviceReferences) {
+				registerStore(serviceReference);
+			}
 		}
 
 		// Catch store services
