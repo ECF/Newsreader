@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.6"?>
+
+<target includeMode="feature" name="Gravity Target">
+<locations>
+<location includeAllPlatforms="true" includeMode="slicer" type="InstallableUnit">
+<unit id="org.eclipse.equinox.server.core.feature.group" version="1.0.0.v20100510-7K7QErDzbb9z-yqHb55T7I"/>
+<unit id="org.eclipse.ecf.discovery.feature.feature.group" version="1.0.0.v20101221-1719"/>
+<unit id="org.eclipse.ecf.discovery.zookeeper.feature.feature.group" version="1.0.0.v20101221-1719"/>
+<unit id="org.eclipse.ecf.eventadmin.feature.feature.group" version="1.0.0.v20101221-1719"/>
+<unit id="org.eclipse.ecf.server.generic.feature.feature.group" version="1.0.0.v20101221-1719"/>
+<unit id="org.eclipse.ecf.osgi.services.feature.feature.group" version="1.0.0.v20101221-1719"/>
+<unit id="org.eclipse.ecf.remoteservice.feature.feature.group" version="1.0.0.v20101221-1719"/>
+<unit id="org.eclipse.ecf.remoteservice.rosgi.feature.feature.group" version="1.0.0.v20101221-1719"/>
+<unit id="org.eclipse.help.feature.group" version="1.2.0.v20100427-7e7jEQFEp4jsWcboLU9l93"/>
+<unit id="org.eclipse.jdt.feature.group" version="3.6.1.r361_v20100714-0800-7z8XFUSFLFlmgLc5z-Bvrt8-HVkH"/>
+<unit id="org.eclipse.platform.feature.group" version="3.6.1.r361_v20100909-9gF78GrkFqw7GrsZnvz0JWNTeb6fue6896L"/>
+<unit id="org.eclipse.equinox.executable.feature.group" version="3.4.1.R36x_v20100823-7M7K7JF90dnJ-WLf3cf4yi"/>
+<unit id="org.eclipse.pde.feature.group" version="3.6.1.r361_v20100727-7b7mFL-FET3dhESDgE5_bkJ"/>
+<unit id="org.eclipse.rcp.feature.group" version="3.6.1.r361_v20100827-9OArFLdFjY-ThSQXmKvKz0_T"/>
+<unit id="org.eclipse.persistence.jpa.feature.group" version="2.1.1.v20100817-r8050"/>
+<unit id="org.eclipse.persistence.jpa.source.feature.group" version="2.1.1.v20100817-r8050"/>
+<unit id="org.eclipse.persistence.moxy.feature.group" version="2.1.1.v20100817-r8050"/>
+<unit id="org.eclipse.persistence.moxy.source.feature.group" version="2.1.1.v20100817-r8050"/>
+<unit id="org.eclipse.persistence.sdo.feature.group" version="2.1.1.v20100817-r8050"/>
+<unit id="org.eclipse.persistence.sdo.source.feature.group" version="2.1.1.v20100817-r8050"/>
+<unit id="org.eclipse.persistence.sdk.feature.group" version="2.1.1.v20100817-r8050"/>
+<unit id="org.eclipse.equinox.compendium.sdk.feature.group" version="3.6.0.v20100421-7V7RFiwFLSgEt4Pctn77c7J"/>
+<unit id="org.eclipse.equinox.core.sdk.feature.group" version="3.6.0.v20100603-7sF99FsHFTw8HQBta4g33J3F"/>
+<unit id="org.eclipse.equinox.p2.discovery.feature.feature.group" version="1.0.0.v20100510-4--9oB5855K7P"/>
+<unit id="org.eclipse.equinox.p2.user.ui.feature.group" version="2.0.1.r361_v20100903-897HFZFFZRuSD2LMtVxyz0Vr"/>
+<unit id="org.eclipse.equinox.p2.sdk.feature.group" version="3.6.0.v20100503-9I7VGAeG8tz-BY6jz0w2HLRYr"/>
+<unit id="org.eclipse.equinox.serverside.sdk.feature.group" version="3.6.0.v20100421-7u7NFVgFN5JdPKPhDHd_6Yqc54uw"/>
+<unit id="org.eclipse.equinox.sdk.feature.group" version="3.6.1.r361_v20100903-7H7R07v8rtOZyYbv1I6aZgou5z07"/>
+<unit id="org.eclipse.equinox.weaving.sdk.feature.group" version="1.0.0.v20100421-79--EVVFNFFsFc"/>
+<unit id="org.eclipse.draw2d.feature.group" version="3.6.1.v20100908-1100-4507w31211A2403131"/>
+<unit id="org.eclipse.draw2d.sdk.feature.group" version="3.6.1.v20100908-1100-7A7G18yE5F-8K8N4I8E558B48x42"/>
+<unit id="org.eclipse.draw2d.source.feature.group" version="3.6.1.v20100908-1100-4507w31211A2403131"/>
+<unit id="org.eclipse.gef.feature.group" version="3.6.1.v20100908-1100-777B181A3Bz-6B663E7974242"/>
+<unit id="org.eclipse.gef.sdk.feature.group" version="3.6.1.v20100908-1100-7G7R2A5WNcBQPZgXAHiSXMXYaKPI"/>
+<unit id="org.eclipse.gef.source.feature.group" version="3.6.1.v20100908-1100-777B181A3Bz-6B663E7974242"/>
+<unit id="org.eclipse.equinox.server.jetty.feature.group" version="1.0.0.v20100510-7I777iBgJ9DIARGH8IIQ"/>
+<unit id="org.eclipse.equinox.server.p2.feature.group" version="1.0.0.v20100503-7x7IFGOFQ74dz0POCNUBjA6L"/>
+<unit id="org.eclipse.equinox.server.servletbridge.feature.group" version="1.0.0.v20100510-42A79oB5855K5E"/>
+<unit id="org.eclipse.equinox.server.simple.feature.group" version="1.0.0.v20100510-44DF8s734C48662444"/>
+<repository location="file:/media/development/Build/targets/Gravity/Admin/final/"/>
+</location>
+<location includeAllPlatforms="true" includeMode="slicer" type="InstallableUnit">
+<unit id="javax.xml" version="1.3.4.v201005080400"/>
+<unit id="org.apache.log4j" version="1.2.15.v201005080500"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20100519200754/repository"/>
+</location>
+</locations>
+</target>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rm:rmap xmlns:bc="http://www.eclipse.org/buckminster/Common-1.0" xmlns:rm="http://www.eclipse.org/buckminster/RMap-1.0">
+  <rm:locator pattern="^org\.eclipse\.ecf.\salvo(\..+)?\.feature" searchPathRef="features" failOnError="false"/>
+  <rm:locator pattern="^(org.\eclipse.\ecf.\.*(nntp|salvo|quotes).*?|org.apache.mime4j)" searchPathRef="bundles" failOnError="false"/>
+  <rm:searchPath name="features">
+    <rm:provider componentTypes="eclipse.feature,osgi.bundle,buckminster" readerType="git" mutable="false">
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="git://github.com/ECF/Newsreader.git/features/{0} ">
+        <bc:propertyRef key="buckminster.component"/>
+      </rm:uri>
+    </rm:provider>
+  </rm:searchPath>
+  <rm:searchPath name="bundles">
+    <rm:provider componentTypes="osgi.bundle,buckminster" readerType="git" mutable="false">
+      <rm:property key="buckminster.mutable" value="false"/>
+      <rm:uri format="git://github.com/ECF/Newsreader.git/bundles/{0} ">
+        <bc:propertyRef key="buckminster.component"/>
+      </rm:uri>
+    </rm:provider>
+  </rm:searchPath>
+</rm:rmap>

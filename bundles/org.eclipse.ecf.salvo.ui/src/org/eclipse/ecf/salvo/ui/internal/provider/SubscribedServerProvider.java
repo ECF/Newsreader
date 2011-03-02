@@ -14,6 +14,7 @@ package org.eclipse.ecf.salvo.ui.internal.provider;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.eclipse.ecf.protocol.nntp.core.Debug;
 import org.eclipse.ecf.protocol.nntp.core.ServerStoreFactory;
 import org.eclipse.ecf.protocol.nntp.model.IServer;
 import org.eclipse.ecf.protocol.nntp.model.NNTPException;
@@ -28,7 +29,11 @@ public class SubscribedServerProvider implements IChildProvider {
 
 		if (ServerStoreFactory.instance().getServerStoreFacade()
 				.getFirstStore() == null) {
-			return new ArrayList<ISalvoResource>();
+			Debug.log(this.getClass(), "No stores defined");
+			ISalvoResource er = SalvoResourceFactory.getResource("No store service is running", "No store service is running");
+			ArrayList<ISalvoResource> ar = new ArrayList<ISalvoResource>();
+			ar.add(er);
+			return ar;
 		}
 
 		try {
@@ -42,7 +47,11 @@ public class SubscribedServerProvider implements IChildProvider {
 			}
 			return result;
 		} catch (NNTPException e) {
-			return new ArrayList<ISalvoResource>();
+			Debug.log(this.getClass(), e);
+			ISalvoResource er = SalvoResourceFactory.getResource(e.getMessage(), e);
+			ArrayList<ISalvoResource> ar = new ArrayList<ISalvoResource>();
+			ar.add(er);
+			return ar;
 		}
 	}
 

@@ -36,8 +36,8 @@
 
    <features>
       <feature id="org.eclipse.ecf.salvo.feature" version="0.7.0.qualifier"/>
-      <feature id="org.eclipse.rcp" version="3.6.0.v20100519-9OArFKvFtsd7WLUKh-DcYTS"/>
-      <feature id="org.eclipse.platform" version="3.6.0.v20100602-9gF78GpqFt6trOGhL60z0oEx3fz-JKNwxPY"/>
+      <feature id="org.eclipse.rcp" version="3.6.2.r362_v20101104-9SAxFMKFkSAqi8axkv1ZjegmiBLY"/>
+      <feature id="org.eclipse.platform" version="3.6.2.r362_v20110210-9gF78Gs1FrIGnHDHWkEcopoN8AmxeZflGDGKQi"/>
    </features>
 
    <configurations>

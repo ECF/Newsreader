@@ -1,0 +1,61 @@
+<project>
+	<pathconvert property="equinox.launcher.jar">
+		<first count="1">
+			<sort>
+				<fileset dir="${eclipse.home}/plugins" includes="**/org.eclipse.equinox.launcher_*.jar" />
+				<reverse xmlns="antlib:org.apache.tools.ant.types.resources.comparators">
+					<date />
+				</reverse>
+			</sort>
+		</first>
+	</pathconvert>
+
+	<target name="create.javadoc" description="Generate the JavaDoc for the sources">
+		<echo message="javadoc source ${javadoc.source}">
+		</echo>
+		<echo message="javadoc destination ${javadoc.output}">
+		</echo>
+		<echo message="target platform ${p2.site}">
+		</echo>
+
+
+		<!-- set target platform as classpath -->
+		<path id="files-classpath">
+			<fileset dir="${p2.site}\plugins">
+				<include name="*.jar" />
+			</fileset>
+		</path>
+		
+		<!-- clean and create output location -->
+		<delete dir="${javadoc.output}" />
+		<mkdir dir="${javadoc.output}" />
+
+
+		<!-- generate the javadoc -->
+		<javadoc destdir="${javadoc.output}" 
+			packagenames="com.remainsoftware.gravity.*"
+			maxmemory="1024m" source="1.6" 
+			useexternalfile="true" 
+			author="true" version="true" 
+			use="true" windowtitle="Gravity" encoding="Cp1252">
+
+			<classpath refid="files-classpath"/> 
+			<!-- link external APIs -->
+			<link offline="false" href="http://java.sun.com/javase/6/docs/api/" />
+			<link offline="false" href="http://www.osgi.org/javadoc/r4v42/" />
+			<link offline="false" href="http://www.eclipse.org/ecf/org.eclipse.ecf.docs/api/" />
+			<link offline="false" href="http://help.eclipse.org/galileo/topic/org.eclipse.platform.doc.isv/reference/api/" />
+
+			<!-- sources -->
+			<fileset dir="${javadoc.source}" defaultexcludes="true">
+				<include name="**/*.java" />
+				<exclude name="**/org/**" />
+				<exclude name="**/net/**" />
+				<exclude name="**/test/**" />
+			</fileset>
+
+			<bottom><![CDATA[<i>Copyright © 2010 Remain Software</i>]]></bottom>
+
+	</javadoc>
+</target>
+</project>
