@@ -71,7 +71,9 @@ public class Server implements IServer {
 		return getAddress() + "::" + getPort() + "::"
 				+ getServerConnection().getUser() + "::"
 				+ getServerConnection().getEmail() + "::"
-				+ getServerConnection().getLogin() + "::" + isSecure();
+				+ getServerConnection().getLogin() + "::" 
+				+ isSecure() + "::"
+				+ isSubscribed();
 	}
 
 	public String getID() {
@@ -134,7 +136,7 @@ public class Server implements IServer {
 	public String getURL() {
 		return "nntp://" + getAddress().trim() + ":" + getPort();
 	}
-	
+
 	public boolean isSubscribed() {
 		return subscribed;
 	}
@@ -142,6 +144,7 @@ public class Server implements IServer {
 	public void setSubscribed(boolean subscribed) {
 		this.subscribed = subscribed;
 	}
+
 	public void setProperty(String key, String value) {
 		if (value == null) {
 			getProperties().remove(key);

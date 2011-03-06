@@ -18,42 +18,44 @@ public class SALVO {
 	/**
 	 * IStoreEvent event constants
 	 */
-	public static final int EVENT_ADD_SERVER = 1;
+	public static final int EVENT_ADD_SERVER = 1 << 1;
 
-	public static final int EVENT_ADD_GROUP = 2;
+	public static final int EVENT_ADD_GROUP = 1 << 2;
 
 	public static final int EVENT_ADD = EVENT_ADD_GROUP | EVENT_ADD_SERVER;
 
-	public static final int EVENT_REMOVE_SERVER = 4;
+	public static final int EVENT_REMOVE_SERVER = 1 << 3;
 
-	public static final int EVENT_REMOVE_GROUP = 8;
+	public static final int EVENT_REMOVE_GROUP = 1 << 4;
 
-	public static final int EVENT_REMOVE = EVENT_REMOVE_GROUP
-			| EVENT_REMOVE_SERVER;
+	public static final int EVENT_REMOVE_ARTICLE = 1 << 5;
 
-	public static final int EVENT_CHANGE_SERVER = 16;
+	public static final int EVENT_REMOVE = EVENT_REMOVE_ARTICLE
+			| EVENT_REMOVE_GROUP | EVENT_REMOVE_SERVER;
 
-	public static final int EVENT_CHANGE_GROUP = 32;
+	public static final int EVENT_CHANGE_SERVER = 1 << 6;
 
-	public static final int EVENT_RELOAD = 64;
+	public static final int EVENT_CHANGE_GROUP = 1 << 7;
 
-	public static final int EVENT_UNSUBSCRIBE_GROUP = 128;
+	public static final int EVENT_RELOAD = 1 << 8;
 
-	public static final int EVENT_UNSUBSCRIBE_SERVER = 256;
+	public static final int EVENT_UNSUBSCRIBE_GROUP = 1 << 9;
+
+	public static final int EVENT_UNSUBSCRIBE_SERVER = 1 << 10;
 
 	public static final int EVENT_UNSUBSCRIBE = EVENT_UNSUBSCRIBE_GROUP
 			| EVENT_UNSUBSCRIBE_SERVER;
 
-	public static final int EVENT_SUBSCRIBE_GROUP = 512;
+	public static final int EVENT_SUBSCRIBE_GROUP = 1 << 11;
 
-	public static final int EVENT_SUBSCRIBE_SERVER = 1024;
+	public static final int EVENT_SUBSCRIBE_SERVER = 1 << 12;
 
 	public static final int EVENT_SUBSCRIBE = EVENT_SUBSCRIBE_GROUP
 			| EVENT_SUBSCRIBE_SERVER;
 
-	public static final int EVENT_REGISTER_STORE = 2048;
+	public static final int EVENT_REGISTER_STORE = 1 << 13;
 
-	public static final int EVENT_UNREGISTER_STORE = 4096;
+	public static final int EVENT_UNREGISTER_STORE = 1 << 14;
 
 	public static final int EVENT_STORE = EVENT_REGISTER_STORE
 			| EVENT_UNREGISTER_STORE;

@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.apache.derby.iapi.services.io.ArrayUtil;
 import org.eclipse.ecf.protocol.nntp.core.DateParser;
 import org.eclipse.ecf.protocol.nntp.core.Debug;
 import org.eclipse.ecf.protocol.nntp.core.StringUtils;
@@ -167,7 +168,7 @@ public class Store implements IStore {
 		}
 	}
 
-	public void fireEvent(IStoreEvent event) {
+	private void fireEvent(IStoreEvent event) {
 
 		if (listeners == null || listeners.isEmpty())
 			return;
@@ -263,8 +264,19 @@ public class Store implements IStore {
 		fireEvent(new StoreEvent(newsgroup, SALVO.EVENT_CHANGE_GROUP));
 	}
 
-	public IServer[] getSubscribedServers() throws NNTPException {
-		return serverDOA.getServers(true);
+	public IServer[] getServers() throws NNTPException {
+		IServer[] subsc = serverDOA.getServers(true);
+		IServer[] unsubsc = serverDOA.getServers(false);
+		IServer[] result = new IServer[subsc.length + unsubsc.length];
+		int counter = 0;
+		for (int i = 0; i < subsc.length; i++) {
+			result[counter++] = subsc[i];
+
+		}
+		for (int i = 0; i < unsubsc.length; i++) {
+			result[counter++] = unsubsc[i];
+		}
+		return result;
 	}
 
 	public IArticle[] getArticles(INewsgroup newsgroup, int from, int to)
@@ -379,7 +391,7 @@ public class Store implements IStore {
 		int result = 0;
 
 		try {
-			IServer[] servers = getSubscribedServers();
+			IServer[] servers = getServers();
 			for (int i = 0; i < servers.length; i++) {
 				INewsgroup[] groups = getSubscribedNewsgroups(servers[i]);
 
@@ -420,6 +432,7 @@ public class Store implements IStore {
 				result = result + delete(followUp);
 			}
 			articleDOA.deleteArticle(article);
+			fireEvent(new StoreEvent(article, SALVO.EVENT_REMOVE_ARTICLE));
 			return ++result;
 		} catch (StoreException e) {
 			throw new NNTPIOException(e.getMessage(), e);
@@ -432,5 +445,12 @@ public class Store implements IStore {
 
 	public Database getDatabase() {
 		return database;
+	}
+
+	@Override
+	public int getListenerCount() {
+		if (listeners == null)
+			return 0;
+		return listeners.size();
 	}
 }

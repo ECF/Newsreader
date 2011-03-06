@@ -202,6 +202,15 @@ public class ServerDAO {
 		}
 	}
 
+	/**
+	 * Returns a list of servers.
+	 * 
+	 * @param subscribed
+	 *            true if you want subscribed server and false if you want
+	 *            unsubscribed servers
+	 * @return the array of servers, never null
+	 * @throws NNTPException
+	 */
 	public IServer[] getServers(boolean subscribed) throws NNTPException {
 
 		synchronized (connection) {
@@ -218,7 +227,7 @@ public class ServerDAO {
 					IServer server = ServerFactory.getCreateServer(
 							getAddress(r), getPort(r), getCredentials(r),
 							getSecure(r));
-					server.setSubscribed(true);
+					server.setSubscribed(subscribed);
 					result.add(server);
 				}
 				r.close();

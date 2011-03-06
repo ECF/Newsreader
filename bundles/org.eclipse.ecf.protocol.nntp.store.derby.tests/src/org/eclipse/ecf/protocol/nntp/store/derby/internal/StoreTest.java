@@ -18,6 +18,7 @@ import java.util.HashMap;
 import org.eclipse.ecf.protocol.nntp.model.ISecureStore;
 import org.eclipse.ecf.protocol.nntp.model.IStoreFactory;
 import org.eclipse.ecf.protocol.nntp.model.SALVO;
+import org.eclipse.ecf.protocol.nntp.model.StoreException;
 import org.eclipse.ecf.protocol.nntp.store.derby.StoreFactory;
 import org.eclipse.ecf.protocol.nntp.store.tests.AbstractStoreTest;
 import org.junit.After;
@@ -36,13 +37,13 @@ public class StoreTest extends AbstractStoreTest {
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
+
+
 	}
 
 	@Before
 	public void setUp() throws Exception {
-		sf = new StoreFactory();
-		setStore(sf.createStore(SALVO.SALVO_HOME + SALVO.SEPARATOR
-				+ "StoreTestDerby"));
+		newStore();
 		getStore().setSecureStore(new ISecureStore() {
 			HashMap<String, String> mappie = new HashMap<String, String>();
 
@@ -66,7 +67,17 @@ public class StoreTest extends AbstractStoreTest {
 
 	@After
 	public void tearDown() throws Exception {
-		sf.deleteStore();
+		IStoreFactory sf = new StoreFactory();
+		((Store) sf.createStore(SALVO.SALVO_HOME + SALVO.SEPARATOR
+				+ "StoreTestDerby")).getDatabase().closeDB();
+	}
+
+	@Override
+	public void newStore() throws StoreException {
+		sf = new StoreFactory();
+		setStore(sf.createStore(SALVO.SALVO_HOME + SALVO.SEPARATOR
+				+ "StoreTestDerby"));
+
 	}
 
 }

@@ -42,10 +42,9 @@ public class StoreTest extends AbstractStoreTest {
 	@Before
 	public void setUp() throws Exception {
 
-		setStore(new StoreFactory().createStore(SALVO.SALVO_HOME
-				+ SALVO.SEPARATOR + "StoreTestFileSystem"));
+		newStore();
 
-		IServer[] subscribedServers = getStore().getSubscribedServers();
+		IServer[] subscribedServers = getStore().getServers();
 		for (int i = 0; i < subscribedServers.length; i++) {
 			IServer iServer = subscribedServers[i];
 			getStore().unsubscribeServer(iServer, true);
@@ -74,7 +73,7 @@ public class StoreTest extends AbstractStoreTest {
 
 	@After
 	public void tearDown() throws Exception {
-		IServer[] subscribedServers = getStore().getSubscribedServers();
+		IServer[] subscribedServers = getStore().getServers();
 		for (int i = 0; i < subscribedServers.length; i++) {
 			IServer iServer = subscribedServers[i];
 			getStore().unsubscribeServer(iServer, true);
@@ -84,5 +83,12 @@ public class StoreTest extends AbstractStoreTest {
 	@Test
 	public void testStore() {
 		assertTrue(getStore() != null);
+	}
+
+	@Override
+	public void newStore() {
+		setStore(new StoreFactory().createStore(SALVO.SALVO_HOME
+				+ SALVO.SEPARATOR + "StoreTestFileSystem"));
+
 	}
 }

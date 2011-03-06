@@ -13,11 +13,14 @@
  *******************************************************************************/
 package org.eclipse.ecf.protocol.nntp.store.tests;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+
+import junit.framework.Assert;
 
 import org.eclipse.ecf.protocol.nntp.core.ArticleFactory;
 import org.eclipse.ecf.protocol.nntp.core.NewsgroupFactory;
@@ -25,7 +28,6 @@ import org.eclipse.ecf.protocol.nntp.core.ServerFactory;
 import org.eclipse.ecf.protocol.nntp.model.IArticle;
 import org.eclipse.ecf.protocol.nntp.model.ICredentials;
 import org.eclipse.ecf.protocol.nntp.model.INewsgroup;
-import org.eclipse.ecf.protocol.nntp.model.ISecureStore;
 import org.eclipse.ecf.protocol.nntp.model.IServer;
 import org.eclipse.ecf.protocol.nntp.model.IStore;
 import org.eclipse.ecf.protocol.nntp.model.IStoreEvent;
@@ -36,14 +38,12 @@ import org.eclipse.ecf.protocol.nntp.model.SALVO;
 import org.eclipse.ecf.protocol.nntp.model.StoreException;
 import org.eclipse.ecf.protocol.nntp.model.UnexpectedResponseException;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 public abstract class AbstractStoreTest {
 
-	static String[] overviewHeaders = new String[] {
+	private static String[] overviewHeaders = new String[] {
 			"1	=?utf-8?Q?ReportScripting=20in=20BIRT=202.2.1=20:=20Problem=20wit?= =?utf-8?Q?h=20the=20evaluation=20of=20an=20Expression?=	Maghen Calinghee <maghen.calinghee@zenika.com>	Fri, 09 Oct 2009 08:00:06 -0400	<han8k7$9m7$1@build.eclipse.org>		1313	9	Xref: build.eclipse.org eclipse.birt:01",
 			"2	=?utf-8?Q?dynamic=20grouping=20of=20charts=20possible=3F?=	<a.reiners@reply.eu>	Fri, 09 Oct 2009 08:22:23 -0400	<han9u0$obp$1@build.eclipse.org>		1408	14	Xref: build.eclipse.org eclipse.birt:02",
 			"3	Re: How to force page break after group in HTML but not in PDF?	Thilo Bruesshaber <thilo.bruesshaber@gmail.com>	Fri, 09 Oct 2009 14:24:04 +0200	<hana0t$ov4$1@build.eclipse.org>	<ha4at4$dq4$1@build.eclipse.org> <halm91$a9f$1@build.eclipse.org>	2057	39	Xref: build.eclipse.org eclipse.birt:03",
@@ -69,21 +69,15 @@ public abstract class AbstractStoreTest {
 			"23	Re: Problems with ReportEngine after Upgrading Birt from 2.3 to 2.5.1	Jason Weathersby <jasonweathersby@windstream.net>	Mon, 12 Oct 2009 11:13:15 -0400	<havgu5$u2l$3@build.eclipse.org>	<haldiv$42p$1@build.eclipse.org> <hamiqa$qkd$1@build.eclipse.org> <hangml$5vi$1@build.eclipse.org>	3135	55	Xref: build.eclipse.org eclipse.birt:23",
 			"24	Re: problem with BIRT installation on top od zend studio for eclipse on ubuntu	Jason Weathersby <jasonweathersby@windstream.net>	Mon, 12 Oct 2009 11:16:55 -0400	<havh51$u2l$4@build.eclipse.org>	<hah8aa$p1k$1@build.eclipse.org> <han669$7rd$1@build.eclipse.org>	2159	32	Xref: build.eclipse.org eclipse.birt:24" };
 
-	static String[] headers = new String[] { "Subject:", "From:", "Date:",
-			"Message-ID:", "References:", "Bytes:", "Lines:", "Xref:full" };
+	private static String[] headers = new String[] { "Subject:", "From:",
+			"Date:", "Message-ID:", "References:", "Bytes:", "Lines:",
+			"Xref:full" };
 
 	private IStore store;
 
-	private IStoreEventListener listener;
-	private static HashMap<IStoreEvent, Integer> listenerCounter;
+	private static HashMap<IStoreEvent, Integer> listenserCounter;
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
+	private IStoreEventListener newListener;
 
 	@Before
 	public abstract void setUp() throws Exception;
@@ -96,118 +90,49 @@ public abstract class AbstractStoreTest {
 		assertTrue(getStore() != null);
 	}
 
+	/**
+	 * Test if a not permanent deleted server can be resurrected.
+	 * 
+	 * @throws NNTPException
+	 */
 	@Test
-	public void testFireEvent() {
-		final ArrayList<String> boolie = new ArrayList<String>();
-		getStore().addListener(new IStoreEventListener() {
-
-			@Override
-			public void storeEvent(IStoreEvent event) {
-				boolie.clear();
-				boolie.add(event.getEventObject().toString());
-			}
-		}, SALVO.EVENT_ALL_EVENTS);
-
-		getStore().fireEvent(new IStoreEvent() {
-			@Override
-			public int getEventType() {
-				return SALVO.EVENT_ADD;
-			}
-
-			@Override
-			public Object getEventObject() {
-				return "add";
-			}
-		});
-		assertTrue(boolie.get(0).equals("add"));
-
-		getStore().fireEvent(new IStoreEvent() {
-			@Override
-			public int getEventType() {
-				return SALVO.EVENT_ADD_GROUP;
-			}
-
-			@Override
-			public Object getEventObject() {
-				return "add_group";
-			}
-		});
-		assertTrue(boolie.get(0).equals("add_group"));
-
-		getStore().fireEvent(new IStoreEvent() {
-			@Override
-			public int getEventType() {
-				return SALVO.EVENT_ADD_SERVER;
-			}
-
-			@Override
-			public Object getEventObject() {
-				return "add_server";
-			}
-		});
-		assertTrue(boolie.get(0).equals("add_server"));
-
-		getStore().fireEvent(new IStoreEvent() {
-			@Override
-			public int getEventType() {
-				return SALVO.EVENT_CHANGE;
-			}
-
-			@Override
-			public Object getEventObject() {
-				return "change";
-			}
-		});
-		assertTrue(boolie.get(0).equals("change"));
-
-		getStore().fireEvent(new IStoreEvent() {
-			@Override
-			public int getEventType() {
-				return SALVO.EVENT_CHANGE_GROUP;
-			}
-
-			@Override
-			public Object getEventObject() {
-				return "change_group";
-			}
-		});
-		assertTrue(boolie.get(0).equals("change_group"));
-
-		getStore().fireEvent(new IStoreEvent() {
-			@Override
-			public int getEventType() {
-				return SALVO.EVENT_CHANGE_SERVER;
-			}
-
-			@Override
-			public Object getEventObject() {
-				return "change_server";
-			}
-		});
-		assertTrue(boolie.get(0).equals("change_server"));
-
+	public void testResurectServer() throws NNTPException {
+		testStoreArticles();
+		getStore().unsubscribeServer(getStore().getServers()[0], false);
+		newStore();
+		assertTrue(getStore().getServers().length == 1);
+		assertFalse(getStore().getServers()[0].isSubscribed());
 	}
 
+	/**
+	 * A fresh new store is created.
+	 */
+	public abstract void newStore() throws StoreException;
+
 	@Test
-	public void testAddListener() {
+	public void testAddListener() throws NNTPIOException, StoreException,
+			NNTPException {
 
-		AbstractStoreTest
-				.setListenerCounter(new HashMap<IStoreEvent, Integer>());
+		testStoreArticles();
 
-		listener = new IStoreEventListener() {
+		final ArrayList<IStoreEvent> catcher = new ArrayList<IStoreEvent>();
+
+		newListener = new IStoreEventListener() {
 
 			@Override
 			public void storeEvent(IStoreEvent event) {
-				Integer counter = getListenerCounter().get(event);
-				if (counter == null) {
-					counter = new Integer(0);
-					getListenerCounter().put(event, counter);
-				}
-				counter += 1;
+				catcher.add(event);
 			}
 		};
 
-		getStore().addListener(listener, SALVO.EVENT_ALL_EVENTS);
+		getStore().addListener(newListener, SALVO.EVENT_ALL_EVENTS);
+
+		getStore().delete(
+				getStore().getFirstArticle(
+						getStore().getSubscribedNewsgroups(
+								getStore().getServers()[0])[0]));
+
+		assertTrue(catcher.size() > 0);
 	}
 
 	@Test
@@ -244,7 +169,7 @@ public abstract class AbstractStoreTest {
 				credentials, true);
 		getStore().subscribeServer(server, "flinder1f7");
 
-		assertTrue(getStore().getSubscribedServers()[0].equals(server));
+		assertTrue(getStore().getServers()[0].equals(server));
 
 	}
 
@@ -252,12 +177,12 @@ public abstract class AbstractStoreTest {
 	public void testSubscribeNewsgroup() throws NNTPException {
 		testSubscribeServer();
 		INewsgroup newsgroup = NewsgroupFactory.createNewsGroup(getStore()
-				.getSubscribedServers()[0], "eclipse.platform.rcp",
+				.getServers()[0], "eclipse.platform.rcp",
 				"eclipse.platform.rcp");
 		getStore().subscribeNewsgroup(newsgroup);
 		assertTrue(newsgroup.isSubscribed());
 		assertTrue(getStore().getSubscribedNewsgroups(
-				getStore().getSubscribedServers()[0]).length == 1);
+				getStore().getServers()[0]).length == 1);
 	}
 
 	@Test
@@ -265,7 +190,7 @@ public abstract class AbstractStoreTest {
 			NNTPException {
 		testSubscribeNewsgroup();
 		assertTrue(getStore().getSubscribedNewsgroups(
-				getStore().getSubscribedServers()[0]).length == 1);
+				getStore().getServers()[0]).length == 1);
 	}
 
 	@Test
@@ -274,23 +199,25 @@ public abstract class AbstractStoreTest {
 
 		testSubscribeNewsgroup();
 		ArrayList<IArticle> result = new ArrayList<IArticle>();
-		for (String string : overviewHeaders) {
+		for (String string : getOverviewHeaders()) {
 			IArticle article = ArticleFactory.createArticle(
-					headers,
+					getHeaders(),
 					string,
 					getStore().getSubscribedNewsgroups(
-							getStore().getSubscribedServers()[0])[0]);
+							getStore().getServers()[0])[0]);
 			result.add(article);
 		}
 		getStore().storeArticles((IArticle[]) result.toArray(new IArticle[0]));
 
-		assertTrue(getStore().getArticles(
-				getStore().getSubscribedNewsgroups(
-						getStore().getSubscribedServers()[0])[0], 1, 100) == null);
+		assertTrue(getStore()
+				.getArticles(
+						getStore().getSubscribedNewsgroups(
+								getStore().getServers()[0])[0], 1, 100) == null);
 
-		assertTrue(getStore().getArticles(
-				getStore().getSubscribedNewsgroups(
-						getStore().getSubscribedServers()[0])[0], 1, 24).length == getOverviewHeaders().length);
+		assertTrue(getStore()
+				.getArticles(
+						getStore().getSubscribedNewsgroups(
+								getStore().getServers()[0])[0], 1, 24).length == getOverviewHeaders().length);
 	}
 
 	@Test
@@ -306,12 +233,12 @@ public abstract class AbstractStoreTest {
 				"the quick brown fox jumps over the lazy dog 5",
 				"the quick brown fox jumps over the lazy dog 6" };
 
-		for (int i = 0; i < overviewHeaders.length; i++) {
+		for (int i = 0; i < getOverviewHeaders().length; i++) {
 			getStore().storeArticleBody(
 					getStore().getArticle(
 							getStore().getSubscribedNewsgroups(
-									getStore().getSubscribedServers()[0])[0],
-							i + 1), body);
+									getStore().getServers()[0])[0], i + 1),
+					body);
 
 		}
 	}
@@ -321,12 +248,11 @@ public abstract class AbstractStoreTest {
 			UnexpectedResponseException, StoreException, NNTPException {
 
 		testStoreArticleBody();
-		for (int i = 0; i < overviewHeaders.length; i++) {
+		for (int i = 0; i < getOverviewHeaders().length; i++) {
 			String[] body = getStore().getArticleBody(
 					getStore().getArticle(
 							getStore().getSubscribedNewsgroups(
-									getStore().getSubscribedServers()[0])[0],
-							i + 1));
+									getStore().getServers()[0])[0], i + 1));
 			assertTrue(body.length + "", body.length == 5);
 		}
 	}
@@ -335,42 +261,47 @@ public abstract class AbstractStoreTest {
 	public void testUpdateAttributes() throws StoreException, NNTPException {
 		testSubscribeNewsgroup();
 		INewsgroup group = getStore().getSubscribedNewsgroups(
-				getStore().getSubscribedServers()[0])[0];
+				getStore().getServers()[0])[0];
 		group.setSubscribed(false);
 		getStore().updateAttributes(group);
 
 		// some stores unsubscribe by setting this attribute
-		if (getStore().getSubscribedNewsgroups(
-				getStore().getSubscribedServers()[0]).length == 1) {
+		if (getStore().getSubscribedNewsgroups(getStore().getServers()[0]).length == 1) {
 
 			assertTrue(getStore().getSubscribedNewsgroups(
-					getStore().getSubscribedServers()[0])[0].isSubscribed() == false);
+					getStore().getServers()[0])[0].isSubscribed() == false);
 		}
 	}
 
 	@Test
-	public void testGetSubscribedServers() throws NNTPException {
+	public void testGetServers() throws NNTPException {
 		testSubscribeServer();
-		assertTrue(getStore().getSubscribedServers().length == 1);
+		store = getStore();
+		assertTrue(store.getServers().length == 1);
+		store.unsubscribeServer(store.getServers()[0], false);
+		assertTrue(store.getServers().length == 1);
+		store.unsubscribeServer(store.getServers()[0], true);
+		assertTrue(store.getServers().length == 0);
 	}
 
 	@Test
 	public void testGetArticles() throws NNTPIOException,
 			UnexpectedResponseException, StoreException, NNTPException {
 		testStoreArticles();
-		assertTrue(getStore().getArticles(
-				getStore().getSubscribedNewsgroups(
-						getStore().getSubscribedServers()[0])[0], 1, 24).length == overviewHeaders.length);
+		assertTrue(getStore()
+				.getArticles(
+						getStore().getSubscribedNewsgroups(
+								getStore().getServers()[0])[0], 1, 24).length == getOverviewHeaders().length);
 	}
 
 	@Test
 	public void testGetArticleINewsgroupInt() throws NNTPIOException,
 			UnexpectedResponseException, StoreException, NNTPException {
 		testStoreArticles();
-		for (int i = 0; i < overviewHeaders.length; i++) {
+		for (int i = 0; i < getOverviewHeaders().length; i++) {
 			assertTrue(getStore().getArticle(
 					getStore().getSubscribedNewsgroups(
-							getStore().getSubscribedServers()[0])[0], i + 1) != null);
+							getStore().getServers()[0])[0], i + 1) != null);
 
 		}
 	}
@@ -378,19 +309,35 @@ public abstract class AbstractStoreTest {
 	@Test
 	public void testGetFirstArticle() throws StoreException, NNTPException {
 		testStoreArticles();
-		assertTrue(getStore().getFirstArticle(
-				getStore().getSubscribedNewsgroups(
-						getStore().getSubscribedServers()[0])[0])
+		assertTrue(getStore()
+				.getFirstArticle(
+						getStore().getSubscribedNewsgroups(
+								getStore().getServers()[0])[0])
 				.getArticleNumber() == 1);
+
+		IArticle firstArticle = getStore().getFirstArticle(
+				getStore().getSubscribedNewsgroups(store.getServers()[0])[0]);
+		store.delete(firstArticle);
+		IArticle firstArticle2 = getStore().getFirstArticle(
+				getStore().getSubscribedNewsgroups(store.getServers()[0])[0]);
+		assertFalse(firstArticle.equals(firstArticle2));
 	}
 
 	@Test
 	public void testGetLastArticle() throws StoreException, NNTPException {
 		testStoreArticles();
-		assertTrue(getStore().getLastArticle(
-				getStore().getSubscribedNewsgroups(
-						getStore().getSubscribedServers()[0])[0])
+		assertTrue(getStore()
+				.getLastArticle(
+						getStore().getSubscribedNewsgroups(
+								getStore().getServers()[0])[0])
 				.getArticleNumber() == 24);
+		IArticle lastArticle = getStore().getLastArticle(
+				getStore().getSubscribedNewsgroups(store.getServers()[0])[0]);
+		store.delete(lastArticle);
+		IArticle lastArticle2 = getStore().getLastArticle(
+				getStore().getSubscribedNewsgroups(store.getServers()[0])[0]);
+
+		assertFalse(lastArticle.equals(lastArticle2));
 	}
 
 	@Test
@@ -398,10 +345,10 @@ public abstract class AbstractStoreTest {
 			UnexpectedResponseException, StoreException, NNTPException {
 		testStoreArticles();
 
-		for (int i = 0; i < overviewHeaders.length; i++) {
+		for (int i = 0; i < getOverviewHeaders().length; i++) {
 			IArticle article = getStore().getArticle(
 					getStore().getSubscribedNewsgroups(
-							getStore().getSubscribedServers()[0])[0], i + 1);
+							getStore().getServers()[0])[0], i + 1);
 			assertTrue(article != null);
 
 			IArticle[] followUps = getStore().getFollowUps(article);
@@ -415,10 +362,10 @@ public abstract class AbstractStoreTest {
 	public void testUpdateArticle() throws NNTPIOException,
 			UnexpectedResponseException, StoreException, NNTPException {
 		testStoreArticles();
-		for (int i = 0; i < overviewHeaders.length; i++) {
+		for (int i = 0; i < getOverviewHeaders().length; i++) {
 			IArticle article = getStore().getArticle(
 					getStore().getSubscribedNewsgroups(
-							getStore().getSubscribedServers()[0])[0], i + 1);
+							getStore().getServers()[0])[0], i + 1);
 			assertTrue(article != null);
 
 			article.setMarked(false);
@@ -426,7 +373,7 @@ public abstract class AbstractStoreTest {
 			getStore().updateArticle(article);
 			article = getStore().getArticle(
 					getStore().getSubscribedNewsgroups(
-							getStore().getSubscribedServers()[0])[0], i + 1);
+							getStore().getServers()[0])[0], i + 1);
 			assertTrue(article.isRead() == false);
 			assertTrue(article.isMarked() == false);
 
@@ -435,7 +382,7 @@ public abstract class AbstractStoreTest {
 			getStore().updateArticle(article);
 			article = getStore().getArticle(
 					getStore().getSubscribedNewsgroups(
-							getStore().getSubscribedServers()[0])[0], i + 1);
+							getStore().getServers()[0])[0], i + 1);
 			assertTrue(article.isRead() == true);
 			assertTrue(article.isMarked() == true);
 
@@ -450,7 +397,17 @@ public abstract class AbstractStoreTest {
 	}
 
 	@Test
-	public void testSetWaterMarks() {
+	public void testSetWaterMarks() throws NNTPIOException,
+			UnexpectedResponseException, StoreException, NNTPException {
+
+		testStoreArticles();
+		INewsgroup iNewsgroup = getStore().getSubscribedNewsgroups(
+				getStore().getServers()[0])[0];
+		iNewsgroup.adjustHighWatermark(23);
+		iNewsgroup.adjustLowWatermark(2);
+		assertTrue(iNewsgroup.getHighWaterMark() == 23);
+		assertTrue(iNewsgroup.getLowWaterMark() == 2);
+		store.setWaterMarks(iNewsgroup);
 
 	}
 
@@ -463,9 +420,9 @@ public abstract class AbstractStoreTest {
 			UnexpectedResponseException, NNTPException {
 		testStoreArticles();
 		INewsgroup group = getStore().getSubscribedNewsgroups(
-				getStore().getSubscribedServers()[0])[0];
+				getStore().getServers()[0])[0];
 
-		for (int i = 0; i < overviewHeaders.length; i++) {
+		for (int i = 0; i < getOverviewHeaders().length; i++) {
 			IArticle article = getStore().getArticle(
 					group.getURL() + "&article=" + (i + 1));
 			assertTrue(article != null);
@@ -477,9 +434,9 @@ public abstract class AbstractStoreTest {
 			UnexpectedResponseException, StoreException, NNTPException {
 		testStoreArticles();
 		INewsgroup group = getStore().getSubscribedNewsgroups(
-				getStore().getSubscribedServers()[0])[0];
+				getStore().getServers()[0])[0];
 		getStore().unsubscribeNewsgroup(group, false);
-		assertTrue(getStore().getArticles(group, 1, 24).length == overviewHeaders.length);
+		assertTrue(getStore().getArticles(group, 1, 24).length == getOverviewHeaders().length);
 		getStore().subscribeNewsgroup(group);
 		getStore().unsubscribeNewsgroup(group, true);
 		assertTrue(getStore().getArticles(group, 1, 24) == null);
@@ -489,12 +446,11 @@ public abstract class AbstractStoreTest {
 	public void testUnsubscribeServer() throws StoreException, NNTPException {
 
 		testSubscribeNewsgroup();
-		assertTrue(getStore().getSubscribedServers().length == 1);
-		IServer server = getStore().getSubscribedServers()[0];
+		assertTrue(getStore().getServers().length == 1);
+		IServer server = getStore().getServers()[0];
 		assertTrue(getStore().getSubscribedNewsgroups(server).length == 1);
-		getStore().unsubscribeServer(getStore().getSubscribedServers()[0],
-				false);
-		assertTrue(getStore().getSubscribedServers().length == 0);
+		getStore().unsubscribeServer(getStore().getServers()[0], false);
+		assertTrue(getStore().getServers().length == 1);
 		assertTrue(getStore().getSubscribedNewsgroups(server).length == 1);
 		getStore().unsubscribeServer(server, true);
 		assertTrue(getStore().getSubscribedNewsgroups(server).length == 0);
@@ -502,15 +458,10 @@ public abstract class AbstractStoreTest {
 
 	@Test
 	public void testRemoveListener() throws NNTPException {
-		// assertTrue(!listenerCounter.isEmpty());
-		// listenerCounter.clear();
-		// assertTrue(listenerCounter.isEmpty());
-		testUnsubscribeServer();
-		assertTrue(getListenerCounter().isEmpty());
 		testAddListener();
-		testUnsubscribeServer();
-		testSubscribeServer();
-		assertTrue(!getListenerCounter().isEmpty());
+		assertTrue(getStore().getListenerCount() == 1);
+		getStore().removeListener(newListener);
+		assertTrue(getStore().getListenerCount() == 0);
 	}
 
 	@Test
@@ -518,7 +469,7 @@ public abstract class AbstractStoreTest {
 			UnexpectedResponseException, StoreException, NNTPException {
 		testStoreArticles();
 		INewsgroup iNewsgroup = getStore().getSubscribedNewsgroups(
-				getStore().getSubscribedServers()[0])[0];
+				getStore().getServers()[0])[0];
 		store.getArticles(iNewsgroup, 0, iNewsgroup.getArticleCount());
 		int result = store.purge(Calendar.getInstance(), 23);
 		assertTrue("Result = " + result, result == 23);
@@ -545,20 +496,4 @@ public abstract class AbstractStoreTest {
 		return headers;
 	}
 
-	public void setListener(IStoreEventListener listener) {
-		this.listener = listener;
-	}
-
-	public IStoreEventListener getListener() {
-		return listener;
-	}
-
-	public static HashMap<IStoreEvent, Integer> getListenerCounter() {
-		return listenerCounter;
-	}
-
-	public static void setListenerCounter(
-			HashMap<IStoreEvent, Integer> listenerCounter) {
-		AbstractStoreTest.listenerCounter = listenerCounter;
-	}
 }

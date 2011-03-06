@@ -39,7 +39,7 @@ public class SubscribedServerProvider implements IChildProvider {
 		try {
 			for (IServer server : ServerStoreFactory.instance()
 					.getServerStoreFacade().getFirstStore()
-					.getSubscribedServers()) {
+					.getServers()) {
 				ISalvoResource s1 = SalvoResourceFactory.getResource(
 						server.getAddress(), server);
 				s1.setChildProvider(new SubscribedNewsGroupProvider(s1));

@@ -271,7 +271,7 @@ public class Store implements IStore {
 
 	public void subscribeServer(final IServer server, final String passWord) {
 		server.setSubscribed(true);
-		getSubscribedServers();
+		getServers();
 		getSecureStore().put(server.getAddress(), passWord, true);
 		storedServers.put(server.getAddress(), server);
 		writeSubscribedServers();
@@ -328,7 +328,7 @@ public class Store implements IStore {
 		}
 	}
 
-	public void fireEvent(IStoreEvent event) {
+	private void fireEvent(IStoreEvent event) {
 
 		if (listeners == null || listeners.isEmpty())
 			return;
@@ -487,13 +487,13 @@ public class Store implements IStore {
 			File file = new File(getServerHome(server));
 			if (file.exists())
 				file.delete();
+
+			// remove this server from the preferences
+			getSecureStore().remove(server.getAddress());
+
+			// Remove the server from the list
+			storedServers.remove(server.getAddress());
 		}
-
-		// remove this server from the preferences
-		getSecureStore().remove(server.getAddress());
-
-		// Remove the server from the list
-		storedServers.remove(server.getAddress());
 
 		// Remove it from the servers file
 		writeSubscribedServers();
@@ -568,8 +568,8 @@ public class Store implements IStore {
 
 	}
 
-	public IServer[] getSubscribedServers() {
-		if (storedServers != null)
+	public IServer[] getServers() {
+		if (storedServers != null && !storedServers.isEmpty())
 			return (IServer[]) storedServers.values().toArray(new IServer[0]);
 
 		storedServers = new HashMap();
@@ -586,6 +586,7 @@ public class Store implements IStore {
 			String email = tizer.nextToken();
 			String logIn = tizer.nextToken();
 			boolean secure = Boolean.getBoolean(tizer.nextToken());
+			boolean subscribed = Boolean.getBoolean(tizer.nextToken());
 
 			// Do we already have a server initialized?
 			ICredentials credentials = new AbstractCredentials(user, email,
@@ -593,6 +594,7 @@ public class Store implements IStore {
 			IServer server = null;
 			server = ServerFactory
 					.getServer(address, port, credentials, secure);
+
 
 			// If not then we must get a password from the secure store
 			if (server == null) {
@@ -609,6 +611,7 @@ public class Store implements IStore {
 				}
 			}
 
+			server.setSubscribed(subscribed);
 			loadSubscribedGroups(server);
 			storedServers.put(server.getAddress(), server);
 			fireEvent(new StoreEvent(server, SALVO.EVENT_RELOAD));
@@ -1176,7 +1179,7 @@ public class Store implements IStore {
 			throw new NNTPException("Error parsing URL " + URL, e);
 		}
 
-		IServer[] servers = getSubscribedServers();
+		IServer[] servers = getServers();
 		for (int i = 0; i < servers.length; i++) {
 			if (servers[i].getURL().equals(server)) {
 				INewsgroup[] groups = getSubscribedNewsgroups(servers[i]);
@@ -1197,7 +1200,7 @@ public class Store implements IStore {
 		int result = 0;
 
 		try {
-			IServer[] servers = getSubscribedServers();
+			IServer[] servers = getServers();
 			for (int i = 0; i < servers.length; i++) {
 				INewsgroup[] groups = getSubscribedNewsgroups(servers[i]);
 
@@ -1289,10 +1292,26 @@ public class Store implements IStore {
 			clearFirstArticle(article.getNewsgroup().getURL());
 		}
 
+		if (getLastArticle(article.getNewsgroup()).equals(article)) {
+			clearLastArticle(article.getNewsgroup().getURL());
+		}
+
+		fireEvent(new StoreEvent(article, SALVO.EVENT_REMOVE_ARTICLE));
+
 		return ++result;
 	}
 
 	private void clearFirstArticle(String newsgroupURL) {
 		firstArticles.remove(newsgroupURL);
+	}
+
+	private void clearLastArticle(String newsgroupURL) {
+		lastArticles.remove(newsgroupURL);
+	}
+
+	public int getListenerCount() {
+		if (listeners == null)
+			return 0;
+		return listeners.size();
 	}
 }

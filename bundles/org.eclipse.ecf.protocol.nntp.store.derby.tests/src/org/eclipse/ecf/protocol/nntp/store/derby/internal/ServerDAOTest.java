@@ -83,7 +83,9 @@ public class ServerDAOTest {
 
 	@After
 	public void tearDown() throws Exception {
-		sf.deleteStore();
+		IStoreFactory sf = new StoreFactory();
+		((Store) sf.createStore(SALVO.SALVO_HOME + SALVO.SEPARATOR
+				+ "StoreTestDerby")).getDatabase().closeDB();
 	}
 
 	@Test

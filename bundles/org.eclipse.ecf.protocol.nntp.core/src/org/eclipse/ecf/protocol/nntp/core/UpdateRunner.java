@@ -81,7 +81,7 @@ public final class UpdateRunner implements Runnable {
 
 	private IServer[] getSubscribedServers(IStore store) {
 		try {
-			return store.getSubscribedServers();
+			return store.getServers();
 		} catch (NNTPException e) {
 			Debug.log(getClass(), e);
 			return new IServer[0];

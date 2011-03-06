@@ -29,7 +29,12 @@ public interface IStoreEventProvider {
 	 */
 	public void addListener(IStoreEventListener listener, int eventType);
 
-	public void fireEvent(IStoreEvent event);
-
+	/**
+	 * Gets the number of listeners. Rather then exposing the list of listeners
+	 * here is a count of the listeners. This is really a method that was
+	 * inserted for testing.
+	 * 
+	 */
+	public int getListenerCount();
 
 }

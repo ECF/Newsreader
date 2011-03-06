@@ -46,9 +46,27 @@ public class NewsgroupDAOTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 
-		final IStoreFactory sf = new StoreFactory();
-		store = sf.createStore(SALVO.SALVO_HOME + SALVO.SEPARATOR
+	
+
+	
+
+	}
+
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {
+
+	}
+
+	private static IServer server;
+	private static int lastnumber;
+	private Database db;
+
+	@Before
+	public void setUp() throws Exception {
+		StoreFactory sf = new StoreFactory();
+		IStore store = sf.createStore(SALVO.SALVO_HOME + SALVO.SEPARATOR
 				+ "StoreTestDerby");
+		db = ((Store) store).getDatabase();
 		store.setSecureStore(new ISecureStore() {
 			HashMap<String, String> mappie = new HashMap<String, String>();
 
@@ -69,7 +87,7 @@ public class NewsgroupDAOTest {
 			}
 		});
 
-		DatabaseTest.setUpBeforeClass();
+		// setUpBeforeClass();
 		ICredentials iCredentials = new ICredentials() {
 
 			public String getUser() {
@@ -92,39 +110,29 @@ public class NewsgroupDAOTest {
 				return "wim.jongman@gmail.com";
 			}
 		};
-
 		server = ServerFactory.getCreateServer("news.eclipse.org", 119,
 				iCredentials, true);
-		new ServerDAO(DatabaseTest.db.getConnection(), store)
+		new ServerDAO(db.getConnection(), store)
 				.insertServer(server);
 
 	}
 
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-		DatabaseTest.tearDownAfterClass();
-	}
-
-	private static IServer server;
-	private static int lastnumber;
-
-	@Before
-	public void setUp() throws Exception {
-	}
-
 	@After
 	public void tearDown() throws Exception {
+		IStoreFactory sf = new StoreFactory();
+		((Store) sf.createStore(SALVO.SALVO_HOME + SALVO.SEPARATOR
+				+ "StoreTestDerby")).getDatabase().closeDB();
 	}
 
 	@Test
 	public void testNewsgroupDAO() throws StoreException {
-		new NewsgroupDAO(DatabaseTest.db.getConnection());
+		new NewsgroupDAO(db.getConnection());
 	}
 
 	@Test
 	public void testInsertNewsgroup() throws NNTPException, SQLException {
 
-		NewsgroupDAO DAO = new NewsgroupDAO(DatabaseTest.db.getConnection());
+		NewsgroupDAO DAO = new NewsgroupDAO(db.getConnection());
 		for (String group : groups) {
 			INewsgroup newsgroup = NewsgroupFactory.createNewsGroup(server,
 					group, group);
@@ -142,7 +150,7 @@ public class NewsgroupDAOTest {
 	public void testGetNewsgroupIServerString() throws StoreException,
 			SQLException {
 		for (String group : groups) {
-			assertTrue(group + " not found.", new NewsgroupDAO(DatabaseTest.db
+			assertTrue(group + " not found.", new NewsgroupDAO(db
 					.getConnection()).getNewsgroup(server, group).length == 1);
 		}
 	}
@@ -150,16 +158,16 @@ public class NewsgroupDAOTest {
 	@Test
 	public void testGetNewsgroupIServerInt() throws StoreException,
 			SQLException {
-		assertTrue(new NewsgroupDAO(DatabaseTest.db.getConnection())
+		assertTrue(new NewsgroupDAO(db.getConnection())
 				.getNewsgroup(server, lastnumber).length == 1);
 	}
 
 	@Test
 	public void testGetSubscribedNewsgroups() throws StoreException,
 			SQLException {
-		assertTrue(new NewsgroupDAO(DatabaseTest.db.getConnection())
+		assertTrue(new NewsgroupDAO(db.getConnection())
 				.getSubscribedNewsgroups(server, false).length == groups.length);
-		assertTrue(new NewsgroupDAO(DatabaseTest.db.getConnection())
+		assertTrue(new NewsgroupDAO(db.getConnection())
 				.getSubscribedNewsgroups(server, true).length == 0);
 
 	}
@@ -167,7 +175,7 @@ public class NewsgroupDAOTest {
 	@Test
 	public void testUpdateNewsgroup() throws StoreException {
 
-		NewsgroupDAO DAO = new NewsgroupDAO(DatabaseTest.db.getConnection());
+		NewsgroupDAO DAO = new NewsgroupDAO(db.getConnection());
 		INewsgroup[] fetched = DAO.getNewsgroup(server, "%");
 		for (INewsgroup grp : fetched) {
 			grp.setSubscribed(true);
@@ -189,7 +197,7 @@ public class NewsgroupDAOTest {
 
 	@Test
 	public void testDeleteNewsgroup() throws SQLException, StoreException {
-		NewsgroupDAO DAO = new NewsgroupDAO(DatabaseTest.db.getConnection());
+		NewsgroupDAO DAO = new NewsgroupDAO(db.getConnection());
 		for (String group : groups) {
 			INewsgroup newsgroup = NewsgroupFactory.createNewsGroup(server,
 					group, group);

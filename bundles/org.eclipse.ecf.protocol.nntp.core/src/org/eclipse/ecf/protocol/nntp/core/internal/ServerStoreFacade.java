@@ -470,8 +470,8 @@ public class ServerStoreFacade implements IServerStoreFacade {
 		setModeReader(server);
 	}
 
-	public IServer[] getSubscribedServers() throws NNTPException {
-		return getStores()[0].getSubscribedServers();
+	public IServer[] getServers() throws NNTPException {
+		return getStores()[0].getServers();
 	}
 
 	public INewsgroup getSubscribedNewsgroup(IServer server, String newsgroup) {
@@ -496,7 +496,7 @@ public class ServerStoreFacade implements IServerStoreFacade {
 			throw new NNTPException("Error parsing URL " + URL, e);
 		}
 
-		IServer[] servers = getSubscribedServers();
+		IServer[] servers = getServers();
 		for (int i = 0; i < servers.length; i++) {
 			if (servers[i].getAddress().equals(server)) {
 				INewsgroup[] groups = getSubscribedNewsgroups(servers[i]);

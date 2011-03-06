@@ -88,12 +88,11 @@ public interface IAdministration {
 			throws StoreException;
 
 	/**
-	 * Retrieves a list with all the servers this client subscribes to. This is
-	 * store only.
+	 * Retrieves a list with all the servers in the administration.
 	 * 
 	 * @return the possible empty list of IServer objects. May not return null.
 	 * @throws NNTPException
 	 */
-	public IServer[] getSubscribedServers() throws NNTPException;
+	public IServer[] getServers() throws NNTPException;
 
 }
