@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.ecf.protocol.nntp.model;
 
+
 /**
  * This class combines several interfaces to provide the place where news data
  * is stored off-line. Storage for passwords has to be supplied separately to
@@ -99,5 +100,4 @@ public interface IStore extends IStoreEventProvider, IInputOutputSystem,
 	 * 
 	 */
 	public ISecureStore getSecureStore();
-
 }

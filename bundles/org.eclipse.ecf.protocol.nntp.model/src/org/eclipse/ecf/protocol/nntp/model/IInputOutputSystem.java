@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.ecf.protocol.nntp.model;
 
+import java.util.Calendar;
+
 /**
  * This class provides methods that both the server side and the store side
  * need. The server side needs to fetch the information and the store side needs
@@ -28,7 +30,7 @@ public interface IInputOutputSystem {
 	 * 
 	 * @throws NNTPIOException
 	 * @throws UnexpectedResponseException
-	 * @throws StoreException 
+	 * @throws StoreException
 	 */
 	public void updateAttributes(INewsgroup newsgroup) throws NNTPIOException,
 			UnexpectedResponseException, StoreException;
@@ -40,7 +42,7 @@ public interface IInputOutputSystem {
 	 * @return the body, may not be null
 	 * @throws UnexpectedResponseException
 	 * @throws NNTPIOException
-	 * @throws StoreException 
+	 * @throws StoreException
 	 */
 	public String[] getArticleBody(IArticle article) throws NNTPIOException,
 			UnexpectedResponseException, StoreException;
@@ -53,7 +55,7 @@ public interface IInputOutputSystem {
 	 * @param newsgroup
 	 * @throws NNTPIOException
 	 * @throws UnexpectedResponseException
-	 * @throws StoreException 
+	 * @throws StoreException
 	 */
 	public void setWaterMarks(INewsgroup newsgroup) throws NNTPIOException,
 			UnexpectedResponseException, StoreException;
@@ -108,9 +110,33 @@ public interface IInputOutputSystem {
 	 * @return the article or null if it was not found.
 	 * @throws NNTPConnectException
 	 * @throws NNTPIOException
-	 * @throws NNTPException 
+	 * @throws NNTPException
 	 */
 	public IArticle getArticle(String URL) throws NNTPIOException,
 			UnexpectedResponseException, NNTPException;
 
+	/**
+	 * Purges (removes) articles from the store that are the supplied date and
+	 * older. It only removes <code>number</code> articles before returning.
+	 * This enables you to have control over the time this methods is running.
+	 * 
+	 * @param purgeDate
+	 *            remove articles before and on this date
+	 * @param number
+	 *            the number of articles to delete before returning or 0 to
+	 *            delete all articles before and on <code>purgeDate</code>
+	 * @return the number of articles that were deleted during this call
+	 * @throws StoreException
+	 */
+	public int purge(Calendar purgeDate, int number) throws NNTPIOException;
+
+	/**
+	 * Deletes the article from the store.
+	 * 
+	 * @param article
+	 *            the {@link IArticle} to remove
+	 * @return 
+	 * @throws StoreException
+	 */
+	public int delete(IArticle article) throws NNTPIOException;
 }

@@ -35,8 +35,8 @@ public class DatabaseTest {
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
-		db.dropDB();
 		db.closeDB();
+		db.dropDB();
 		assertFalse(db.existDB());
 	}
 

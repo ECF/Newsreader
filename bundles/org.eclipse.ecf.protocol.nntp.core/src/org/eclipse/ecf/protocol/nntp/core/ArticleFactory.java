@@ -64,7 +64,9 @@ public class ArticleFactory {
 		if (file.exists()) {
 			try {
 				FileInputStream f_in = new FileInputStream(file);
-				return (createArticle(new ObjectInputStream(f_in)));
+				IArticle article = createArticle(new ObjectInputStream(f_in)); 
+				f_in.close();
+				return article;
 			} catch (Exception e) {
 				Debug.log(IArticle.class, e);
 			}

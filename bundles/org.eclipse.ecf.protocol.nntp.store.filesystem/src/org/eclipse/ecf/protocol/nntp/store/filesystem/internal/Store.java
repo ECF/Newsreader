@@ -22,14 +22,17 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.eclipse.ecf.protocol.nntp.core.ArticleFactory;
+import org.eclipse.ecf.protocol.nntp.core.DateParser;
 import org.eclipse.ecf.protocol.nntp.core.Debug;
 import org.eclipse.ecf.protocol.nntp.core.NewsgroupFactory;
 import org.eclipse.ecf.protocol.nntp.core.ServerFactory;
@@ -471,15 +474,16 @@ public class Store implements IStore {
 		}
 
 		// Unsubscribe all groups
-		INewsgroup[] subscribedNewsgroups = getSubscribedNewsgroups(server);
-		for (int i = 0; i < subscribedNewsgroups.length; i++) {
-			INewsgroup group = subscribedNewsgroups[i];
-			unsubscribeNewsgroup(group, permanent);
-			fireEvent(new StoreEvent(group, SALVO.EVENT_REMOVE_GROUP));
-		}
-
-		// remove server directory from disk
 		if (permanent) {
+
+			INewsgroup[] subscribedNewsgroups = getSubscribedNewsgroups(server);
+			for (int i = 0; i < subscribedNewsgroups.length; i++) {
+				INewsgroup group = subscribedNewsgroups[i];
+				unsubscribeNewsgroup(group, permanent);
+				fireEvent(new StoreEvent(group, SALVO.EVENT_REMOVE_GROUP));
+			}
+
+			// remove server directory from disk
 			File file = new File(getServerHome(server));
 			if (file.exists())
 				file.delete();
@@ -552,6 +556,7 @@ public class Store implements IStore {
 								+ "Newsgroup.data");
 				ObjectOutputStream obj_out = new ObjectOutputStream(f_out);
 				obj_out.writeObject(newsgroup);
+				obj_out.close();
 
 				// Send store event
 				fireEvent(new StoreEvent(newsgroup, SALVO.EVENT_CHANGE_GROUP));
@@ -1054,6 +1059,7 @@ public class Store implements IStore {
 				FileInputStream f_in = new FileInputStream(serialized);
 				ObjectInputStream obj_in = new ObjectInputStream(f_in);
 				Object obj = obj_in.readObject();
+				obj_in.close();
 				if (obj instanceof String[]) {
 					return (String[]) obj;
 				}
@@ -1184,5 +1190,109 @@ public class Store implements IStore {
 
 		return null;
 
+	}
+
+	public int purge(Calendar date, int number) throws NNTPIOException {
+
+		int result = 0;
+
+		try {
+			IServer[] servers = getSubscribedServers();
+			for (int i = 0; i < servers.length; i++) {
+				INewsgroup[] groups = getSubscribedNewsgroups(servers[i]);
+
+				for (int j = 0; j < groups.length; j++) {
+					IArticle candidate = getFirstArticle(groups[j]);
+
+					while (candidate != null) {
+						Date postDate = DateParser.parseDate(candidate
+								.getDate());
+
+						if (postDate == null) {
+							result += delete(candidate);
+						}
+
+						else if (postDate.before(date.getTime())) {
+							result += delete(candidate);
+						}
+
+						if (number > 0 && result == number)
+							return result;
+
+						candidate = getFirstArticle(groups[j]);
+					}
+				}
+			}
+		} catch (NNTPException e) {
+			throw new NNTPIOException("Error during purge", e);
+		}
+
+		return result;
+	}
+
+	public int delete(IArticle article) throws NNTPIOException {
+
+		int result = 0;
+
+		IArticle[] followUps = getFollowUps(article);
+		for (int i = 0; i < followUps.length; i++) {
+			IArticle followUp = followUps[i];
+			result = result + delete(followUp);
+		}
+
+		File file = new File(getArticleFilename(article));
+		if (file.exists())
+			file.delete();
+		if (file.exists())
+			throw new NNTPIOException("File " + file.getAbsolutePath()
+					+ " could not be purged");
+
+		file = new File(getArticleFilenameById(article.getNewsgroup(),
+				article.getMessageId()));
+		if (file.exists())
+			file.delete();
+		if (file.exists())
+			throw new NNTPIOException("File " + file.getAbsolutePath()
+					+ " could not be purged");
+
+		file = new File(getArticleFilenameByNumber(article.getNewsgroup(),
+				article.getArticleNumber()));
+		if (file.exists())
+			file.delete();
+		if (file.exists())
+			throw new NNTPIOException("File " + file.getAbsolutePath()
+					+ " could not be purged");
+
+		if (!article.isReply()) {
+			File directory = new File(getArticleDirectory(
+					article.getNewsgroup(), article.getMessageId()));
+			if (directory.exists()) {
+				File[] files = directory.listFiles();
+				for (int i = 0; i < files.length; i++) {
+					if (files[i].exists())
+						files[i].delete();
+					if (files[i].exists())
+						throw new NNTPIOException("File "
+								+ files[i].getAbsolutePath()
+								+ " could not be purged");
+				}
+				directory.delete();
+				if (directory.exists())
+					throw new NNTPIOException("File "
+							+ directory.getAbsolutePath()
+							+ " could not be purged");
+
+			}
+		}
+
+		if (getFirstArticle(article.getNewsgroup()).equals(article)) {
+			clearFirstArticle(article.getNewsgroup().getURL());
+		}
+
+		return ++result;
+	}
+
+	private void clearFirstArticle(String newsgroupURL) {
+		firstArticles.remove(newsgroupURL);
 	}
 }

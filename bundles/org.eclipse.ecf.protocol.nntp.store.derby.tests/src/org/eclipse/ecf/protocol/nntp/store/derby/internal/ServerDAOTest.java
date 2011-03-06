@@ -40,23 +40,26 @@ public class ServerDAOTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		DatabaseTest.setUpBeforeClass();
+	//	setUpBeforeClass();
 
 	}
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
-		DatabaseTest.tearDownAfterClass();
+	//	tearDownAfterClass();
 
 	}
 
 	private IStore store;
+	private IStoreFactory sf;
+	private Database db;
 
 	@Before
 	public void setUp() throws Exception {
-		final IStoreFactory sf = new StoreFactory();
+		sf = new StoreFactory();
 		store = sf.createStore(SALVO.SALVO_HOME + SALVO.SEPARATOR
 				+ "StoreTestDerby");
+		db = ((Store) store).getDatabase();
 		store.setSecureStore(new ISecureStore() {
 			HashMap<String, String> mappie = new HashMap<String, String>();
 
@@ -80,11 +83,12 @@ public class ServerDAOTest {
 
 	@After
 	public void tearDown() throws Exception {
+		sf.deleteStore();
 	}
 
 	@Test
 	public void testServerDAO() throws StoreException {
-		new ServerDAO(DatabaseTest.db.getConnection(),store);
+		new ServerDAO(db.getConnection(),store);
 	}
 
 	@Test
@@ -116,8 +120,8 @@ public class ServerDAOTest {
 				iCredentials, true);
 		server.setSubscribed(false);
 
-		new ServerDAO(DatabaseTest.db.getConnection(),store).insertServer(server);
-		IServer[] getServer = new ServerDAO(DatabaseTest.db.getConnection(),store)
+		new ServerDAO(db.getConnection(),store).insertServer(server);
+		IServer[] getServer = new ServerDAO(db.getConnection(),store)
 				.getServer(server.getURL());
 		assertTrue(getServer[0] == server);
 
@@ -127,12 +131,12 @@ public class ServerDAOTest {
 	public void testUpdateServer() throws SQLException, NNTPException {
 		testDeleteServer();
 		testInsertServer();
-		IServer[] servers = new ServerDAO(DatabaseTest.db.getConnection(),store)
+		IServer[] servers = new ServerDAO(db.getConnection(),store)
 				.getServer(server.getURL());
 
 		assertTrue(servers[0].isSubscribed() == false);
 		servers[0].setSubscribed(true);
-		new ServerDAO(DatabaseTest.db.getConnection(),store).updateServer(servers[0]);
+		new ServerDAO(db.getConnection(),store).updateServer(servers[0]);
 
 	}
 
@@ -140,15 +144,15 @@ public class ServerDAOTest {
 	public void testGetServer() throws SQLException, NNTPException {
 
 		testInsertServer();
-		IServer[] getServer = new ServerDAO(DatabaseTest.db.getConnection(),store)
+		IServer[] getServer = new ServerDAO(db.getConnection(),store)
 				.getServer(server.getURL());
 		assertTrue(getServer.length == 1);
 	}
 
 	@Test
 	public void testDeleteServer() throws StoreException, SQLException {
-		new ServerDAO(DatabaseTest.db.getConnection(),store).deleteServer(server);
-		IServer[] getServer = new ServerDAO(DatabaseTest.db.getConnection(),store)
+		new ServerDAO(db.getConnection(),store).deleteServer(server);
+		IServer[] getServer = new ServerDAO(db.getConnection(),store)
 				.getServer(server.getURL());
 
 		assertTrue(getServer.length == 0);

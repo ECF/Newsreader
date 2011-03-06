@@ -11,6 +11,12 @@
  *******************************************************************************/
 package org.eclipse.ecf.protocol.nntp.model;
 
+/**
+ * This exception is thrown when something in the store or server went wrong.
+ * 
+ * @author Wim Jongman
+ * 
+ */
 public class NNTPIOException extends NNTPException {
 
 	/**

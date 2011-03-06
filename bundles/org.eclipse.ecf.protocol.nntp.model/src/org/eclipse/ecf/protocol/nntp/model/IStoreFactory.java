@@ -31,4 +31,6 @@ public interface IStoreFactory {
 	 */
 	public IStore createStore(String rootDirectoryHint) throws StoreException;
 
+	public void deleteStore() throws StoreException;
+
 }

@@ -27,11 +27,21 @@ import org.eclipse.ecf.protocol.nntp.store.derby.internal.Store;
  */
 public class StoreFactory implements IStoreFactory {
 
-	private IStore store;
+	private Store store;
 
 	public IStore createStore(String root) throws StoreException {
 		if (store == null)
 			store = new Store(root + SALVO.SEPARATOR + "SalvoDerbyStore");
 		return store;
 	}
+
+	@Override
+	public void deleteStore() throws StoreException {
+		if (store == null)
+			throw new StoreException("Cannot delete. Store is null.");
+
+		store.dropDB();
+
+	}
+
 }

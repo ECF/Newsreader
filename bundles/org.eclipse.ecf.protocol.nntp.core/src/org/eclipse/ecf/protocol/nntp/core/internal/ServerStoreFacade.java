@@ -13,6 +13,7 @@ package org.eclipse.ecf.protocol.nntp.core.internal;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -508,5 +509,27 @@ public class ServerStoreFacade implements IServerStoreFacade {
 		}
 
 		return null;
+	}
+
+	public int purge(Calendar purgeDate, int number) throws NNTPIOException {
+		IStore[] stores = getStores();
+		int result = 0;
+		if (stores.length > 0)
+			result = stores[0].purge(purgeDate, number);
+		for (int i = 1; i < stores.length; i++) {
+			stores[i].purge(purgeDate, number);
+		}
+		return result;
+	}
+
+	public int delete(IArticle article) throws NNTPIOException {
+		IStore[] stores = getStores();
+		int result = 0;
+		if (stores.length > 0)
+			result = stores[0].delete(article);
+		for (int i = 1; i < stores.length; i++) {
+			stores[i].delete(article);
+		}
+		return result;
 	}
 }

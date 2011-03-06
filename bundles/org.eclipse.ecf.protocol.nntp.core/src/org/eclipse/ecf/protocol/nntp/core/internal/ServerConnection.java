@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.StringTokenizer;
@@ -31,6 +32,7 @@ import org.eclipse.ecf.protocol.nntp.model.NNTPConnectException;
 import org.eclipse.ecf.protocol.nntp.model.NNTPException;
 import org.eclipse.ecf.protocol.nntp.model.NNTPIOException;
 import org.eclipse.ecf.protocol.nntp.model.SALVO;
+import org.eclipse.ecf.protocol.nntp.model.StoreException;
 import org.eclipse.ecf.protocol.nntp.model.TimeoutException;
 import org.eclipse.ecf.protocol.nntp.model.UnexpectedResponseException;
 
@@ -772,7 +774,6 @@ public class ServerConnection implements IServerConnection {
 	}
 
 	public int getBatchsize() {
-		// TODO Auto-generated method stub
 		if (batchSize == 0)
 			return SALVO.DEFAULT_BATCH;
 		return batchSize;
@@ -780,7 +781,6 @@ public class ServerConnection implements IServerConnection {
 
 	public void setBatchSize(int size) {
 		batchSize = size;
-
 	}
 
 	public IArticle getArticle(String URL) throws NNTPIOException,
@@ -805,5 +805,13 @@ public class ServerConnection implements IServerConnection {
 		}
 
 		return null;
+	}
+
+	public int purge(Calendar purgeDate, int number) throws NNTPIOException {
+		throw new NNTPIOException("You cannot remove articles from the server, use cancelArticle()");
+	}
+
+	public int delete(IArticle article) throws NNTPIOException {
+		throw new NNTPIOException("You cannot remove articles from the server, use cancelArticle()");
 	}
 }

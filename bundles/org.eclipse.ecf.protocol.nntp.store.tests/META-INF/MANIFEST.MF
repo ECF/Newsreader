@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Store Generic Tests
+Bundle-SymbolicName: org.eclipse.ecf.protocol.nntp.store.tests
+Bundle-Version: 0.7.0.qualifier
+Bundle-Vendor: Eclipse ECF
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.junit4;bundle-version="4.8.1",
+ org.eclipse.ecf.protocol.nntp.model;bundle-version="0.7.0",
+ org.eclipse.ecf.protocol.nntp.core;bundle-version="0.7.0"
+Export-Package: org.eclipse.ecf.protocol.nntp.store.tests

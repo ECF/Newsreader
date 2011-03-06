@@ -54,6 +54,26 @@ public class Article implements IArticle {
 		this.posted = posted;
 	}
 
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + articleNumber;
+		return result;
+	}
+
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Article other = (Article) obj;
+		if (articleNumber != other.articleNumber)
+			return false;
+		return true;
+	}
+
 	public int getArticleNumber() {
 		return articleNumber;
 	}

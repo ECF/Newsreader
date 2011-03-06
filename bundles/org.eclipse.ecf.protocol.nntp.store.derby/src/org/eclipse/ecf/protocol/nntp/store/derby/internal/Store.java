@@ -15,11 +15,14 @@ package org.eclipse.ecf.protocol.nntp.store.derby.internal;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.eclipse.ecf.protocol.nntp.core.DateParser;
 import org.eclipse.ecf.protocol.nntp.core.Debug;
 import org.eclipse.ecf.protocol.nntp.core.StringUtils;
 import org.eclipse.ecf.protocol.nntp.model.IArticle;
@@ -83,12 +86,27 @@ public class Store implements IStore {
 	public void initDB(String root, boolean initialize) throws StoreException {
 
 		try {
-			database = Database.createDatabase(root, initialize);
-			serverDOA = new ServerDAO(database.getConnection(), this);
-			groupDOA = new NewsgroupDAO(database.getConnection());
-			articleDOA = new ArticleDAO(database.getConnection());
+			setDatabase(Database.createDatabase(root, initialize));
+			serverDOA = new ServerDAO(getDatabase().getConnection(), this);
+			groupDOA = new NewsgroupDAO(getDatabase().getConnection());
+			articleDOA = new ArticleDAO(getDatabase().getConnection());
 		} catch (Exception e) {
 			throw new StoreException("Error occured intializing store ", e);
+		}
+	}
+
+	/**
+	 * Deletes the database.
+	 * 
+	 * @throws StoreException
+	 */
+	public void dropDB() throws StoreException {
+
+		try {
+			getDatabase().closeDB();
+			getDatabase().dropDB();
+		} catch (Exception e) {
+			throw new StoreException("Error occured dropping store ", e);
 		}
 	}
 
@@ -354,5 +372,65 @@ public class Store implements IStore {
 		INewsgroup group = groupDOA.getNewsgroup(server, groupName)[0];
 		return articleDOA.getArticle(group, URL);
 
+	}
+
+	public int purge(Calendar date, int number) throws NNTPIOException {
+
+		int result = 0;
+
+		try {
+			IServer[] servers = getSubscribedServers();
+			for (int i = 0; i < servers.length; i++) {
+				INewsgroup[] groups = getSubscribedNewsgroups(servers[i]);
+
+				for (int j = 0; j < groups.length; j++) {
+					IArticle candidate = getFirstArticle(groups[j]);
+
+					while (candidate != null) {
+						Date postDate = DateParser.parseDate(candidate
+								.getDate());
+
+						if (postDate == null) {
+							result += delete(candidate);
+						}
+
+						else if (postDate.before(date.getTime())) {
+							result += delete(candidate);
+						}
+
+						if (number > 0 && result == number)
+							return result;
+						candidate = getFirstArticle(groups[j]);
+					}
+				}
+			}
+		} catch (NNTPException e) {
+			throw new NNTPIOException("Error during purge", e);
+		}
+
+		return result;
+	}
+
+	public int delete(IArticle article) throws NNTPIOException {
+		try {
+			int result = 0;
+			IArticle[] followUps = getFollowUps(article);
+			for (int i = 0; i < followUps.length; i++) {
+				IArticle followUp = followUps[i];
+				result = result + delete(followUp);
+			}
+			articleDOA.deleteArticle(article);
+			return ++result;
+		} catch (StoreException e) {
+			throw new NNTPIOException(e.getMessage(), e);
+		}
+	}
+
+	private void setDatabase(Database database) {
+		this.database = database;
+	}
+
+	public Database getDatabase() {
+		return database;
 	}
 }

@@ -75,6 +75,10 @@ public class ArticleDAOTest {
 
 	private IStore store;
 
+	private IStoreFactory sf;
+
+	private Database db;
+
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 
@@ -86,10 +90,11 @@ public class ArticleDAOTest {
 
 	@Before
 	public void setUp() throws Exception {
-		
-		final IStoreFactory sf = new StoreFactory();
+
+		sf = new StoreFactory();
 		store = sf.createStore(SALVO.SALVO_HOME + SALVO.SEPARATOR
 				+ "StoreTestDerby");
+		db = ((Store) store).getDatabase();
 		store.setSecureStore(new ISecureStore() {
 			HashMap<String, String> mappie = new HashMap<String, String>();
 
@@ -109,9 +114,8 @@ public class ArticleDAOTest {
 				mappie.clear();
 			}
 		});
-		
-		
-		DatabaseTest.setUpBeforeClass();
+
+		// setUpBeforeClass();
 		ICredentials iCredentials = new ICredentials() {
 
 			public String getUser() {
@@ -137,10 +141,10 @@ public class ArticleDAOTest {
 
 		server = ServerFactory.getCreateServer("news.eclipse.org", 119,
 				iCredentials, true);
-		new ServerDAO(DatabaseTest.db.getConnection(),store)
+		new ServerDAO(db.getConnection(), store)
 				.insertServer(server);
 
-		NewsgroupDAO DAO = new NewsgroupDAO(DatabaseTest.db.getConnection());
+		NewsgroupDAO DAO = new NewsgroupDAO(db.getConnection());
 		newsgroup = NewsgroupFactory.createNewsGroup(server, "eclipse.birt",
 				"eclipse.birt");
 		DAO.insertNewsgroup(newsgroup);
@@ -148,14 +152,15 @@ public class ArticleDAOTest {
 
 	@After
 	public void tearDown() throws Exception {
+		sf.deleteStore();
 
-		DatabaseTest.tearDownAfterClass();
+		// tearDownAfterClass();
 
 	}
 
 	@Test
 	public void testArticleDAO() throws StoreException {
-		new ArticleDAO(DatabaseTest.db.getConnection());
+		new ArticleDAO(db.getConnection());
 	}
 
 	@Test
@@ -172,7 +177,7 @@ public class ArticleDAOTest {
 		for (String string : overviewHeaders) {
 			IArticle article = ArticleFactory.createArticle(headers, string,
 					newsgroup);
-			new ArticleDAO(DatabaseTest.db.getConnection()).insertArticle(
+			new ArticleDAO(db.getConnection()).insertArticle(
 					article, body);
 		}
 	}
@@ -182,14 +187,14 @@ public class ArticleDAOTest {
 			UnexpectedResponseException {
 
 		testInsertArticle();
-		IArticle[] articles = new ArticleDAO(DatabaseTest.db.getConnection())
+		IArticle[] articles = new ArticleDAO(db.getConnection())
 				.getArticles(newsgroup, 1, 100);
 		assertTrue(overviewHeaders.length == articles.length);
 
-		ArticleDAO DAO = new ArticleDAO(DatabaseTest.db.getConnection());
+		ArticleDAO DAO = new ArticleDAO(db.getConnection());
 		for (IArticle article : articles) {
-			assertTrue(DAO.getArticleBody(article).length + "", DAO
-					.getArticleBody(article).length == 5);
+			assertTrue(DAO.getArticleBody(article).length + "",
+					DAO.getArticleBody(article).length == 5);
 			assertTrue(article.getHeaderAttributes().length == headers.length);
 			assertTrue(article.getArticleNumber() != 0);
 			assertTrue(article.getFrom() != null);
@@ -208,7 +213,7 @@ public class ArticleDAOTest {
 			UnexpectedResponseException {
 
 		testInsertArticle();
-		IArticle article = new ArticleDAO(DatabaseTest.db.getConnection())
+		IArticle article = new ArticleDAO(db.getConnection())
 				.getNewestArticle(newsgroup);
 		assertTrue(article != null);
 		assertTrue(article.getArticleNumber() + "",
@@ -220,7 +225,7 @@ public class ArticleDAOTest {
 			UnexpectedResponseException {
 		testInsertArticle();
 
-		IArticle article = new ArticleDAO(DatabaseTest.db.getConnection())
+		IArticle article = new ArticleDAO(db.getConnection())
 				.getOldestArticle(newsgroup);
 		assertTrue(article != null);
 		assertTrue(article.getArticleNumber() + "",
@@ -233,12 +238,12 @@ public class ArticleDAOTest {
 
 		testInsertArticle();
 
-		IArticle[] articles = new ArticleDAO(DatabaseTest.db.getConnection())
+		IArticle[] articles = new ArticleDAO(db.getConnection())
 				.getArticles(newsgroup, 1, 100);
 		assertTrue(articles.length + "",
 				this.overviewHeaders.length == articles.length);
 
-		ArticleDAO DAO = new ArticleDAO(DatabaseTest.db.getConnection());
+		ArticleDAO DAO = new ArticleDAO(db.getConnection());
 		for (IArticle article : articles) {
 			assertTrue(article.isMarked() == false);
 			assertTrue(article.isRead() == false);
@@ -249,11 +254,11 @@ public class ArticleDAOTest {
 			assertTrue(article.isMarked() == true);
 		}
 
-		articles = new ArticleDAO(DatabaseTest.db.getConnection()).getArticles(
+		articles = new ArticleDAO(db.getConnection()).getArticles(
 				newsgroup, 1, 100);
 		assertTrue(this.overviewHeaders.length == articles.length);
 
-		DAO = new ArticleDAO(DatabaseTest.db.getConnection());
+		DAO = new ArticleDAO(db.getConnection());
 		for (IArticle article : articles) {
 			assertTrue(article.isMarked() == true);
 			assertTrue(article.isRead() == false);
@@ -264,11 +269,11 @@ public class ArticleDAOTest {
 			assertTrue(article.isRead() == true);
 		}
 
-		articles = new ArticleDAO(DatabaseTest.db.getConnection()).getArticles(
+		articles = new ArticleDAO(db.getConnection()).getArticles(
 				newsgroup, 1, 100);
 		assertTrue(this.overviewHeaders.length == articles.length);
 
-		DAO = new ArticleDAO(DatabaseTest.db.getConnection());
+		DAO = new ArticleDAO(db.getConnection());
 		for (IArticle article : articles) {
 			assertTrue(article.isMarked() == true);
 			assertTrue(article.isRead() == true);
@@ -277,10 +282,10 @@ public class ArticleDAOTest {
 			DAO.updateArticle(article, new String[] { "P", "R", "T" });
 		}
 
-		articles = new ArticleDAO(DatabaseTest.db.getConnection()).getArticles(
+		articles = new ArticleDAO(db.getConnection()).getArticles(
 				newsgroup, 1, 100);
 		assertTrue(this.overviewHeaders.length == articles.length);
-		DAO = new ArticleDAO(DatabaseTest.db.getConnection());
+		DAO = new ArticleDAO(db.getConnection());
 		for (IArticle article : articles) {
 			assertTrue(DAO.getArticleBody(article).length == 3);
 		}
@@ -290,9 +295,9 @@ public class ArticleDAOTest {
 
 	@Test
 	public void testDeleteArticleBody() throws StoreException {
-		IArticle[] articles = new ArticleDAO(DatabaseTest.db.getConnection())
+		IArticle[] articles = new ArticleDAO(db.getConnection())
 				.getArticles(newsgroup, 1, 1);
-		ArticleDAO DAO = new ArticleDAO(DatabaseTest.db.getConnection());
+		ArticleDAO DAO = new ArticleDAO(db.getConnection());
 		for (IArticle article : articles) {
 			DAO.deleteArticleBody(article);
 			assertTrue(DAO.getArticleBody(article).length == 0);
@@ -301,9 +306,9 @@ public class ArticleDAOTest {
 
 	@Test
 	public void testDeleteArticle() throws StoreException {
-		IArticle[] articles = new ArticleDAO(DatabaseTest.db.getConnection())
+		IArticle[] articles = new ArticleDAO(db.getConnection())
 				.getArticles(newsgroup, 1, 100);
-		ArticleDAO DAO = new ArticleDAO(DatabaseTest.db.getConnection());
+		ArticleDAO DAO = new ArticleDAO(db.getConnection());
 		for (IArticle article : articles) {
 			DAO.deleteArticle(article);
 			assertTrue(DAO.getArticleBody(article).length == 0);
@@ -315,9 +320,9 @@ public class ArticleDAOTest {
 	public void testDeleteArticleNewsgroup() throws StoreException,
 			NNTPIOException, UnexpectedResponseException {
 		testInsertArticle();
-		NewsgroupDAO ndaoDao = new NewsgroupDAO(DatabaseTest.db.getConnection());
+		NewsgroupDAO ndaoDao = new NewsgroupDAO(db.getConnection());
 		ndaoDao.deleteNewsgroup(newsgroup);
-		assertTrue(new ArticleDAO(DatabaseTest.db.getConnection()).getArticles(
+		assertTrue(new ArticleDAO(db.getConnection()).getArticles(
 				newsgroup, 1, 100).length == 0);
 	}
 }
