@@ -586,7 +586,11 @@ public class Store implements IStore {
 			String email = tizer.nextToken();
 			String logIn = tizer.nextToken();
 			boolean secure = Boolean.getBoolean(tizer.nextToken());
-			boolean subscribed = Boolean.getBoolean(tizer.nextToken());
+
+			// This construct is for backwards compatibility
+			boolean subscribed = true;
+			if (tizer.hasMoreElements())
+				subscribed = Boolean.getBoolean(tizer.nextToken());
 
 			// Do we already have a server initialized?
 			ICredentials credentials = new AbstractCredentials(user, email,
@@ -594,7 +598,6 @@ public class Store implements IStore {
 			IServer server = null;
 			server = ServerFactory
 					.getServer(address, port, credentials, secure);
-
 
 			// If not then we must get a password from the secure store
 			if (server == null) {
