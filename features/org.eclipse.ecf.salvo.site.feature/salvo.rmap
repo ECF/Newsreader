@@ -10,6 +10,11 @@
         <bc:propertyRef key="buckminster.component"/>
       </rm:uri>
     </rm:provider>
+    <rm:provider componentTypes="buckminster,osgi.bundle" readerType="cvs">
+      <rm:uri format=":pserver:anonymous@dev.eclipse.org:/cvsroot/rt,org.eclipse.equinox/security/bundles/{0}">
+        <bc:propertyRef key="buckminster.component"/>
+      </rm:uri>
+    </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="features">
     <rm:provider componentTypes="osgi.bundle,buckminster,eclipse.feature" readerType="git" mutable="false">
