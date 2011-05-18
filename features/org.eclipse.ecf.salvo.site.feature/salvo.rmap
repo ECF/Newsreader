@@ -4,7 +4,6 @@
   <rm:locator pattern=".*mime4j.*" searchPathRef="bundles" failOnError="false"/>
   <rm:locator pattern="^org.eclipse.ecf.*(salvo|nntp).*" searchPathRef="bundles" failOnError="false"/>
   <rm:redirect pattern=".*" href="http://git.eclipse.org/c/ecf/org.eclipse.ecf.git/plain/releng/org.eclipse.ecf.releng.bm/ecf.rmap"/>
-  <rm:locator pattern=".*ecf.*" searchPathRef="bundles" failOnError="false"/>
   <rm:searchPath name="bundles">
     <rm:provider componentTypes="osgi.bundle,buckminster" readerType="local" mutable="false">
       <rm:property key="buckminster.mutable" value="false"/>
@@ -14,12 +13,6 @@
     </rm:provider>
     <rm:provider componentTypes="buckminster,osgi.bundle" readerType="cvs">
       <rm:uri format=":pserver:anonymous@dev.eclipse.org:/cvsroot/rt,org.eclipse.equinox/security/bundles/{0}">
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle,buckminster" readerType="local" mutable="false">
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="${workspace.root}/projects,{0}">
         <bc:propertyRef key="buckminster.component"/>
       </rm:uri>
     </rm:provider>
