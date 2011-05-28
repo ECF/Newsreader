@@ -701,7 +701,7 @@ public class ServerConnection implements IServerConnection {
 			throw new UnexpectedResponseException(response);
 		}
 
-		sendCommand("From: " + getEmail() + " (" + getUser() + ")");
+		sendCommand("From: " + getUser() + " <" + getEmail() + ">");
 		sendCommand("Subject: " + subject);
 		sendCommand("Organization: " + server.getOrganization());
 		sendCommand("X-Organization: Salvo");
