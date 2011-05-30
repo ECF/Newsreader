@@ -640,7 +640,7 @@ public class ServerConnection implements IServerConnection {
 							.getSubject() : "Re: " + article.getSubject()));
 			sendCommand("Organization: " + server.getOrganization());
 			sendCommand("X-Organization: Salvo");
-			sendCommand("From: " + getEmail() + " (" + getUser() + ")");
+			sendCommand("From: " + getUser() + " <" + getEmail() + ">");
 			sendCommand("X-Newsreader: Salvo");
 			sendCommand("Newsgroups: "
 					+ article.getNewsgroup().getNewsgroupName());
