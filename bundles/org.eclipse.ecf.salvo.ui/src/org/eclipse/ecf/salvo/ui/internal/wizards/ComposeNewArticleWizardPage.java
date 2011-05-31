@@ -18,7 +18,7 @@ public class ComposeNewArticleWizardPage extends WizardPage {
 		super("Compose Question");
 		setTitle("Compose Question");
 		setDescription("Compose your question");
-
+		
 	}
 
 	

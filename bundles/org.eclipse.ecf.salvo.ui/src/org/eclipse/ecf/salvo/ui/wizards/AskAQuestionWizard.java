@@ -8,6 +8,7 @@ import org.eclipse.ecf.protocol.nntp.model.StoreException;
 import org.eclipse.ecf.protocol.nntp.model.UnexpectedResponseException;
 import org.eclipse.ecf.salvo.ui.internal.wizards.ComposeNewArticleWizardPage;
 import org.eclipse.ecf.salvo.ui.internal.wizards.SelectNewsgroupWizardPage;
+import org.eclipse.ecf.salvo.ui.utils.ImageUtils;
 import org.eclipse.jface.wizard.Wizard;
 
 public class AskAQuestionWizard extends Wizard{
@@ -20,6 +21,8 @@ public class AskAQuestionWizard extends Wizard{
 		super();
 		setNeedsProgressMonitor(true);
 		setWindowTitle("Ask a Question");
+		setDefaultPageImageDescriptor(ImageUtils.getInstance().getImageDescriptor("salvo.gif"));
+		
 	}
 
 	@Override
@@ -28,6 +31,10 @@ public class AskAQuestionWizard extends Wizard{
 		composeNewArticleWizardPage = new ComposeNewArticleWizardPage();
 		addPage(selectNewsgroupWizardPage);
 		addPage(composeNewArticleWizardPage);
+		
+		
+		
+		
 		
 	}
 	
