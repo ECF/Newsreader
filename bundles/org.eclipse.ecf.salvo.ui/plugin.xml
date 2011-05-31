@@ -308,7 +308,7 @@
       </command>
       <command
             categoryId="org.eclipse.ecf.salvo.commands.category"
-            defaultHandler="org.eclipse.ecf.salvo.ui.internal.handlers.DummyHandler"
+            defaultHandler="org.eclipse.ecf.salvo.ui.internal.handlers.AskAquestionHandler"
             id="org.eclipse.ecf.salvo.ui.ask"
             name="Ask a Question...">
       </command>
