@@ -1,4 +1,4 @@
-package org.eclipse.ecf.salvo.ui.utils;
+package org.eclipse.ecf.salvo.ui.tools;
 
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.osgi.service.prefs.Preferences;

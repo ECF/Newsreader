@@ -1,4 +1,4 @@
-package org.eclipse.ecf.salvo.ui.utils;
+package org.eclipse.ecf.salvo.ui.tools;
 
 import java.net.URL;
 import java.util.HashMap;

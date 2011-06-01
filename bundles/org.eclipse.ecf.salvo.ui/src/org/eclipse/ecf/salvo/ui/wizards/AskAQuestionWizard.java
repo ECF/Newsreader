@@ -8,8 +8,8 @@ import org.eclipse.ecf.protocol.nntp.model.StoreException;
 import org.eclipse.ecf.protocol.nntp.model.UnexpectedResponseException;
 import org.eclipse.ecf.salvo.ui.internal.wizards.ComposeNewArticleWizardPage;
 import org.eclipse.ecf.salvo.ui.internal.wizards.SelectNewsgroupWizardPage;
-import org.eclipse.ecf.salvo.ui.utils.ImageUtils;
-import org.eclipse.ecf.salvo.ui.utils.PreferencesUtil;
+import org.eclipse.ecf.salvo.ui.tools.ImageUtils;
+import org.eclipse.ecf.salvo.ui.tools.PreferencesUtil;
 import org.eclipse.jface.wizard.Wizard;
 
 public class AskAQuestionWizard extends Wizard {
