@@ -9,20 +9,21 @@ import org.eclipse.ecf.protocol.nntp.model.UnexpectedResponseException;
 import org.eclipse.ecf.salvo.ui.internal.wizards.ComposeNewArticleWizardPage;
 import org.eclipse.ecf.salvo.ui.internal.wizards.SelectNewsgroupWizardPage;
 import org.eclipse.ecf.salvo.ui.utils.ImageUtils;
+import org.eclipse.ecf.salvo.ui.utils.PreferencesUtil;
 import org.eclipse.jface.wizard.Wizard;
 
-public class AskAQuestionWizard extends Wizard{
+public class AskAQuestionWizard extends Wizard {
 
 	private SelectNewsgroupWizardPage selectNewsgroupWizardPage;
 	private ComposeNewArticleWizardPage composeNewArticleWizardPage;
-	
-	
+
 	public AskAQuestionWizard() {
 		super();
 		setNeedsProgressMonitor(true);
 		setWindowTitle("Ask a Question");
-		setDefaultPageImageDescriptor(ImageUtils.getInstance().getImageDescriptor("salvo.gif"));
-		
+		setDefaultPageImageDescriptor(ImageUtils.getInstance()
+				.getImageDescriptor("salvo.gif"));
+
 	}
 
 	@Override
@@ -31,36 +32,36 @@ public class AskAQuestionWizard extends Wizard{
 		composeNewArticleWizardPage = new ComposeNewArticleWizardPage();
 		addPage(selectNewsgroupWizardPage);
 		addPage(composeNewArticleWizardPage);
-		
-		
-		
-		
-		
+
 	}
-	
+
 	@Override
 	public boolean performFinish() {
-		
+
 		INewsgroup group = selectNewsgroupWizardPage.getSelectedNewsgroup();
+
+		// Saving preferences
+		PreferencesUtil.instance().savePluginSettings(
+				"recentSelectedNewsgroup", group.getNewsgroupName());
+		PreferencesUtil.instance().savePluginSettings("recentSelectedServer",
+				group.getServer().getAddress());
+
 		String subject = composeNewArticleWizardPage.getSubject();
 		String body = composeNewArticleWizardPage.getBodyText();
-				
-		IServerStoreFacade serverStoreFacade = ServerStoreFactory.instance().getServerStoreFacade(); 
-		  try {
-			serverStoreFacade.postNewArticle(new INewsgroup[] { group }, subject, body);
-			System.out.println("Article POSTED to "+group.getNewsgroupName());
+
+		IServerStoreFacade serverStoreFacade = ServerStoreFactory.instance()
+				.getServerStoreFacade();
+		try {
+			serverStoreFacade.postNewArticle(new INewsgroup[] { group },
+					subject, body);
 		} catch (NNTPIOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (UnexpectedResponseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (StoreException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
+
 		return true;
 	}
 

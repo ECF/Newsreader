@@ -15,6 +15,10 @@ public class ImageUtils {
 	private Map<String, ImageDescriptor> ICONS;
 	private static ImageUtils INSTANCE;
 	
+	/**
+	 * 
+	 * @return an instance of ImageUtils
+	 */
 	public static ImageUtils getInstance(){
 		if (INSTANCE==null){
 			INSTANCE=new ImageUtils();
@@ -23,7 +27,7 @@ public class ImageUtils {
 	}
 	
 	/**
-	 * create ImageDescriptor Create image descriptors 
+	 * Create image descriptors 
 	 * @param imageName
 	 * @return
 	 */
@@ -43,7 +47,7 @@ public class ImageUtils {
 	/**
 	 * Get image descriptor
 	 * @param name icon name with extension
-	 * @return
+	 * @return ImageDescriptor
 	 */
 	public ImageDescriptor getImageDescriptor(String name) {
 		if (ICONS == null) {

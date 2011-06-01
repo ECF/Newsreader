@@ -6,6 +6,7 @@ import org.eclipse.ecf.protocol.nntp.core.ServerStoreFactory;
 import org.eclipse.ecf.protocol.nntp.model.INewsgroup;
 import org.eclipse.ecf.protocol.nntp.model.IServer;
 import org.eclipse.ecf.protocol.nntp.model.NNTPException;
+import org.eclipse.ecf.salvo.ui.utils.PreferencesUtil;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -22,7 +23,7 @@ public class SelectNewsgroupWizardPage extends WizardPage{
 		super("Select Newsgroup");
 		setTitle("Select Newsgroup");
 		setDescription("Select the Newsgroup you want to ask the question");
-
+		getAllNewsgroups();
 		
 	}
 
@@ -37,11 +38,28 @@ public class SelectNewsgroupWizardPage extends WizardPage{
 			newsgroupList = new List(container, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);
 			newsgroupList.setBounds(48, 35, 400, 150);
 		
-			// Get all newsgroups
-			for (INewsgroup newsgroup : getAllNewsgroups()) {
-				newsgroupList.add(newsgroup.getNewsgroupName()+ "   (Server : "+ newsgroup.getServer()+")");	
+			// Load preferences 
+			String recentlySelectedNewsgroup = PreferencesUtil.instance().loadPluginSettings("recentSelectedNewsgroup");
+			String recentlySelectedServer = PreferencesUtil.instance().loadPluginSettings("recentSelectedServer");
+			
+			int selectionIndex = 0;
+			
+			for (int i=0,size = newsgroups.size(); i<size;i++){
+				
+				String newsgroupName = newsgroups.get(i).getNewsgroupName();
+				String serverAddress = newsgroups.get(i).getServer().getAddress();
+				
+				newsgroupList.add(newsgroupName+ "   (Server : "+ serverAddress+")");
+				
+				// calculate the recently selected item from the list
+				if (newsgroupName.equals(recentlySelectedNewsgroup) && serverAddress.equals(recentlySelectedServer)){
+					selectionIndex = i;
+				}
+				
 			}
-
+			
+			newsgroupList.select(selectionIndex);
+			
 		}
 				
 		setControl(container);
@@ -53,7 +71,7 @@ public class SelectNewsgroupWizardPage extends WizardPage{
 	}
 	
 	
-	private  ArrayList<INewsgroup> getAllNewsgroups(){
+	private void getAllNewsgroups(){
 		newsgroups = new ArrayList<INewsgroup>();
 		
 		try {
@@ -72,8 +90,7 @@ public class SelectNewsgroupWizardPage extends WizardPage{
 		} catch (NNTPException e) {
 			e.printStackTrace();
 		}
-		
-		return newsgroups;
+	
 	}
 	
 		
