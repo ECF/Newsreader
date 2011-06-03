@@ -17,10 +17,6 @@
       [Enter License Description here.]
    </license>
 
-   <requires>
-      <import feature="org.eclipse.ecf.provider.nntp.feature"/>
-   </requires>
-
    <plugin
          id="org.eclipse.ecf.protocol.nntp.store.derby"
          download-size="0"

@@ -23,7 +23,6 @@
 
    <requires>
       <import feature="org.eclipse.rcp"/>
-      <import feature="org.eclipse.ecf.provider.nntp.feature"/>
    </requires>
 
    <plugin
