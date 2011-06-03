@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.ecf.salvo.site.feature"
       label="Salvo Site Feature"
-      version="0.7.0.qualifier"
+      version="0.8.0.qualifier"
       provider-name="%provider">
 
    <description url="http://www.example.com/description">

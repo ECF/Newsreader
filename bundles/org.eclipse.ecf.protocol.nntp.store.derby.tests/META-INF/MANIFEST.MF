@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Derby Tests
 Bundle-SymbolicName: org.eclipse.ecf.tests.protocol.nntp.store.derby.tests
-Bundle-Version: 0.7.0.qualifier
+Bundle-Version: 0.8.0.qualifier
 Bundle-Vendor: eclipse.org
 Fragment-Host: org.eclipse.ecf.protocol.nntp.store.derby;bundle-version="0.7.0"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

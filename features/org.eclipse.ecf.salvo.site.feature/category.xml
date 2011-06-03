@@ -1,29 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/com.remainsoftware.gravity.core.ui.feature_1.0.0.qualifier.jar" id="com.remainsoftware.gravity.core.ui.feature" version="1.0.0.qualifier">
-      <category name="ui"/>
+   <feature url="features/org.eclipse.ecf.protocol.nntp.store.filesystem.feature_0.8.0.qualifier.jar" id="org.eclipse.ecf.protocol.nntp.store.filesystem.feature" version="0.8.0.qualifier">
+      <category name="Filesystem_Store"/>
    </feature>
-   <feature url="features/com.remainsoftware.gravity.dashboard.feature_1.0.0.qualifier.jar" id="com.remainsoftware.gravity.dashboard.feature" version="1.0.0.qualifier">
-      <category name="ui"/>
+   <feature url="features/org.eclipse.ecf.salvo.ui.feature_0.8.0.qualifier.jar" id="org.eclipse.ecf.salvo.ui.feature" version="0.8.0.qualifier">
+      <category name="UI"/>
    </feature>
-   <feature url="features/com.remainsoftware.gravity.views.feature_1.0.0.qualifier.jar" id="com.remainsoftware.gravity.views.feature" version="1.0.0.qualifier">
-      <category name="ui"/>
+   <feature url="features/org.eclipse.ecf.protocol.nntp.model.feature_0.8.0.qualifier.jar" id="org.eclipse.ecf.protocol.nntp.model.feature" version="0.8.0.qualifier">
+      <category name="Model"/>
    </feature>
-   <feature url="features/com.remainsoftware.capability.feature_1.0.0.qualifier.jar" id="com.remainsoftware.capability.feature" version="1.0.0.qualifier">
+   <feature url="features/org.eclipse.ecf.protocol.nntp.store.derby.feature_0.8.0.qualifier.jar" id="org.eclipse.ecf.protocol.nntp.store.derby.feature" version="0.8.0.qualifier">
+      <category name="Derby_Store"/>
+   </feature>
+   <feature url="features/org.eclipse.ecf.provider.nntp.feature_0.8.0.qualifier.jar" id="org.eclipse.ecf.provider.nntp.feature" version="0.8.0.qualifier">
       <category name="Core"/>
    </feature>
-   <feature url="features/com.remainsoftware.gravity.components.feature_1.0.0.qualifier.jar" id="com.remainsoftware.gravity.components.feature" version="1.0.0.qualifier">
-      <category name="Core"/>
-   </feature>
-   <feature url="features/com.remainsoftware.gravity.definitions.feature_1.0.0.qualifier.jar" id="com.remainsoftware.gravity.definitions.feature" version="1.0.0.qualifier">
-      <category name="Core"/>
-   </feature>
-   <feature url="features/com.remainsoftware.gravity.discovery.feature_1.0.0.qualifier.jar" id="com.remainsoftware.gravity.discovery.feature" version="1.0.0.qualifier">
-      <category name="Core"/>
-   </feature>
-   <feature url="features/com.remainsoftware.gravity.distribution.feature_1.0.0.qualifier.jar" id="com.remainsoftware.gravity.distribution.feature" version="1.0.0.qualifier">
-      <category name="Core"/>
-   </feature>
-   <category-def name="ui" label="Gravity UI"/>
-   <category-def name="Core" label="Core"/>
+   <category-def name="UI" label="Salvo UI">
+      <description>
+         The Salvo UI Feature. Contains Core.
+      </description>
+   </category-def>
+   <category-def name="Core" label="Core">
+      <description>
+         NNTP Core feature. Includes the model feature.
+      </description>
+   </category-def>
+   <category-def name="Filesystem_Store" label="Filesystem Store">
+      <description>
+         This store saves the read/unread articles in the local filesystem. It creates a lot of small files.
+      </description>
+   </category-def>
+   <category-def name="Derby_Store" label="Derby Store">
+      <description>
+         This store saves read/unread articles in a local derby database.
+      </description>
+   </category-def>
+   <category-def name="Model" label="Model">
+      <description>
+         The NNTP Model.
+      </description>
+   </category-def>
 </site>
