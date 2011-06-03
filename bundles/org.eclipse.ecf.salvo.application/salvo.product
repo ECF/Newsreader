@@ -35,9 +35,13 @@
    </plugins>
 
    <features>
-      <feature id="org.eclipse.ecf.salvo.feature"/>
       <feature id="org.eclipse.rcp"/>
       <feature id="org.eclipse.platform"/>
+      <feature id="org.eclipse.ecf.protocol.nntp.model.feature" version="0.8.0.qualifier"/>
+      <feature id="org.eclipse.ecf.protocol.nntp.store.derby.feature" version="0.8.0.qualifier"/>
+      <feature id="org.eclipse.ecf.protocol.nntp.store.filesystem.feature" version="0.8.0.qualifier"/>
+      <feature id="org.eclipse.ecf.salvo.ui.feature" version="0.8.0.v20110603-1040"/>
+      <feature id="org.eclipse.ecf.services.quotes.feature" version="0.8.0.v20110603-1040"/>
    </features>
 
    <configurations>
