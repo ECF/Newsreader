@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/org.eclipse.ecf.protocol.nntp.store.filesystem.feature_0.8.0.qualifier.jar" id="org.eclipse.ecf.protocol.nntp.store.filesystem.feature" version="0.8.0.qualifier">
+      <category name="Filesystem_Store"/>
+   </feature>
+   <feature url="features/org.eclipse.ecf.salvo.ui.feature_0.8.0.qualifier.jar" id="org.eclipse.ecf.salvo.ui.feature" version="0.8.0.qualifier">
+      <category name="UI"/>
+   </feature>
+   <feature url="features/org.eclipse.ecf.protocol.nntp.model.feature_0.8.0.qualifier.jar" id="org.eclipse.ecf.protocol.nntp.model.feature" version="0.8.0.qualifier">
+      <category name="Model"/>
+   </feature>
+   <feature url="features/org.eclipse.ecf.protocol.nntp.store.derby.feature_0.8.0.qualifier.jar" id="org.eclipse.ecf.protocol.nntp.store.derby.feature" version="0.8.0.qualifier">
+      <category name="Derby_Store"/>
+   </feature>
+   <feature url="features/org.eclipse.ecf.provider.nntp.feature_0.8.0.qualifier.jar" id="org.eclipse.ecf.provider.nntp.feature" version="0.8.0.qualifier">
+      <category name="Core"/>
+   </feature>
+   <category-def name="UI" label="Salvo UI">
+      <description>
+         The Salvo UI Feature. Contains Core.
+      </description>
+   </category-def>
+   <category-def name="Core" label="Core">
+      <description>
+         NNTP Core feature. Includes the model feature.
+      </description>
+   </category-def>
+   <category-def name="Filesystem_Store" label="Filesystem Store">
+      <description>
+         This store saves the read/unread articles in the local filesystem. It creates a lot of small files.
+      </description>
+   </category-def>
+   <category-def name="Derby_Store" label="Derby Store">
+      <description>
+         This store saves read/unread articles in a local derby database.
+      </description>
+   </category-def>
+   <category-def name="Model" label="Model">
+      <description>
+         The NNTP Model.
+      </description>
+   </category-def>
+</site>
