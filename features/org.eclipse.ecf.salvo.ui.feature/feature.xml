@@ -21,10 +21,6 @@
          id="org.eclipse.ecf.salvo.mime4j.feature"
          version="0.0.0"/>
 
-   <requires>
-      <import feature="org.eclipse.rcp"/>
-   </requires>
-
    <plugin
          id="org.eclipse.ecf.salvo.application"
          download-size="0"

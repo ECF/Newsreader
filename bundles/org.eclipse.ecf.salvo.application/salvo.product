@@ -36,12 +36,14 @@
 
    <features>
       <feature id="org.eclipse.rcp"/>
-      <feature id="org.eclipse.platform"/>
       <feature id="org.eclipse.ecf.protocol.nntp.model.feature"/>
       <feature id="org.eclipse.ecf.protocol.nntp.store.derby.feature"/>
       <feature id="org.eclipse.ecf.protocol.nntp.store.filesystem.feature"/>
       <feature id="org.eclipse.ecf.salvo.ui.feature"/>
       <feature id="org.eclipse.ecf.services.quotes.feature"/>
+      <feature id="org.eclipse.ecf.provider.nntp.feature"/>
+      <feature id="org.eclipse.platform"/>
+      <feature id="org.eclipse.equinox.p2.user.ui"/>
    </features>
 
    <configurations>
