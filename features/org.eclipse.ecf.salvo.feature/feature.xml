@@ -37,10 +37,6 @@
          id="org.eclipse.ecf.services.quotes.feature"
          version="0.0.0"/>
 
-   <includes
-         id="org.eclipse.rcp"
-         version="0.0.0"/>
-
    <requires>
       <import feature="org.eclipse.rcp" version="3.6.2.r362_v20101104-9SAxFMKFkSAqi8axkv1ZjegmiBLY"/>
    </requires>
