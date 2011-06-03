@@ -1,17 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.eclipse.ecf.protocol.nntp.store.filesystem.feature_0.7.0.qualifier.jar" id="org.eclipse.ecf.protocol.nntp.store.filesystem.feature" version="0.7.0.qualifier">
-      <category name="Filesystem_Store"/>
-   </feature>
-   <feature url="features/org.eclipse.ecf.salvo.ui.feature_0.7.0.qualifier.jar" id="org.eclipse.ecf.salvo.ui.feature" version="0.7.0.qualifier">
-      <category name="UI"/>
-   </feature>
-   <feature url="features/org.eclipse.ecf.protocol.nntp.model.feature_0.7.0.qualifier.jar" id="org.eclipse.ecf.protocol.nntp.model.feature" version="0.7.0.qualifier">
-      <category name="Model"/>
-   </feature>
-   <feature url="features/org.eclipse.ecf.protocol.nntp.store.derby.feature_0.7.0.qualifier.jar" id="org.eclipse.ecf.protocol.nntp.store.derby.feature" version="0.7.0.qualifier">
-      <category name="Derby_Store"/>
-   </feature>
    <feature url="features/org.eclipse.ecf.provider.nntp.feature_0.8.0.qualifier.jar" id="org.eclipse.ecf.provider.nntp.feature" version="0.8.0.qualifier">
       <category name="Core"/>
    </feature>
@@ -20,6 +8,18 @@
    </feature>
    <feature url="features/org.eclipse.ecf.services.quotes.feature_0.8.0.qualifier.jar" id="org.eclipse.ecf.services.quotes.feature" version="0.8.0.qualifier">
       <category name="quote_services"/>
+   </feature>
+   <feature url="features/org.eclipse.ecf.salvo.ui.feature_0.8.0.qualifier.jar" id="org.eclipse.ecf.salvo.ui.feature" version="0.8.0.qualifier">
+      <category name="UI"/>
+   </feature>
+   <feature url="features/org.eclipse.ecf.protocol.nntp.store.filesystem.feature_0.8.0.qualifier.jar" id="org.eclipse.ecf.protocol.nntp.store.filesystem.feature" version="0.8.0.qualifier">
+      <category name="Filesystem_Store"/>
+   </feature>
+   <feature url="features/org.eclipse.ecf.protocol.nntp.store.derby.feature_0.8.0.qualifier.jar" id="org.eclipse.ecf.protocol.nntp.store.derby.feature" version="0.8.0.qualifier">
+      <category name="Derby_Store"/>
+   </feature>
+   <feature url="features/org.eclipse.ecf.protocol.nntp.model.feature_0.8.0.qualifier.jar" id="org.eclipse.ecf.protocol.nntp.model.feature" version="0.8.0.qualifier">
+      <category name="Model"/>
    </feature>
    <category-def name="UI" label="5. Salvo UI">
       <description>
