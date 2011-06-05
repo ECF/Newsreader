@@ -231,7 +231,7 @@
             <visibleWhen
                   checkEnabled="false">
                <with
-                     variable="activeWorkbenchWindow.activePerspectivesynch">
+                     variable="activeWorkbenchWindow.activePerspective">
                   <equals
                         value="org.eclipse.ecf.salvo.application.perspective">
                   </equals>
