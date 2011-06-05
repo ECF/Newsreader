@@ -32,8 +32,10 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.ProgressBar;
 
 public class NewNewsServerWizardPage extends WizardPage {
 
@@ -59,6 +61,7 @@ public class NewNewsServerWizardPage extends WizardPage {
 	private Label logInLabel;
 
 	private Label passwordLabel;
+	private ProgressBar progressBar;
 
 	public NewNewsServerWizardPage(String pageName) {
 		super(pageName);
@@ -158,15 +161,18 @@ public class NewNewsServerWizardPage extends WizardPage {
 		validateButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(final MouseEvent e) {
-
+				progressBar.setVisible(true);
 				validateServer();
-
+				progressBar.setVisible(false);
 			}
 		});
-		validateButton.setLayoutData(new GridData());
 		validateButton.setSelection(true);
 		validateButton.setText("Validate");
-		new Label(composite, SWT.NONE);
+
+		progressBar = new ProgressBar(composite, SWT.SMOOTH | SWT.INDETERMINATE);
+		progressBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false,
+				false, 1, 1));
+		progressBar.setVisible(false);
 
 		fillDialog();
 
@@ -207,28 +213,54 @@ public class NewNewsServerWizardPage extends WizardPage {
 		// If everything is ok then try to connect to the server if this
 		// is required.
 
+		final StringBuffer message = new StringBuffer();
+		final AbstractCredentials credentials = new AbstractCredentials(
+				getUser(), getEmail(), getLogin(), getPass());
+		final String v_address = getAddress();
+		final int v_port = getPort();
+		final boolean v_secure = isSecure();
+
 		BusyIndicator.showWhile(null, new Runnable() {
 
 			public void run() {
-				setErrorMessage(null);
 
-				AbstractCredentials credentials = new AbstractCredentials(
-						getUser(), getEmail(), getLogin(), getPass());
+				setServerValidated(false);
 
-				try {
-					IServer server = ServerFactory.getCreateServer(
-							getAddress(), getPort(), credentials, isSecure());
-					IServerConnection connection = server.getServerConnection();
-					connection.disconnect();
-					connection.connect();
-					connection.setModeReader(server);
-					connection.getOverviewHeaders(server);
-				} catch (NNTPException e) {
-					setErrorMessage(e.getMessage());
-					Debug.log(getClass(), e);
-				}
+				Runnable runner = new Runnable() {
 
-				setServerValidated(true);
+					public void run() {
+						setErrorMessage(null);
+
+						try {
+							IServer server = ServerFactory.getCreateServer(
+									v_address, v_port, credentials, v_secure);
+							IServerConnection connection = server
+									.getServerConnection();
+							connection.disconnect();
+							connection.connect();
+							connection.setModeReader(server);
+							connection.getOverviewHeaders(server);
+						} catch (NNTPException e) {
+							message.append(e.getMessage());
+							Debug.log(getClass(), e);
+						}
+
+					}
+				};
+
+				Thread thread = new Thread(runner,
+						"Salvo Server validation Thread");
+				thread.start();
+
+				while (thread.isAlive())
+					while (Display.getCurrent().readAndDispatch()
+							&& thread.isAlive())
+						Display.getCurrent().sleep();
+
+				if (message.toString().length() > 0)
+					setErrorMessage(message.toString());
+				else
+					setServerValidated(true);
 
 				return;
 
