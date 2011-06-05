@@ -193,28 +193,8 @@
       <menuContribution
             locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
          <toolbar
-               id="org.eclipse.ecf.salvo.ui.toolbar2">
-         </toolbar>
-         <toolbar
                id="org.eclipse.ecf.salvo.ui.articlepanel.toolbar">
-            <visibleWhen
-                  checkEnabled="false">
-               <with
-                     variable="activeEditorId">
-                  <equals
-                        value="org.eclipse.ecf.salvo.ui.articlepanel">
-                  </equals>
-               </with>
-            </visibleWhen>
          </toolbar>
-      </menuContribution>
-      <menuContribution
-            locationURI="toolbar:org.eclipse.ecf.salvo.ui.toolbar2?after=additions">
-         <command
-               commandId="org.eclipse.ui.views.showView"
-               icon="icons/showview.gif"
-               style="push">
-         </command>
       </menuContribution>
       <menuContribution
             locationURI="toolbar:org.eclipse.ecf.salvo.ui.internal.views.replyView">
@@ -235,10 +215,28 @@
          <command
                commandId="org.eclipse.ecf.salvo.postNewArticle"
                style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeWorkbenchWindow.activePerspective">
+                  <equals
+                        value="org.eclipse.ecf.salvo.application.perspective">
+                  </equals>
+               </with>
+            </visibleWhen>
          </command>
          <command
                commandId="org.eclipse.ui.file.save"
                style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeWorkbenchWindow.activePerspectivesynch">
+                  <equals
+                        value="org.eclipse.ecf.salvo.application.perspective">
+                  </equals>
+               </with>
+            </visibleWhen>
          </command>
       </menuContribution>
       <menuContribution

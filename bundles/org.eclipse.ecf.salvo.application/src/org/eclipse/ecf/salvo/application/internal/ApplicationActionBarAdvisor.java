@@ -36,6 +36,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 	private IWorkbenchAction aboutAction;
 	private IWorkbenchAction preferenceAction;
 	private IWorkbenchAction perspectiveAction;
+	private IWorkbenchAction showViewAction;
 
 	public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
 		super(configurer);
@@ -59,6 +60,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		perspectiveAction = ActionFactory.OPEN_PERSPECTIVE_DIALOG
 				.create(window);
 		register(perspectiveAction);
+		showViewAction = ActionFactory.SHOW_VIEW_MENU
+				.create(window);
+		register(showViewAction);
 	}
 
 	@Override
@@ -67,6 +71,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 				IWorkbenchActionConstants.M_FILE);
 		menuBar.add(fileMenu);
 		fileMenu.add(aboutAction);
+		fileMenu.add(showViewAction);
 		fileMenu.add(preferenceAction);
 		fileMenu.add(exitAction);
 		MenuManager helpMenu = new MenuManager("&Help",
