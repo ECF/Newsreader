@@ -25,6 +25,7 @@ import org.eclipse.ecf.protocol.nntp.model.SALVO;
 import org.eclipse.ecf.protocol.nntp.model.StoreException;
 import org.eclipse.ecf.provider.nntp.security.SalvoSecureStore;
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceEvent;
@@ -73,8 +74,14 @@ public class Activator extends AbstractUIPlugin implements ServiceListener {
 		// Catch store services
 		context.addServiceListener(this);
 
-		// start the update thread
-		startUpdateThread();
+		// The UI thread must start the update thread to avoid a deadlock
+		// See bug: https://bugs.eclipse.org/bugs/show_bug.cgi?id=344468
+		Display.getCurrent().asyncExec(new Runnable() {
+			
+			public void run() {
+				startUpdateThread();
+			}
+		});
 
 	}
 
