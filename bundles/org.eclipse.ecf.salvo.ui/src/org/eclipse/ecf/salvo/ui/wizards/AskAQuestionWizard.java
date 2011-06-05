@@ -10,6 +10,7 @@ import org.eclipse.ecf.salvo.ui.internal.wizards.ComposeNewArticleWizardPage;
 import org.eclipse.ecf.salvo.ui.internal.wizards.SelectNewsgroupWizardPage;
 import org.eclipse.ecf.salvo.ui.tools.ImageUtils;
 import org.eclipse.ecf.salvo.ui.tools.PreferencesUtil;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 
 public class AskAQuestionWizard extends Wizard {
@@ -54,6 +55,10 @@ public class AskAQuestionWizard extends Wizard {
 		try {
 			serverStoreFacade.postNewArticle(new INewsgroup[] { group },
 					subject, body);
+			MessageDialog.openInformation(
+					getShell(),
+					"Article Posted",
+					"Your question is posted to "+group.getNewsgroupName());
 		} catch (NNTPIOException e) {
 			e.printStackTrace();
 		} catch (UnexpectedResponseException e) {
