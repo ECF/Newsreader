@@ -12,14 +12,18 @@
 
 package org.eclipse.ecf.salvo.application.internal;
 
+import org.eclipse.core.commands.Command;
+import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
+import org.eclipse.ui.actions.ContributionItemFactory;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
+import org.eclipse.ui.internal.actions.CommandAction;
 
 /**
  * An action bar advisor is responsible for creating, adding, and disposing of
@@ -36,7 +40,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 	private IWorkbenchAction aboutAction;
 	private IWorkbenchAction preferenceAction;
 	private IWorkbenchAction perspectiveAction;
-	private IWorkbenchAction showViewAction;
+	private IContributionItem showViewAction;
 
 	public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
 		super(configurer);
@@ -60,20 +64,28 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		perspectiveAction = ActionFactory.OPEN_PERSPECTIVE_DIALOG
 				.create(window);
 		register(perspectiveAction);
-		showViewAction = ActionFactory.SHOW_VIEW_MENU
-				.create(window);
-		register(showViewAction);
+		showViewAction = ContributionItemFactory.VIEWS_SHORTLIST.create(window);
+		
 	}
 
 	@Override
 	protected void fillMenuBar(IMenuManager menuBar) {
 		MenuManager fileMenu = new MenuManager("&File",
 				IWorkbenchActionConstants.M_FILE);
+		
 		menuBar.add(fileMenu);
+
+		
 		fileMenu.add(aboutAction);
-		fileMenu.add(showViewAction);
 		fileMenu.add(preferenceAction);
 		fileMenu.add(exitAction);
+		
+		MenuManager viewsMenu = new MenuManager("Show View",
+				IWorkbenchActionConstants.M_VIEW);
+		viewsMenu.add(showViewAction);
+
+		fileMenu.add(viewsMenu);
+		
 		MenuManager helpMenu = new MenuManager("&Help",
 				IWorkbenchActionConstants.M_HELP);
 		menuBar.add(helpMenu);
