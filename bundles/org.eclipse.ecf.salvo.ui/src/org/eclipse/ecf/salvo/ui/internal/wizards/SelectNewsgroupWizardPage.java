@@ -9,6 +9,8 @@ import org.eclipse.ecf.protocol.nntp.model.NNTPException;
 import org.eclipse.ecf.salvo.ui.tools.PreferencesUtil;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.ui.contexts.EnabledSubmission;
@@ -32,13 +34,14 @@ public class SelectNewsgroupWizardPage extends WizardPage{
 	public void createControl(Composite parent) {
 		// Container
 		container = new Composite(parent, SWT.NULL);
-		container.setLayout(null);
+		container.setLayout(new GridLayout(1, false));
 		
 		// Newsgroup List
 		{
 			newsgroupList = new List(container, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);
-			newsgroupList.setBounds(48, 35, 400, 150);
-		
+			newsgroupList.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true,
+					1, 1));
+			
 			// Load preferences 
 			String recentlySelectedNewsgroup = PreferencesUtil.instance().loadPluginSettings("recentSelectedNewsgroup");
 			String recentlySelectedServer = PreferencesUtil.instance().loadPluginSettings("recentSelectedServer");
