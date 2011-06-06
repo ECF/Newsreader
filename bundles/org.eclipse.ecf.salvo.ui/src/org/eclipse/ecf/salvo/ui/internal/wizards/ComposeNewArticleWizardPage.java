@@ -20,10 +20,9 @@ public class ComposeNewArticleWizardPage extends WizardPage {
 		super("Compose Question");
 		setTitle("Compose Question");
 		setDescription("Compose your question");
-		
+
 	}
 
-	
 	public void createControl(Composite parent) {
 		composite = new Composite(parent, SWT.NULL);
 		composite.setLayout(new GridLayout(1, false));
@@ -43,7 +42,7 @@ public class ComposeNewArticleWizardPage extends WizardPage {
 				subjectText = new Text(group, SWT.BORDER);
 				subjectText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
 						true, false, 1, 1));
-				
+
 				subjectText.addKeyListener(new KeyAdapter() {
 
 					@Override
@@ -59,7 +58,7 @@ public class ComposeNewArticleWizardPage extends WizardPage {
 			bodyText = new Text(composite, SWT.BORDER | SWT.MULTI | SWT.WRAP);
 			bodyText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true,
 					1, 1));
-			
+
 			bodyText.addKeyListener(new KeyAdapter() {
 
 				@Override
@@ -73,23 +72,20 @@ public class ComposeNewArticleWizardPage extends WizardPage {
 		setPageComplete(false);
 
 	}
-		
+
 	public boolean isValuesSet() {
-		if(!getBodyText().equals("") && !getSubject().equals("")){
+		if (!getBodyText().equals("") && !getSubject().equals("")) {
 			return true;
 		}
 		return false;
-		
 	}
-	
-	
-	public String getBodyText(){
+
+	public String getBodyText() {
 		return bodyText.getText();
 	}
-	
+
 	public String getSubject() {
 		return subjectText.getText();
 	}
-	
-	
+
 }

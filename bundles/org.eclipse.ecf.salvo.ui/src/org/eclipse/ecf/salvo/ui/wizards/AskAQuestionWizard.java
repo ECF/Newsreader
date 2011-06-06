@@ -20,7 +20,7 @@ public class AskAQuestionWizard extends Wizard {
 
 	public AskAQuestionWizard() {
 		super();
-		
+
 		setNeedsProgressMonitor(true);
 		setWindowTitle("Ask a Question");
 		setDefaultPageImageDescriptor(ImageUtils.getInstance()
@@ -36,11 +36,10 @@ public class AskAQuestionWizard extends Wizard {
 		addPage(composeNewArticleWizardPage);
 
 	}
-	
-	
+
 	@Override
 	public boolean canFinish() {
-		if(composeNewArticleWizardPage.isValuesSet()){
+		if (composeNewArticleWizardPage.isValuesSet()) {
 			return true;
 		}
 		return false;
@@ -65,10 +64,8 @@ public class AskAQuestionWizard extends Wizard {
 		try {
 			serverStoreFacade.postNewArticle(new INewsgroup[] { group },
 					subject, body);
-			MessageDialog.openInformation(
-					getShell(),
-					"Article Posted",
-					"Your question is posted to "+group.getNewsgroupName());
+			MessageDialog.openInformation(getShell(), "Article Posted",
+					"Your question is posted to " + group.getNewsgroupName());
 		} catch (NNTPIOException e) {
 			e.printStackTrace();
 		} catch (UnexpectedResponseException e) {
