@@ -2,6 +2,8 @@ package org.eclipse.ecf.salvo.ui.internal.wizards;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -41,6 +43,14 @@ public class ComposeNewArticleWizardPage extends WizardPage {
 				subjectText = new Text(group, SWT.BORDER);
 				subjectText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
 						true, false, 1, 1));
+				
+				subjectText.addKeyListener(new KeyAdapter() {
+
+					@Override
+					public void keyReleased(KeyEvent e) {
+						getWizard().getContainer().updateButtons();
+					}
+				});
 			}
 		}
 
@@ -49,12 +59,29 @@ public class ComposeNewArticleWizardPage extends WizardPage {
 			bodyText = new Text(composite, SWT.BORDER | SWT.MULTI | SWT.WRAP);
 			bodyText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true,
 					1, 1));
+			
+			bodyText.addKeyListener(new KeyAdapter() {
+
+				@Override
+				public void keyReleased(KeyEvent e) {
+					getWizard().getContainer().updateButtons();
+				}
+			});
 		}
 
 		setControl(composite);
-		setPageComplete(true);
+		setPageComplete(false);
 
 	}
+		
+	public boolean isValuesSet() {
+		if(!getBodyText().equals("") && !getSubject().equals("")){
+			return true;
+		}
+		return false;
+		
+	}
+	
 	
 	public String getBodyText(){
 		return bodyText.getText();

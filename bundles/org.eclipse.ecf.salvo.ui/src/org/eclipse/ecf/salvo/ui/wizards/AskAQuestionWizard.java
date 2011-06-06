@@ -20,6 +20,7 @@ public class AskAQuestionWizard extends Wizard {
 
 	public AskAQuestionWizard() {
 		super();
+		
 		setNeedsProgressMonitor(true);
 		setWindowTitle("Ask a Question");
 		setDefaultPageImageDescriptor(ImageUtils.getInstance()
@@ -34,6 +35,15 @@ public class AskAQuestionWizard extends Wizard {
 		addPage(selectNewsgroupWizardPage);
 		addPage(composeNewArticleWizardPage);
 
+	}
+	
+	
+	@Override
+	public boolean canFinish() {
+		if(composeNewArticleWizardPage.isValuesSet()){
+			return true;
+		}
+		return false;
 	}
 
 	@Override

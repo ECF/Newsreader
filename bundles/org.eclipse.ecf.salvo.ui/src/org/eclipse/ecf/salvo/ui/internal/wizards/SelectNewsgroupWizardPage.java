@@ -11,6 +11,7 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.List;
+import org.eclipse.ui.contexts.EnabledSubmission;
 
 public class SelectNewsgroupWizardPage extends WizardPage{
 
@@ -64,6 +65,7 @@ public class SelectNewsgroupWizardPage extends WizardPage{
 				
 		setControl(container);
 		setPageComplete(true);
+						
 	}
 	
 	public INewsgroup getSelectedNewsgroup() {
