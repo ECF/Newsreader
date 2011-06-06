@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Salvo Product File" id="org.eclipse.ecf.salvo.application.product" application="org.eclipse.ecf.salvo.application.application" version="0.7.0" useFeatures="true" includeLaunchers="true">
+<product name="Salvo Product File" id="org.eclipse.ecf.salvo.application.product" application="org.eclipse.ecf.salvo.application.application" version="0.8.0" useFeatures="true" includeLaunchers="true">
 
    <configIni use="default">
    </configIni>
@@ -35,9 +35,15 @@
    </plugins>
 
    <features>
-      <feature id="org.eclipse.ecf.salvo.feature" version="0.7.0.qualifier"/>
-      <feature id="org.eclipse.rcp" version="3.6.2.r362_v20101104-9SAxFMKFkSAqi8axkv1ZjegmiBLY"/>
-      <feature id="org.eclipse.platform" version="3.6.2.r362_v20110210-9gF78Gs1FrIGnHDHWkEcopoN8AmxeZflGDGKQi"/>
+      <feature id="org.eclipse.rcp"/>
+      <feature id="org.eclipse.ecf.protocol.nntp.model.feature"/>
+      <feature id="org.eclipse.ecf.protocol.nntp.store.derby.feature"/>
+      <feature id="org.eclipse.ecf.protocol.nntp.store.filesystem.feature"/>
+      <feature id="org.eclipse.ecf.salvo.ui.feature"/>
+      <feature id="org.eclipse.ecf.services.quotes.feature"/>
+      <feature id="org.eclipse.ecf.provider.nntp.feature"/>
+      <feature id="org.eclipse.platform"/>
+      <feature id="org.eclipse.equinox.p2.user.ui"/>
    </features>
 
    <configurations>

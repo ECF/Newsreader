@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.ecf.salvo.ui.feature"
       label="Salvo UI Components"
-      version="0.7.0.qualifier"
+      version="0.8.0.qualifier"
       provider-name="Eclipse ECF">
 
    <description url="http://www.example.com/description">
