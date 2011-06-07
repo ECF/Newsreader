@@ -14,6 +14,7 @@ package org.eclipse.ecf.salvo.ui.internal.handlers;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.ecf.protocol.nntp.core.Debug;
 import org.eclipse.ecf.protocol.nntp.core.ServerStoreFactory;
 import org.eclipse.ecf.salvo.ui.wizards.AskAQuestionWizard;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -36,6 +37,7 @@ public class AskAquestionHandler extends AbstractHandler {
 			MessageDialog
 					.openError(dialogShell, "Salvo Newsreader",
 							"No stores found. Please start a store to use this feature");
+			Debug.log(this.getClass(), "No stores found. Start a store to use this feature");
 		} else {
 			dialog.open();
 		}

@@ -12,7 +12,9 @@
 package org.eclipse.ecf.salvo.ui.tools;
 
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.ecf.protocol.nntp.core.Debug;
 import org.osgi.service.prefs.Preferences;
+import org.osgi.service.prefs.BackingStoreException;
 
 public class PreferencesUtil {
 	private static PreferencesUtil INSTANCE;
@@ -39,8 +41,8 @@ public class PreferencesUtil {
 		prefs.put(key, value);
 		try {
 			prefs.flush();
-		} catch (org.osgi.service.prefs.BackingStoreException e) {
-			e.printStackTrace();
+		} catch (BackingStoreException e) {
+			Debug.log(this.getClass(), e);
 		}
 
 	}
@@ -54,7 +56,6 @@ public class PreferencesUtil {
 		  Preferences prefs = new InstanceScope().getNode("org.eclipse.ecf.salvo.ui");
 		  String value = prefs.get(key,"null");
 		  return value;
-		  
 	}
 
 	

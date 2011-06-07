@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.ecf.salvo.ui.wizards;
 
+import org.eclipse.ecf.protocol.nntp.core.Debug;
 import org.eclipse.ecf.protocol.nntp.core.ServerStoreFactory;
 import org.eclipse.ecf.protocol.nntp.model.INewsgroup;
 import org.eclipse.ecf.protocol.nntp.model.IServerStoreFacade;
@@ -76,11 +77,11 @@ public class AskAQuestionWizard extends Wizard {
 			MessageDialog.openInformation(getShell(), "Article Posted",
 					"Your question is posted to " + group.getNewsgroupName());
 		} catch (NNTPIOException e) {
-			e.printStackTrace();
+			Debug.log(this.getClass(), e);
 		} catch (UnexpectedResponseException e) {
-			e.printStackTrace();
+			Debug.log(this.getClass(), e);
 		} catch (StoreException e) {
-			e.printStackTrace();
+			Debug.log(this.getClass(), e);
 		}
 
 		return true;

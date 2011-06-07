@@ -13,6 +13,7 @@ package org.eclipse.ecf.salvo.ui.internal.wizards;
 
 import java.util.ArrayList;
 
+import org.eclipse.ecf.protocol.nntp.core.Debug;
 import org.eclipse.ecf.protocol.nntp.core.ServerStoreFactory;
 import org.eclipse.ecf.protocol.nntp.model.INewsgroup;
 import org.eclipse.ecf.protocol.nntp.model.IServer;
@@ -180,7 +181,7 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 
 			}
 		} catch (NNTPException e) {
-			e.printStackTrace();
+			Debug.log(this.getClass(), e);
 		}
 
 	}
