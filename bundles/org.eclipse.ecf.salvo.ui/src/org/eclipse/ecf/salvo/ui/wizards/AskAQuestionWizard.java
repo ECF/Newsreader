@@ -23,9 +23,7 @@ public class AskAQuestionWizard extends Wizard {
 
 		setNeedsProgressMonitor(true);
 		setWindowTitle("Ask a Question");
-		setDefaultPageImageDescriptor(ImageUtils.getInstance()
-				.getImageDescriptor("askaq.png"));
-
+		
 	}
 
 	@Override

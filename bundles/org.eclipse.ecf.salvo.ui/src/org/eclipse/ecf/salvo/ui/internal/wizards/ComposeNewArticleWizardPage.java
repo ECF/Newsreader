@@ -1,5 +1,6 @@
 package org.eclipse.ecf.salvo.ui.internal.wizards;
 
+import org.eclipse.ecf.salvo.ui.tools.ImageUtils;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
@@ -20,7 +21,9 @@ public class ComposeNewArticleWizardPage extends WizardPage {
 		super("Compose Question");
 		setTitle("Compose Question");
 		setDescription("Compose your question");
-
+		setImageDescriptor(ImageUtils.getInstance()
+				.getImageDescriptor("composequestion.png"));
+		
 	}
 
 	public void createControl(Composite parent) {

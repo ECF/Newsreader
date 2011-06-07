@@ -6,6 +6,7 @@ import org.eclipse.ecf.protocol.nntp.core.ServerStoreFactory;
 import org.eclipse.ecf.protocol.nntp.model.INewsgroup;
 import org.eclipse.ecf.protocol.nntp.model.IServer;
 import org.eclipse.ecf.protocol.nntp.model.NNTPException;
+import org.eclipse.ecf.salvo.ui.tools.ImageUtils;
 import org.eclipse.ecf.salvo.ui.tools.PreferencesUtil;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -29,6 +30,8 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 		setTitle("Select Newsgroup");
 		setDescription("Select the Newsgroup you want to ask the question");
 		getAllNewsgroups();
+		setImageDescriptor(ImageUtils.getInstance()
+				.getImageDescriptor("selectnewsgroup.png"));
 
 	}
 
