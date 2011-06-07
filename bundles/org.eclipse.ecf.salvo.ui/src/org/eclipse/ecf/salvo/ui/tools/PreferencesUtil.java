@@ -16,6 +16,11 @@ import org.eclipse.ecf.protocol.nntp.core.Debug;
 import org.osgi.service.prefs.Preferences;
 import org.osgi.service.prefs.BackingStoreException;
 
+/**
+ * This class provides utilities to access preferences based on workspace
+ * @author isuru
+ *
+ */
 public class PreferencesUtil {
 	private static PreferencesUtil INSTANCE;
 	

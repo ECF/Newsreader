@@ -22,6 +22,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+/**
+ * This wizard page can be used to compose a new article.
+ * 
+ * @author isuru
+ * 
+ */
 public class ComposeNewArticleWizardPage extends WizardPage {
 
 	private Text bodyText;
@@ -32,12 +38,12 @@ public class ComposeNewArticleWizardPage extends WizardPage {
 		super("Compose Question");
 		setTitle("Compose Question");
 		setDescription("Compose your question");
-		setImageDescriptor(ImageUtils.getInstance()
-				.getImageDescriptor("composequestion.png"));
-		
+		setImageDescriptor(ImageUtils.getInstance().getImageDescriptor(
+				"composequestion.png"));
 	}
 
 	public void createControl(Composite parent) {
+
 		composite = new Composite(parent, SWT.NULL);
 		composite.setLayout(new GridLayout(1, false));
 
@@ -56,9 +62,7 @@ public class ComposeNewArticleWizardPage extends WizardPage {
 				subjectText = new Text(group, SWT.BORDER);
 				subjectText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
 						true, false, 1, 1));
-
 				subjectText.addKeyListener(new KeyAdapter() {
-
 					@Override
 					public void keyReleased(KeyEvent e) {
 						getWizard().getContainer().updateButtons();
@@ -87,6 +91,11 @@ public class ComposeNewArticleWizardPage extends WizardPage {
 
 	}
 
+	/**
+	 * Check whether both subject and body is not empty
+	 * 
+	 * @return whether both subject and body is set
+	 */
 	public boolean isValuesSet() {
 		if (!getBodyText().equals("") && !getSubject().equals("")) {
 			return true;
@@ -94,10 +103,20 @@ public class ComposeNewArticleWizardPage extends WizardPage {
 		return false;
 	}
 
+	/**
+	 * Get the body of the article
+	 * 
+	 * @return body of the article
+	 */
 	public String getBodyText() {
 		return bodyText.getText();
 	}
 
+	/**
+	 * Get the subject of the article
+	 * 
+	 * @return subject of the article
+	 */
 	public String getSubject() {
 		return subjectText.getText();
 	}

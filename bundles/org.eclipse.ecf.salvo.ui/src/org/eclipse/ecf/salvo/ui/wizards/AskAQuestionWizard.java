@@ -25,6 +25,12 @@ import org.eclipse.ecf.salvo.ui.tools.PreferencesUtil;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 
+/**
+ * This class is responsible for providing the "Ask A Question" wizard. 
+ * 
+ * @author isuru
+ *
+ */
 public class AskAQuestionWizard extends Wizard {
 
 	private SelectNewsgroupWizardPage selectNewsgroupWizardPage;
@@ -32,7 +38,6 @@ public class AskAQuestionWizard extends Wizard {
 
 	public AskAQuestionWizard() {
 		super();
-
 		setNeedsProgressMonitor(true);
 		setWindowTitle("Ask a Question");
 		

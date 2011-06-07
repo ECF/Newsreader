@@ -41,10 +41,9 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 		super("Select Newsgroup");
 		setTitle("Select Newsgroup");
 		setDescription("Select the Newsgroup you want to ask the question");
-		getAllNewsgroups();
-		setImageDescriptor(ImageUtils.getInstance()
-				.getImageDescriptor("selectnewsgroup.png"));
-
+		fetchAllNewsgroups();
+		setImageDescriptor(ImageUtils.getInstance().getImageDescriptor(
+				"selectnewsgroup.png"));
 	}
 
 	public void createControl(Composite parent) {
@@ -58,10 +57,9 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 			searchBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 					false, 1, 1));
 			searchBar.addKeyListener(new KeyAdapter() {
-
 				@Override
 				public void keyReleased(KeyEvent e) {
-					getFilteredListItems();
+					setFilteredListItems();
 				}
 			});
 
@@ -73,9 +71,7 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 					| SWT.V_SCROLL);
 			newsgroupList.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
 					true, 1, 1));
-
 			initNewsgroupList();
-
 		}
 
 		setControl(container);
@@ -83,7 +79,12 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 
 	}
 
+	/**
+	 * Initialize NewsgroupList for the first time with all the available
+	 * newsgroups
+	 */
 	private void initNewsgroupList() {
+		
 		// Load preferences
 		String recentlySelectedNewsgroup = PreferencesUtil.instance()
 				.loadPluginSettings("recentSelectedNewsgroup");
@@ -110,7 +111,11 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 		newsgroupList.select(selectionIndex);
 	}
 
-	private void getFilteredListItems() {
+	/**
+	 * Fill the newsgroupList according to the filter specified on the search
+	 * bar
+	 */
+	private void setFilteredListItems() {
 
 		newsgroupList.removeAll();
 
@@ -127,6 +132,13 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 
 	}
 
+	/**
+	 * Match whether the given newsgroup is match with the filter.
+	 * 
+	 * @param newsgroupName
+	 *            Name of the newsgroup
+	 * @return whether the newsgroup is match with the filter
+	 */
 	private boolean matchPattern(String newsgroupName) {
 
 		String searchText = searchBar.getText();
@@ -140,9 +152,13 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 			}
 		}
 		return false;
-
 	}
 
+	/**
+	 * Get the selected Newsgroup from the list
+	 * 
+	 * @return selected Newsgroup
+	 */
 	public INewsgroup getSelectedNewsgroup() {
 
 		INewsgroup resultNewsgroup = null;
@@ -161,11 +177,14 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 				resultNewsgroup = newsgroup;
 			}
 		}
-
 		return resultNewsgroup;
 	}
 
-	private void getAllNewsgroups() {
+	/**
+	 * Fetch all the newsgroups from the store
+	 */
+	private void fetchAllNewsgroups() {
+		
 		newsgroups = new ArrayList<INewsgroup>();
 
 		try {
