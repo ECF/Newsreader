@@ -15,6 +15,7 @@ import org.eclipse.ecf.protocol.nntp.core.Debug;
 import org.eclipse.ecf.protocol.nntp.core.ServerStoreFactory;
 import org.eclipse.ecf.protocol.nntp.model.INewsgroup;
 import org.eclipse.ecf.protocol.nntp.model.IServerStoreFacade;
+import org.eclipse.ecf.protocol.nntp.model.NNTPException;
 import org.eclipse.ecf.protocol.nntp.model.NNTPIOException;
 import org.eclipse.ecf.protocol.nntp.model.StoreException;
 import org.eclipse.ecf.protocol.nntp.model.UnexpectedResponseException;
@@ -81,13 +82,11 @@ public class AskAQuestionWizard extends Wizard {
 					subject, body);
 			MessageDialog.openInformation(getShell(), "Article Posted",
 					"Your question is posted to " + group.getNewsgroupName());
-		} catch (NNTPIOException e) {
+		}  catch (NNTPException e) {
+			MessageDialog.openError(getShell(), "Problem posting message",
+					"The message could not be posted. \n\r" + e.getMessage());
 			Debug.log(this.getClass(), e);
-		} catch (UnexpectedResponseException e) {
-			Debug.log(this.getClass(), e);
-		} catch (StoreException e) {
-			Debug.log(this.getClass(), e);
-		}
+		} 
 
 		return true;
 	}
