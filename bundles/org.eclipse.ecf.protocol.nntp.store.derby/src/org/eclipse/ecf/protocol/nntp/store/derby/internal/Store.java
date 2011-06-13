@@ -453,4 +453,34 @@ public class Store implements IStore {
 			return 0;
 		return listeners.size();
 	}
+
+	/**
+	 * Get articles of a particular user
+	 * @param newsgroup Newsgroup
+	 * @param userId Full username
+	 * @return articles of a particular user in the particular Newsgroup
+	 *  
+	 */
+	public IArticle[] getArticlesByUserId(INewsgroup newsgroup, String userId) {
+
+		ArrayList result = new ArrayList();
+
+		try {
+			Integer[] articleIds = articleDOA.getArticleIdsFromUser(userId);
+
+			for (int i : articleIds) {
+				IArticle article = articleDOA.getArticleById(newsgroup, i);
+				if (article != null) {
+					result.add(article);
+				}
+
+			}
+			return (IArticle[]) result.toArray(new IArticle[0]);
+
+		} catch (StoreException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 }
