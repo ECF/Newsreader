@@ -473,12 +473,12 @@ public class Store implements IStore {
 				if (article != null) {
 					result.add(article);
 				}
-
 			}
+			
 			return (IArticle[]) result.toArray(new IArticle[0]);
 
 		} catch (StoreException e) {
-			e.printStackTrace();
+			Debug.log(getClass(), e);
 		}
 		return null;
 	}
