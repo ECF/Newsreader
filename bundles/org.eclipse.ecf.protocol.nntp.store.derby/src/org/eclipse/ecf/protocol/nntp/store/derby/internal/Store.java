@@ -463,7 +463,7 @@ public class Store implements IStore {
 	 */
 	public IArticle[] getArticlesByUserId(INewsgroup newsgroup, String userId) {
 
-		ArrayList result = new ArrayList();
+		ArrayList<IArticle> result = new ArrayList<IArticle>();
 
 		try {
 			Integer[] articleIds = articleDOA.getArticleIdsFromUser(userId);
