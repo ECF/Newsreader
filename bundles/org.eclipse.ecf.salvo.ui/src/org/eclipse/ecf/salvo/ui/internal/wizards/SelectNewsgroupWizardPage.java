@@ -18,25 +18,29 @@ import org.eclipse.ecf.protocol.nntp.core.ServerStoreFactory;
 import org.eclipse.ecf.protocol.nntp.model.INewsgroup;
 import org.eclipse.ecf.protocol.nntp.model.IServer;
 import org.eclipse.ecf.protocol.nntp.model.NNTPException;
+import org.eclipse.ecf.salvo.ui.internal.dialogs.ThisUserArticlesComposite;
 import org.eclipse.ecf.salvo.ui.tools.ImageUtils;
 import org.eclipse.ecf.salvo.ui.tools.PreferencesUtil;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Text;
-
 public class SelectNewsgroupWizardPage extends WizardPage {
 
 	private Composite container;
 	private List newsgroupList;
 	private Text searchBar;
+	private Link showArticlesLink;
 	private ArrayList<INewsgroup> newsgroups;
-
+	
 	public SelectNewsgroupWizardPage() {
 		super("Select Newsgroup");
 		setTitle("Select Newsgroup");
@@ -72,6 +76,30 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 			newsgroupList.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
 					true, 1, 1));
 			initNewsgroupList();
+			newsgroupList.addSelectionListener(new SelectionListener() {
+				
+				public void widgetSelected(SelectionEvent arg0) {
+					showArticlesLink.setText("<a href=\"Show Your Articles\">Show your Articles in "+getSelectedNewsgroup().getNewsgroupName()+" </a>");
+				}
+				
+				public void widgetDefaultSelected(SelectionEvent arg0) {}
+			});
+		}
+		
+		// Link to show this user articles
+		{
+			showArticlesLink = new Link(container, SWT.NONE);
+			GridData showArticlesLinkLData = new GridData();
+			showArticlesLink.setLayoutData(showArticlesLinkLData);
+			showArticlesLink.setText("<a href=\"Show Your Articles\">Show your Articles in "+getSelectedNewsgroup().getNewsgroupName()+" </a>");
+			showArticlesLink.addSelectionListener(new SelectionListener() {
+				
+				public void widgetSelected(SelectionEvent arg0) {
+					ThisUserArticlesComposite.showArticles(container.getShell(),getSelectedNewsgroup());
+				}
+				
+				public void widgetDefaultSelected(SelectionEvent arg0) {}
+			});
 		}
 
 		setControl(container);
