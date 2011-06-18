@@ -1,3 +1,14 @@
+/*******************************************************************************
+ *  Copyright (c) 2011 University Of Moratuwa
+ *                                                                      
+ * All rights reserved. This program and the accompanying materials     
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at             
+ * http://www.eclipse.org/legal/epl-v10.html                            
+ *                                                                      
+ * Contributors:                                                        
+ *    Isuru Udana - UI Integration in the Workbench
+ *******************************************************************************/
 package org.eclipse.ecf.salvo.ui.internal.dialogs;
 
 import java.io.ByteArrayInputStream;
@@ -24,13 +35,17 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 
 public class ThisUserArticlesComposite extends Composite {
-	private List articlesList;
-	private Composite messageComposite;
+	private Composite articleBodyComposite;
 	private IArticle[] articles;
+	private Table articleTable;
+	private TableColumn subjectColumn;
+	private TableColumn DateColumn;
 
 	public static void showArticles(Shell parentShell, INewsgroup newsgroup) {
 
@@ -42,19 +57,15 @@ public class ThisUserArticlesComposite extends Composite {
 		ThisUserArticlesComposite instance = new ThisUserArticlesComposite(
 				shell, newsgroup, SWT.NULL);
 
-		if (shell.getChildren().length != 0) {
-			
+		if (shell.getChildren().length != 0) { // check whether the composite is
+												// already disposed due to
+												// absence of articles
+
 			Point size = instance.getSize();
+			Rectangle shellBounds = shell.computeTrim(0, 0, size.x, size.y);
+			shell.setSize(shellBounds.width, shellBounds.height);
 			shell.setLayout(new FillLayout());
 			shell.layout();
-
-			if (size.x == 0 && size.y == 0) {
-				instance.pack();
-				shell.pack();
-			} else {
-				Rectangle shellBounds = shell.computeTrim(0, 0, size.x, size.y);
-				shell.setSize(shellBounds.width, shellBounds.height);
-			}
 
 			shell.open();
 		}
@@ -75,31 +86,43 @@ public class ThisUserArticlesComposite extends Composite {
 
 			FormLayout thisLayout = new FormLayout();
 			this.setLayout(thisLayout);
-			this.setSize(537, 378);
+			this.setSize(535, 500);
 
 			{
-				messageComposite = new Composite(this, SWT.BORDER);
-				FormData messageCompositeLData = new FormData();
-				messageCompositeLData.left = new FormAttachment(0, 1000, 5);
-				messageCompositeLData.top = new FormAttachment(0, 1000, 173);
-				messageCompositeLData.width = 520;
-				messageCompositeLData.height = 199;
-				messageComposite.setLayoutData(messageCompositeLData);
-				messageComposite.setLayout(new GridLayout());
+				articleBodyComposite = new Composite(this, SWT.BORDER);
+
+				FormData articleBodyCompositeLData = new FormData();
+				articleBodyCompositeLData.left = new FormAttachment(0, 1000, 5);
+				articleBodyCompositeLData.top = new FormAttachment(50, 1000,
+						350);
+				articleBodyCompositeLData.width = 520;
+				articleBodyCompositeLData.height = 100;
+				articleBodyComposite.setLayoutData(articleBodyCompositeLData);
+				articleBodyComposite.setLayout(new GridLayout());
+
 			}
 
 			{
-				FormData articlesListLData = new FormData();
-				articlesListLData.width = 521;
-				articlesListLData.height = 155;
-				articlesListLData.left = new FormAttachment(10, 1000, 0);
-				articlesListLData.right = new FormAttachment(980, 1000, 0);
-				articlesListLData.top = new FormAttachment(33, 1000, 0);
-				articlesListLData.bottom = new FormAttachment(443, 1000, 0);
-				articlesList = new List(this, SWT.SINGLE | SWT.BORDER
-						| SWT.V_SCROLL);
-				articlesList.setLayoutData(articlesListLData);
-				articlesList.addSelectionListener(new SelectionListener() {
+				articleTable = new Table(this, SWT.BORDER);
+				articleTable.setHeaderVisible(true);
+				articleTable.setLinesVisible(true);
+
+				FormData articleTableLData = new FormData();
+				articleTableLData.left = new FormAttachment(0, 1000, 5);
+				articleTableLData.top = new FormAttachment(50, 1000, 0);
+				articleTableLData.width = 503;
+				articleTableLData.height = 320;
+				articleTable.setLayoutData(articleTableLData);
+
+				subjectColumn = new TableColumn(articleTable, SWT.NONE);
+				subjectColumn.setText("Subject");
+				subjectColumn.setWidth(300);
+
+				DateColumn = new TableColumn(articleTable, SWT.NONE);
+				DateColumn.setText("Date");
+				DateColumn.setWidth(50);
+
+				articleTable.addSelectionListener(new SelectionListener() {
 
 					public void widgetSelected(SelectionEvent arg0) {
 						showArticleBody();
@@ -128,12 +151,15 @@ public class ThisUserArticlesComposite extends Composite {
 		}
 
 		for (IArticle article : articles) {
-			articlesList.add(article.getSubject());
+			TableItem tableItem = new TableItem(articleTable, SWT.NONE);
+			tableItem.setText(0, article.getSubject());
+			tableItem.setText(1, article.getHeaderAttributeValue("Date:"));
+
 		}
 	}
 
 	private void showArticleBody() {
-		IArticle article = articles[articlesList.getSelectionIndex()];
+		IArticle article = articles[articleTable.getSelectionIndex()];
 
 		StringBuffer buffer = new StringBuffer();
 
@@ -150,19 +176,18 @@ public class ThisUserArticlesComposite extends Composite {
 					article);
 			MimeStreamParser parser = new MimeStreamParser();
 			parser.setContentHandler(handler);
-
 			parser.parse(new ByteArrayInputStream(buffer.toString().getBytes()));
 
-			if (!messageComposite.isDisposed()) {
-				for (Control child : messageComposite.getChildren()) {
+			if (!articleBodyComposite.isDisposed()) {
+				for (Control child : articleBodyComposite.getChildren()) {
 					child.dispose();
 				}
 			}
 
-			ArticleWidgetBuilder.build(messageComposite, article, handler);
-			messageComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL,
+			ArticleWidgetBuilder.build(articleBodyComposite, article, handler);
+			articleBodyComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL,
 					true, true));
-			messageComposite.layout(true);
+			articleBodyComposite.layout(true);
 
 		} catch (Exception e) {
 			Debug.log(getClass(), e);
