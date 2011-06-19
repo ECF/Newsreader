@@ -100,4 +100,13 @@ public interface IStore extends IStoreEventProvider, IInputOutputSystem,
 	 * 
 	 */
 	public ISecureStore getSecureStore();
+	
+	/**
+	 * Get the articles belongs to a particular user
+	 * 
+	 * @param newsgroup Newsgroup
+	 * @param userId Full user name of the user 
+	 * @return the articles belongs to a particular user 
+	 */
+	public IArticle[] getArticlesByUserId(INewsgroup newsgroup, String userId);
 }

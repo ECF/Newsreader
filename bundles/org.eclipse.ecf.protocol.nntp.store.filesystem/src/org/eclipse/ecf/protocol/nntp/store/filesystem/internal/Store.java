@@ -1317,4 +1317,14 @@ public class Store implements IStore {
 			return 0;
 		return listeners.size();
 	}
+	
+	/**
+	 * Get articles of a particular user
+	 */
+	public IArticle[] getArticlesByUserId(INewsgroup newsgroup, String userId){
+		Debug.log(getClass(), "Not implemented yet");
+		return null;
+	}
+	
+			
 }

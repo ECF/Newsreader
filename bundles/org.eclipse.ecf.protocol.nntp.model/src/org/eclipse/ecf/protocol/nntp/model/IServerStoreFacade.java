@@ -74,4 +74,10 @@ public interface IServerStoreFacade extends IInputOutputSystem,
 
 	public void updateArticle(IArticle article) throws StoreException;
 
+	/**
+	 * Get the current user articles
+	 * @param newsgroup Newsgroup
+	 * @return the current user articles
+	 */
+	public IArticle[] getThisUserArticles(INewsgroup newsgroup);
 }

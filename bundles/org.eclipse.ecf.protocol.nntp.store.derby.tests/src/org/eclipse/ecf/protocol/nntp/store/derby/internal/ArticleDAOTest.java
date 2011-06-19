@@ -325,4 +325,25 @@ public class ArticleDAOTest {
 		assertTrue(new ArticleDAO(db.getConnection()).getArticles(
 				newsgroup, 1, 100).length == 0);
 	}
+	
+	@Test
+	public void testGetArticleIdsFromUser() throws StoreException, NNTPIOException, UnexpectedResponseException{
+		ArticleDAO DAO = new ArticleDAO(db.getConnection());
+		testInsertArticle();
+		Integer[] articleIds = DAO.getArticleIdsFromUser("Jason Weathersby <jasonweathersby@windstream.net>");
+		
+		assertTrue(articleIds.length==5); // Check whether all articleIds fetched
+	}
+	
+	@Test
+	public void testgetArticleById() throws StoreException, NNTPIOException, UnexpectedResponseException{
+		ArticleDAO DAO = new ArticleDAO(db.getConnection());
+		testInsertArticle();
+		Integer[] articleIds = DAO.getArticleIdsFromUser("Jason Weathersby <jasonweathersby@windstream.net>");
+		
+		assertTrue(DAO.getArticleById(newsgroup, articleIds[0]).getSubject().equals("Re: Table x-axis - Weekday Sorting")); // Check whether the correct article fetched by article subject
+		assertTrue(DAO.getArticleById(newsgroup, articleIds[4]).getSubject().equals("Re: problem with BIRT installation on top od zend studio for eclipse on ubuntu"));
+		
+	}
+	
 }
