@@ -1,8 +1,26 @@
+/*******************************************************************************
+ *  Copyright (c) 2011 University Of Moratuwa
+ *                                                                      
+ * All rights reserved. This program and the accompanying materials     
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at             
+ * http://www.eclipse.org/legal/epl-v10.html                            
+ *                                                                      
+ * Contributors:                                                        
+ *    Isuru Udana - UI Integration in the Workbench
+ *******************************************************************************/
 package org.eclipse.ecf.salvo.ui.tools;
 
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.ecf.protocol.nntp.core.Debug;
 import org.osgi.service.prefs.Preferences;
+import org.osgi.service.prefs.BackingStoreException;
 
+/**
+ * This class provides utilities to access preferences based on workspace
+ * @author isuru
+ *
+ */
 public class PreferencesUtil {
 	private static PreferencesUtil INSTANCE;
 	
@@ -28,8 +46,8 @@ public class PreferencesUtil {
 		prefs.put(key, value);
 		try {
 			prefs.flush();
-		} catch (org.osgi.service.prefs.BackingStoreException e) {
-			e.printStackTrace();
+		} catch (BackingStoreException e) {
+			Debug.log(this.getClass(), e);
 		}
 
 	}
@@ -43,7 +61,6 @@ public class PreferencesUtil {
 		  Preferences prefs = new InstanceScope().getNode("org.eclipse.ecf.salvo.ui");
 		  String value = prefs.get(key,"null");
 		  return value;
-		  
 	}
 
 	

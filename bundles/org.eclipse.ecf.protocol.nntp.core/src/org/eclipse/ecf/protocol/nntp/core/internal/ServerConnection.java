@@ -772,6 +772,10 @@ public class ServerConnection implements IServerConnection {
 	public String getUser() {
 		return credentials.getUser();
 	}
+	
+	public String getFullUserName(){
+		return getUser() + " <" + getEmail() + ">";
+	}
 
 	public int getBatchsize() {
 		if (batchSize == 0)

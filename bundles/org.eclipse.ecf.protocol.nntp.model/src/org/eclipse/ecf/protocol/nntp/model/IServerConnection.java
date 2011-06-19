@@ -142,6 +142,11 @@ public interface IServerConnection extends IBasicNNTPInterface,
 	public String getUser();
 	
 	/**
+	 * @return the full user name
+	 */
+	public String getFullUserName();
+	
+	/**
 	 * Sets the batch size of article headers to retrieve from the news server.
 	 * If not set then it defaults to SALVO.DEFAULT_BATCH
 	 * 
