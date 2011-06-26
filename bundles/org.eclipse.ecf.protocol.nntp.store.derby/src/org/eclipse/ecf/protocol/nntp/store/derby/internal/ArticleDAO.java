@@ -153,7 +153,7 @@ public class ArticleDAO {
 					.prepareStatement("select articleid from articleheader where attribute = 'From:' and value = ?");
 
 			getMarkedArticles = connection
-					.prepareStatement("select * from article where isMarked = 1 and newsgroupId = ?");
+					.prepareStatement("select * from article where isMarked = '1' and newsgroupId = ?");
 
 		} catch (SQLException e) {
 			throw new StoreException(e.getMessage(), e);
