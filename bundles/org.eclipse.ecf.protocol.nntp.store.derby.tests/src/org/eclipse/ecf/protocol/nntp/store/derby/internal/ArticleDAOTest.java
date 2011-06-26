@@ -17,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 
+import org.apache.derby.tools.sysinfo;
 import org.eclipse.ecf.protocol.nntp.core.ArticleFactory;
 import org.eclipse.ecf.protocol.nntp.core.NewsgroupFactory;
 import org.eclipse.ecf.protocol.nntp.core.ServerFactory;
@@ -346,6 +347,23 @@ public class ArticleDAOTest {
 		
 	}
 	
-	
+	@Test
+	public void testGetMarkedArtilcles() throws NNTPIOException, UnexpectedResponseException, StoreException{
+		
+		testInsertArticle();
+
+		ArticleDAO DAO = new ArticleDAO(db.getConnection());
+		IArticle[] articles = DAO.getArticles(newsgroup, 1, 100);
+
+		articles[1].setMarked(true);
+		DAO.updateArticle(articles[1]);
+		
+		IArticle[] markedArticles = DAO.getMarkedArticles(newsgroup);
+		
+		assertTrue(markedArticles.length == 1);
+		assertTrue(markedArticles[0].getArticleNumber() == articles[1].getArticleNumber());
+		assertTrue(markedArticles[0].getSubject().equals(articles[1].getSubject()));
+		
+	}
 	
 }
