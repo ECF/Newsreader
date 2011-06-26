@@ -80,4 +80,11 @@ public interface IServerStoreFacade extends IInputOutputSystem,
 	 * @return the current user articles
 	 */
 	public IArticle[] getThisUserArticles(INewsgroup newsgroup);
+	
+	/**
+	 * Get marked articles
+	 * @param newsgroup Newsgroup
+	 * @return marked articles of a particular newsgroup
+	 */
+	public IArticle[] getMarkedArticles(INewsgroup newsgroup);
 }

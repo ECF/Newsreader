@@ -71,6 +71,8 @@ public class ArticleDAO {
 
 	private PreparedStatement getArticleIdsFromUser;
 
+	private PreparedStatement getMarkedArticles;
+
 	public ArticleDAO(Connection connection) throws StoreException {
 		this.connection = connection;
 		prepareStatements();
@@ -88,7 +90,7 @@ public class ArticleDAO {
 			getArticleRange = connection
 					.prepareStatement("select * from article where (articleNumber between ? and ?) and newsgroupId = ?");
 
-						getArticleByUri = connection
+			getArticleByUri = connection
 					.prepareStatement("select * from article where uri = ?");
 
 			getArticleByID = connection
@@ -149,6 +151,9 @@ public class ArticleDAO {
 
 			getArticleIdsFromUser = connection
 					.prepareStatement("select articleid from articleheader where attribute = 'From:' and value = ?");
+
+			getMarkedArticles = connection
+					.prepareStatement("select * from article where isMarked = 1 and newsgroupId = ?");
 
 		} catch (SQLException e) {
 			throw new StoreException(e.getMessage(), e);
@@ -529,7 +534,9 @@ public class ArticleDAO {
 
 	/**
 	 * Get articlesIds of a particular user
-	 * @param userId Full user name
+	 * 
+	 * @param userId
+	 *            Full user name
 	 * @return articlesId s of a particular user
 	 * @throws StoreException
 	 */
@@ -549,7 +556,7 @@ public class ArticleDAO {
 				result.add(r.getInt(1));
 			}
 			r.close();
-			
+
 			Integer output[] = new Integer[result.size()];
 			output = result.toArray(output);
 
@@ -562,8 +569,11 @@ public class ArticleDAO {
 
 	/**
 	 * Get a article from the articleId
-	 * @param newsgroup Newsgroup
-	 * @param id articleId
+	 * 
+	 * @param newsgroup
+	 *            Newsgroup
+	 * @param id
+	 *            articleId
 	 * @return article corresponds to given articleId
 	 * @throws StoreException
 	 */
@@ -571,31 +581,72 @@ public class ArticleDAO {
 			throws StoreException {
 		try {
 			getArticleByID.setInt(1, id);
-			getArticleByID.setInt(2, Integer.parseInt(newsgroup.getProperty("DB_ID")));
+			getArticleByID.setInt(2,
+					Integer.parseInt(newsgroup.getProperty("DB_ID")));
 			getArticleByID.execute();
-			
+
 			ResultSet r = getArticleByID.getResultSet();
-			
+
 			if (r == null)
 				return null;
-			
+
 			IArticle article = null;
 			while (r.next()) {
-				article = ArticleFactory.createArticle(
-						getArticleNumber(r), newsgroup);
+				article = ArticleFactory.createArticle(getArticleNumber(r),
+						newsgroup);
 				article.setMarked(isMarked(r));
 				article.setRead(isRead(r));
 				article.setProperty("DB_ID", getArticleID(r) + "");
 				loadArticleHeaders(article, getArticleID(r));
 			}
 			r.close();
-			
+
 			return article;
 
 		} catch (SQLException e) {
 			throw new StoreException(e.getMessage(), e);
 		}
-		
+
+	}
+
+	/**
+	 * Get marked articles for a particular newsgroup
+	 * 
+	 * @param newsgroup
+	 *            Newsgroup
+	 * @return marked articles for a particular newsgroup
+	 * @throws StoreException
+	 */
+	public IArticle[] getMarkedArticles(INewsgroup newsgroup)
+			throws StoreException {
+
+		try {
+			getMarkedArticles.setInt(1,
+					Integer.parseInt(newsgroup.getProperty("DB_ID")));
+			getMarkedArticles.execute();
+			ResultSet r = getMarkedArticles.getResultSet();
+
+			if (r == null)
+				return new IArticle[0];
+
+			ArrayList result = new ArrayList();
+
+			while (r.next()) {
+				IArticle article = ArticleFactory.createArticle(
+						getArticleNumber(r), newsgroup);
+				article.setMarked(isMarked(r));
+				article.setRead(isRead(r));
+				article.setProperty("DB_ID", getArticleID(r) + "");
+				loadArticleHeaders(article, getArticleID(r));
+				result.add(article);
+			}
+			r.close();
+			return (IArticle[]) result.toArray(new IArticle[0]);
+
+		} catch (Exception e) {
+			throw new StoreException(e.getMessage(), e);
+		}
+
 	}
 
 }

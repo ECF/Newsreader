@@ -109,4 +109,16 @@ public interface IStore extends IStoreEventProvider, IInputOutputSystem,
 	 * @return the articles belongs to a particular user 
 	 */
 	public IArticle[] getArticlesByUserId(INewsgroup newsgroup, String userId);
+	
+	
+	/**
+	 * 
+	 * Get marked articles of a particular newsgroup
+	 * 
+	 * @param newsgroup
+	 *            Newsgroup
+	 * @return marked articles of a particular newsgroup
+	 */
+	public IArticle[] getMarkedArticles(INewsgroup newsgroup);
+	
 }
