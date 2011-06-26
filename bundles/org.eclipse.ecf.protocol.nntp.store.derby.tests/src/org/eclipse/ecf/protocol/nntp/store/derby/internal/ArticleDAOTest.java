@@ -336,7 +336,7 @@ public class ArticleDAOTest {
 	}
 	
 	@Test
-	public void testgetArticleById() throws StoreException, NNTPIOException, UnexpectedResponseException{
+	public void testGetArticleById() throws StoreException, NNTPIOException, UnexpectedResponseException{
 		ArticleDAO DAO = new ArticleDAO(db.getConnection());
 		testInsertArticle();
 		Integer[] articleIds = DAO.getArticleIdsFromUser("Jason Weathersby <jasonweathersby@windstream.net>");
@@ -345,5 +345,7 @@ public class ArticleDAOTest {
 		assertTrue(DAO.getArticleById(newsgroup, articleIds[4]).getSubject().equals("Re: problem with BIRT installation on top od zend studio for eclipse on ubuntu"));
 		
 	}
+	
+	
 	
 }
