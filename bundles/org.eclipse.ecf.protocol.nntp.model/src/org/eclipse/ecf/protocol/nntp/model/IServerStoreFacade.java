@@ -87,4 +87,12 @@ public interface IServerStoreFacade extends IInputOutputSystem,
 	 * @return marked articles of a particular newsgroup
 	 */
 	public IArticle[] getMarkedArticles(INewsgroup newsgroup);
+	
+	/**
+	 * 
+	 * Get all marked articles
+	 * 
+	 * @return marked articles for all newsgroups
+	 */
+	public IArticle[] getAllMarkedArticles(IServer server);
 }

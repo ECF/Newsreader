@@ -121,4 +121,12 @@ public interface IStore extends IStoreEventProvider, IInputOutputSystem,
 	 */
 	public IArticle[] getMarkedArticles(INewsgroup newsgroup);
 	
+	
+	/**
+	 * 
+	 * Get all marked articles
+	 * 
+	 * @return marked articles for all newsgroups
+	 */
+	public IArticle[] getAllMarkedArticles(IServer server);
 }

@@ -551,4 +551,14 @@ public class ServerStoreFacade implements IServerStoreFacade {
 		return getFirstStore().getMarkedArticles(newsgroup);
 	}
 	
+	/**
+	 * 
+	 * Get all marked articles
+	 * 
+	 * @return marked articles for all newsgroups
+	 */
+	public IArticle[] getAllMarkedArticles(IServer server) {
+		return getFirstStore().getAllMarkedArticles(server);
+	}
+	
 }

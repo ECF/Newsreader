@@ -505,4 +505,36 @@ public class Store implements IStore {
 
 	}
 
+	/**
+	 * 
+	 * Get all marked articles
+	 * 
+	 * @return marked articles for all newsgroups
+	 */
+	public IArticle[] getAllMarkedArticles(IServer server) {
+
+		try {
+			INewsgroup[] newsgroups = getSubscribedNewsgroups(server);
+
+			ArrayList<IArticle> result = new ArrayList<IArticle>();
+
+			for (INewsgroup newsgroup : newsgroups) {
+				IArticle[] markedArticlesForANewsgroup = articleDOA
+						.getMarkedArticles(newsgroup);
+
+				for (IArticle article : markedArticlesForANewsgroup) {
+					result.add(article);
+				}
+
+			}
+			
+			return (IArticle[]) result.toArray(new IArticle[0]);
+
+		} catch (StoreException e) {
+			Debug.log(getClass(), e);
+		}
+		
+		return null;
+	}
+
 }
