@@ -46,6 +46,14 @@
             name="New Article"
             restorable="true">
       </view>
+      <view
+      		allowMultiple="false"
+      		category="org.eclipse.ecf.salvo.ui.category1"
+            class="org.eclipse.ecf.salvo.ui.internal.views.DigestView"
+            id="org.eclipse.ecf.salvo.ui.internal.views.DigestView"
+            icon="icons/messages.gif"
+            name="News Digest View">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.perspectiveExtensions">
