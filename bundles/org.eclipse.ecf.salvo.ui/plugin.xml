@@ -49,8 +49,8 @@
       <view
       		allowMultiple="false"
       		category="org.eclipse.ecf.salvo.ui.category1"
-            class="org.eclipse.ecf.salvo.ui.internal.views.DigestView"
-            id="org.eclipse.ecf.salvo.ui.internal.views.DigestView"
+            class="org.eclipse.ecf.salvo.ui.internal.views.digest.DigestView"
+            id="org.eclipse.ecf.salvo.ui.internal.views.digest.DigestView"
             icon="icons/messages.gif"
             name="News Digest View">
       </view>
@@ -77,6 +77,13 @@
                relationship="stack"
                relative="org.eclipse.ecf.salvo.application.right"
                visible="false">
+         </view>
+         <view
+               id="org.eclipse.ecf.salvo.ui.internal.views.digest.DigestView"
+               minimized="false"
+               relationship="stack"
+               relative="org.eclipse.ecf.salvo.application.right"
+               visible="true">
          </view>
       </perspectiveExtension>
    </extension>
