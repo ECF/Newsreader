@@ -14,26 +14,32 @@ package org.eclipse.ecf.salvo.ui.internal.views.digest;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.TreeColumn;
-import org.eclipse.jface.viewers.TreeViewerColumn;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.ITreeContentProvider;
 
-public class DigestView extends ViewPart {
+/**
+ * This ViewPart provides the Digest View of Salvo
+ * Digest View shows a digest of articles the user interested in    
+ * @author isuru
+ * 
+ * Plese note that this functionality is still under construction
+ *
+ */
+public class DigestView extends ViewPart{
 	
 	public static final String ID = "org.eclipse.ecf.salvo.ui.internal.views.digest.DigestView"; //$NON-NLS-1$
 	private final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
+	private TreeViewer treeViewer;
 	
 	public DigestView() {
 	}
@@ -41,7 +47,7 @@ public class DigestView extends ViewPart {
 	/**
 	 * Create contents of the view part.
 	 * 
-	 * @param parent
+	 * @param parent Parent composite
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
@@ -60,7 +66,7 @@ public class DigestView extends ViewPart {
 			
 		}
 		{
-			TreeViewer treeViewer = new TreeViewer(container, SWT.BORDER |SWT.VIRTUAL);
+			treeViewer = new TreeViewer(container, SWT.BORDER |SWT.VIRTUAL);
 			Tree tree = treeViewer.getTree();
 			tree.setLinesVisible(true);
 			tree.setHeaderVisible(true);
@@ -83,6 +89,8 @@ public class DigestView extends ViewPart {
 			}
 			treeViewer.setLabelProvider(new DigestViewTreeLabelProvider());
 			treeViewer.setContentProvider(new DigestViewTreeContentProvider());
+			 
+			
 		}
 
 		createActions();
