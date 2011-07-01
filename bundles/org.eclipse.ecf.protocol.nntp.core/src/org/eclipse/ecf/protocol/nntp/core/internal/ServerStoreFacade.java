@@ -534,10 +534,31 @@ public class ServerStoreFacade implements IServerStoreFacade {
 	}
 	
 	/**
-	 * get all articles of current user
+	 * Get all articles of current user
+	 * @param newsgroup Newsgroup
+	 * @return all articles of current user of a particular newsgroup
 	 */
 	public IArticle[] getThisUserArticles(INewsgroup newsgroup){
 		return getFirstStore().getArticlesByUserId(newsgroup, newsgroup.getServer().getServerConnection().getFullUserName());
+	}
+	
+	/**
+	 * Get marked articles
+	 * @param newsgroup Newsgroup
+	 * @return marked articles of a particular newsgroup
+	 */
+	public IArticle[] getMarkedArticles(INewsgroup newsgroup){
+		return getFirstStore().getMarkedArticles(newsgroup);
+	}
+	
+	/**
+	 * 
+	 * Get all marked articles
+	 * 
+	 * @return marked articles for all newsgroups
+	 */
+	public IArticle[] getAllMarkedArticles(IServer server) {
+		return getFirstStore().getAllMarkedArticles(server);
 	}
 	
 }
