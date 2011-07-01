@@ -1325,6 +1325,24 @@ public class Store implements IStore {
 		Debug.log(getClass(), "Not implemented yet");
 		return null;
 	}
+
+	/**
+	 * Get Marked Articles
+	 */
+	public IArticle[] getMarkedArticles(INewsgroup newsgroup) {
+		Debug.log(getClass(), "Not implemented yet");
+		return null;
+	}
+
+	/**
+	 * Get Marked Articles from all newsgroups
+	 */
+	public IArticle[] getAllMarkedArticles(IServer server) {
+		Debug.log(getClass(), "Not implemented yet");
+		return null;
+	}
+	
+	
 	
 			
 }

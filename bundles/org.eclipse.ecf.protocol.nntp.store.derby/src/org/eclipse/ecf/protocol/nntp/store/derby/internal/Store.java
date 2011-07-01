@@ -456,10 +456,13 @@ public class Store implements IStore {
 
 	/**
 	 * Get articles of a particular user
-	 * @param newsgroup Newsgroup
-	 * @param userId Full username
+	 * 
+	 * @param newsgroup
+	 *            Newsgroup
+	 * @param userId
+	 *            Full username
 	 * @return articles of a particular user in the particular Newsgroup
-	 *  
+	 * 
 	 */
 	public IArticle[] getArticlesByUserId(INewsgroup newsgroup, String userId) {
 
@@ -474,12 +477,63 @@ public class Store implements IStore {
 					result.add(article);
 				}
 			}
+
+			return (IArticle[]) result.toArray(new IArticle[0]);
+
+		} catch (StoreException e) {
+			Debug.log(getClass(), e);
+		}
+		return null;
+	}
+
+	/**
+	 * 
+	 * Get marked articles for a particular newsgroup
+	 * 
+	 * @param newsgroup
+	 *            Newsgroup
+	 * @return marked articles for a particular newsgroup
+	 */
+	public IArticle[] getMarkedArticles(INewsgroup newsgroup) {
+
+		try {
+			return articleDOA.getMarkedArticles(newsgroup);
+		} catch (StoreException e) {
+			Debug.log(getClass(), e);
+		}
+		return null;
+
+	}
+
+	/**
+	 * 
+	 * Get all marked articles
+	 * 
+	 * @return marked articles for all newsgroups
+	 */
+	public IArticle[] getAllMarkedArticles(IServer server) {
+
+		try {
+			INewsgroup[] newsgroups = getSubscribedNewsgroups(server);
+
+			ArrayList<IArticle> result = new ArrayList<IArticle>();
+
+			for (INewsgroup newsgroup : newsgroups) {
+				IArticle[] markedArticlesForANewsgroup = articleDOA
+						.getMarkedArticles(newsgroup);
+
+				for (IArticle article : markedArticlesForANewsgroup) {
+					result.add(article);
+				}
+
+			}
 			
 			return (IArticle[]) result.toArray(new IArticle[0]);
 
 		} catch (StoreException e) {
 			Debug.log(getClass(), e);
 		}
+		
 		return null;
 	}
 
