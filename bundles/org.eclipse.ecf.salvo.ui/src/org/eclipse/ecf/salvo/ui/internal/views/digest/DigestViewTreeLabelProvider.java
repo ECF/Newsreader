@@ -20,14 +20,10 @@ package org.eclipse.ecf.salvo.ui.internal.views.digest;
  */
 import org.apache.james.mime4j.codec.DecoderUtil;
 import org.eclipse.ecf.protocol.nntp.core.DateParser;
-import org.eclipse.ecf.protocol.nntp.core.ServerStoreFactory;
 import org.eclipse.ecf.protocol.nntp.model.IArticle;
 import org.eclipse.ecf.protocol.nntp.model.INewsgroup;
-import org.eclipse.ecf.protocol.nntp.model.IServer;
-import org.eclipse.ecf.protocol.nntp.model.StoreException;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 class DigestViewTreeLabelProvider implements ITableLabelProvider {

@@ -12,9 +12,14 @@
 
 package org.eclipse.ecf.salvo.ui.internal.views.digest;
 
+import org.eclipse.ecf.protocol.nntp.core.Debug;
 import org.eclipse.ecf.protocol.nntp.core.ServerStoreFactory;
 import org.eclipse.ecf.protocol.nntp.model.IServer;
 import org.eclipse.ecf.protocol.nntp.model.NNTPException;
+import org.eclipse.ecf.salvo.ui.internal.dialogs.SelectServerDialog;
+import org.eclipse.ecf.salvo.ui.tools.ImageUtils;
+import org.eclipse.ecf.salvo.ui.tools.PreferencesUtil;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -25,6 +30,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -45,6 +51,8 @@ public class DigestView extends ViewPart{
 	public static final String ID = "org.eclipse.ecf.salvo.ui.internal.views.digest.DigestView"; //$NON-NLS-1$
 	private final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
 	private TreeViewer treeViewer;
+	
+	private Action selectServer;
 	
 	public DigestView() {
 	}
@@ -114,7 +122,17 @@ public class DigestView extends ViewPart{
 	 * Create the actions.
 	 */
 	private void createActions() {
-		// Create the actions
+		selectServer = new Action("Select Server") {
+            public void run() { 
+            	Shell shell = new Shell();
+            	  SelectServerDialog selectServerDialog = new SelectServerDialog(shell); 
+                  selectServerDialog.open();
+                  treeViewer.setInput(getServer()); 
+               }
+       };
+       selectServer.setToolTipText("Select Server");
+       selectServer.setImageDescriptor(ImageUtils.getInstance().getImageDescriptor(
+				"addserver.gif")); // TODO: Change image descriptor
 	}
 
 	/**
@@ -122,6 +140,7 @@ public class DigestView extends ViewPart{
 	 */
 	private void initializeToolBar() {
 		IToolBarManager tbm = getViewSite().getActionBars().getToolBarManager();
+		tbm.add(selectServer);
 	}
 
 	/**
@@ -133,6 +152,10 @@ public class DigestView extends ViewPart{
 			public void menuAboutToShow(IMenuManager arg0) {
 			}
 		});
+		
+		manager.add(selectServer);
+		
+		
 	}
 
 	@Override
@@ -141,14 +164,24 @@ public class DigestView extends ViewPart{
 	}
 	
 	public IServer getServer(){
+		String selectedServerForDigest = PreferencesUtil.instance()
+		.loadPluginSettings("selectedServerForDigest");
+		
+		IServer[] servers;
 		try {
-			return ServerStoreFactory.instance()
-			.getServerStoreFacade().getFirstStore().getServers()[0];
+			servers = ServerStoreFactory.instance()
+			.getServerStoreFacade().getFirstStore().getServers();
+
+			for (int i=0,length = servers.length; i<length; i++){
+				if (servers[i].getID().equals(selectedServerForDigest)){
+					return servers[i];
+				}
+			}
+			
 		} catch (NNTPException e) {
-			e.printStackTrace();
+			Debug.log(getClass(), e);
 		}
+			
 		return null;
 	}
-	
-
 }
