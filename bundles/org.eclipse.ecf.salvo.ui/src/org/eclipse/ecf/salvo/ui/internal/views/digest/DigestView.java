@@ -12,6 +12,9 @@
 
 package org.eclipse.ecf.salvo.ui.internal.views.digest;
 
+import org.eclipse.ecf.protocol.nntp.core.ServerStoreFactory;
+import org.eclipse.ecf.protocol.nntp.model.IServer;
+import org.eclipse.ecf.protocol.nntp.model.NNTPException;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -26,6 +29,8 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.swt.widgets.Label;
 
 /**
  * This ViewPart provides the Digest View of Salvo
@@ -53,7 +58,8 @@ public class DigestView extends ViewPart{
 	public void createPartControl(Composite parent) {
 		Composite container = toolkit.createComposite(parent, SWT.NONE);
 		toolkit.paintBordersFor(container);
-		container.setLayout(new GridLayout(1, false));
+		container.setLayout(new GridLayout(2, false));
+		new Label(container, SWT.NONE);
 		{
 			Combo combo = new Combo(container, SWT.READ_ONLY);
 			combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -65,6 +71,7 @@ public class DigestView extends ViewPart{
 			combo.select(0);
 			
 		}
+		new Label(container, SWT.NONE);
 		{
 			treeViewer = new TreeViewer(container, SWT.BORDER |SWT.VIRTUAL);
 			Tree tree = treeViewer.getTree();
@@ -77,7 +84,7 @@ public class DigestView extends ViewPart{
 				TreeViewerColumn treeViewerColumn = new TreeViewerColumn(
 						treeViewer, SWT.NONE);
 				TreeColumn trclmnSubject = treeViewerColumn.getColumn();
-				trclmnSubject.setWidth(399);
+				trclmnSubject.setWidth(433);
 				trclmnSubject.setText("Subject");
 			}
 			{
@@ -88,8 +95,8 @@ public class DigestView extends ViewPart{
 				trclmnDate.setText("Date");
 			}
 			treeViewer.setLabelProvider(new DigestViewTreeLabelProvider());
-			treeViewer.setContentProvider(new DigestViewTreeContentProvider());
-			 
+			treeViewer.setContentProvider(new MarkedArticlesContentProvider(treeViewer));
+			treeViewer.setInput(getServer()); 
 			
 		}
 
@@ -122,11 +129,26 @@ public class DigestView extends ViewPart{
 	 */
 	private void initializeMenu() {
 		IMenuManager manager = getViewSite().getActionBars().getMenuManager();
+		manager.addMenuListener(new IMenuListener() {
+			public void menuAboutToShow(IMenuManager arg0) {
+			}
+		});
 	}
 
 	@Override
 	public void setFocus() {
 		// Set the focus
 	}
+	
+	public IServer getServer(){
+		try {
+			return ServerStoreFactory.instance()
+			.getServerStoreFacade().getFirstStore().getServers()[0];
+		} catch (NNTPException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 
 }

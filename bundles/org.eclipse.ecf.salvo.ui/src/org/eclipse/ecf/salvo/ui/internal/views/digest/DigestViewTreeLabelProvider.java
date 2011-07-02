@@ -18,17 +18,68 @@ package org.eclipse.ecf.salvo.ui.internal.views.digest;
  * Plese note that this functionality is still under construction
  *
  */
+import org.apache.james.mime4j.codec.DecoderUtil;
+import org.eclipse.ecf.protocol.nntp.core.DateParser;
+import org.eclipse.ecf.protocol.nntp.core.ServerStoreFactory;
+import org.eclipse.ecf.protocol.nntp.model.IArticle;
+import org.eclipse.ecf.protocol.nntp.model.INewsgroup;
+import org.eclipse.ecf.protocol.nntp.model.IServer;
+import org.eclipse.ecf.protocol.nntp.model.StoreException;
+import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
-class DigestViewTreeLabelProvider extends LabelProvider {
+class DigestViewTreeLabelProvider implements ITableLabelProvider {
 	
-	public Image getImage(Object element) {
-		return super.getImage(element);
+
+	public void addListener(ILabelProviderListener arg0) {
+		// TODO Auto-generated method stub
+		
 	}
-	
-	public String getText(Object element) {
-		return super.getText(element);
+
+	public void dispose() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public boolean isLabelProperty(Object arg0, String arg1) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public void removeListener(ILabelProviderListener arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public Image getColumnImage(Object arg0, int arg1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getColumnText(Object element, int columnIndex) {
+		
+		if (element instanceof INewsgroup) {
+			INewsgroup node = (INewsgroup) element;
+			
+			if (columnIndex == 0) {
+				return node.getNewsgroupName();
+			} else {
+				return "";
+			}
+			
+		} else if (element instanceof IArticle){
+		
+			IArticle node = (IArticle) element;
+			
+			if (columnIndex == 0) {
+				return DecoderUtil.decodeEncodedWords(node.getSubject());
+			} else {
+				return DateParser.parseRFC822(node.getDate()).toString();
+			}
+		}
+		return null;
 	}
 	
 }
