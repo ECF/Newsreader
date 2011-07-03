@@ -51,7 +51,7 @@ public class ArticlePaneLabelProvider implements ITableLabelProvider,
 		fd.setStyle(SWT.ITALIC);
 		unreadReplies = new Font(font.getDevice(), fd);
 
-		mineColor = Display.getDefault().getSystemColor(SWT.COLOR_RED);
+		mineColor = Display.getDefault().getSystemColor(SWT.COLOR_MAGENTA);
 		commentColor = Display.getDefault().getSystemColor(
 				SWT.COLOR_DARK_MAGENTA);
 	}
