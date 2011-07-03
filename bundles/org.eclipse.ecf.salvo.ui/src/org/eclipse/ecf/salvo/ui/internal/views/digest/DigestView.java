@@ -101,6 +101,7 @@ public class DigestView extends ViewPart{
 			Tree tree = treeViewer.getTree();
 			tree.setLinesVisible(true);
 			tree.setHeaderVisible(true);
+			getSite().setSelectionProvider(treeViewer);
 			tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
 					1));
 			toolkit.paintBordersFor(tree);
