@@ -28,50 +28,50 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 class DigestViewTreeLabelProvider implements ITableLabelProvider {
-	
 
 	public void addListener(ILabelProviderListener arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	public void dispose() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	public boolean isLabelProperty(Object arg0, String arg1) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public void removeListener(ILabelProviderListener arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	public Image getColumnImage(Object arg0, int arg1) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/**
+	 * Get Label for a item in a specific column
+	 * 
+	 * @param element
+	 *            Tree item
+	 * @param columnIndex
+	 *            index of the column
+	 * 
+	 * @return text label for item
+	 */
 	public String getColumnText(Object element, int columnIndex) {
-		
+
 		if (element instanceof INewsgroup) {
 			INewsgroup node = (INewsgroup) element;
-			
+
 			if (columnIndex == 0) {
 				return node.getNewsgroupName();
 			} else {
 				return "";
 			}
-			
+
 		} else if (element instanceof ISalvoResource
-				&& ((ISalvoResource) element).getObject() instanceof IArticle){
-		
-			IArticle node = (IArticle) ((ISalvoResource) element)
-			.getObject();
-			
+				&& ((ISalvoResource) element).getObject() instanceof IArticle) {
+
+			IArticle node = (IArticle) ((ISalvoResource) element).getObject();
+
 			if (columnIndex == 0) {
 				return DecoderUtil.decodeEncodedWords(node.getSubject());
 			} else {
@@ -80,5 +80,5 @@ class DigestViewTreeLabelProvider implements ITableLabelProvider {
 		}
 		return null;
 	}
-	
+
 }

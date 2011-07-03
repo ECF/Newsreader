@@ -39,7 +39,7 @@ public class SelectServerDialog extends Dialog {
 	
 	/**
 	 * Create the dialog.
-	 * @param parentShell
+	 * @param parentShell parent shell
 	 */
 	public SelectServerDialog(Shell parentShell) {
 		super(parentShell);
@@ -49,24 +49,27 @@ public class SelectServerDialog extends Dialog {
 
 	/**
 	 * Create contents of the dialog.
-	 * @param parent
+	 * @param parent parent composite
 	 */
 	@Override
 	protected Control createDialogArea(Composite parent) {
+		
 		parent.getShell().setText("Select Server");
 		Composite container = (Composite) super.createDialogArea(parent);
 		GridLayout gridLayout = (GridLayout) container.getLayout();
 		gridLayout.numColumns = 2;
+		
 		new Label(container, SWT.NONE);
 		new Label(container, SWT.NONE);
 		new Label(container, SWT.NONE);
 		
 		int selectionIndex = 0;
 		
-		String selectedServerForDigest = PreferencesUtil.instance()
+		// Load selected server from preferences
+		String selectedServerForDigest = PreferencesUtil.instance()          
 		.loadPluginSettings("selectedServerForDigest");
 		
-		combo = new Combo(container, SWT.NONE);
+		combo = new Combo(container, SWT.READ_ONLY);
 		combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		for (int i=0,length = servers.size(); i<length; i++){
@@ -76,7 +79,6 @@ public class SelectServerDialog extends Dialog {
 				
 			}
 		}
-		
 		combo.select(selectionIndex);
 		
 		combo.addSelectionListener(new SelectionListener() {
@@ -84,8 +86,7 @@ public class SelectServerDialog extends Dialog {
 			public void widgetSelected(SelectionEvent arg0) {
 				// Saving preferences
 				PreferencesUtil.instance().savePluginSettings(
-						"selectedServerForDigest", servers.get(combo.getSelectionIndex()).getID());
-				
+						"selectedServerForDigest", getSelectedServer().getID());
 			}
 			
 			public void widgetDefaultSelected(SelectionEvent arg0) {
@@ -97,7 +98,7 @@ public class SelectServerDialog extends Dialog {
 
 	/**
 	 * Create contents of the button bar.
-	 * @param parent
+	 * @param parent composite
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
@@ -127,7 +128,8 @@ public class SelectServerDialog extends Dialog {
 		}
 	}
 	
-	public IServer getSelectedServer(){
+	
+	private IServer getSelectedServer(){
 		return servers.get(combo.getSelectionIndex());
 	}
 

@@ -35,7 +35,7 @@ import org.eclipse.jface.viewers.Viewer;
  *         Plese note that this functionality is still under construction
  * 
  */
-class MarkedArticlesContentProvider implements ILazyTreeContentProvider {
+public class MarkedArticlesContentProvider implements ILazyTreeContentProvider {
 
 	private TreeViewer viewer;
 	private IServerStoreFacade serverStoreFacade;
@@ -52,6 +52,12 @@ class MarkedArticlesContentProvider implements ILazyTreeContentProvider {
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 	}
 
+	/**
+	 * Get parent of the element
+	 * 
+	 * @param element
+	 * @return the parent of the element
+	 */
 	public Object getParent(Object element) {
 
 		if (element instanceof INewsgroup) {
@@ -64,20 +70,27 @@ class MarkedArticlesContentProvider implements ILazyTreeContentProvider {
 		return null;
 	}
 
+	/**
+	 * Update the child count of a particular element
+	 * 
+	 * @param element
+	 *            element
+	 * @param currentChildCount
+	 *            present child count of the element
+	 */
 	public void updateChildCount(Object element, int currentChildCount) {
 
 		int length = 0;
 
 		if (element instanceof INewsgroup) {
 
-			INewsgroup node = (INewsgroup) element;
-			length = serverStoreFacade.getMarkedArticles(node).length;
+			length = serverStoreFacade.getMarkedArticles((INewsgroup) element).length;
 
 		} else if (element instanceof IServer) {
 
-			IServer node = (IServer) element;
 			try {
-				length = serverStoreFacade.getSubscribedNewsgroups(node).length;
+				length = serverStoreFacade
+						.getSubscribedNewsgroups((IServer) element).length;
 			} catch (StoreException e) {
 				Debug.log(getClass(), e);
 			}
@@ -91,6 +104,14 @@ class MarkedArticlesContentProvider implements ILazyTreeContentProvider {
 
 	}
 
+	/**
+	 * Buld the tree with adding child elements for the parent element
+	 * 
+	 * @param parent
+	 *            Parent element
+	 * @param index
+	 *            index of the child element
+	 */
 	public void updateElement(Object parent, int index) {
 
 		if (parent instanceof IServer) {
@@ -107,12 +128,13 @@ class MarkedArticlesContentProvider implements ILazyTreeContentProvider {
 
 		} else if (parent instanceof INewsgroup) {
 
-			IArticle article = serverStoreFacade.getMarkedArticles((INewsgroup) parent)[index];
+			IArticle article = serverStoreFacade
+					.getMarkedArticles((INewsgroup) parent)[index];
 			ISalvoResource resource = SalvoResourceFactory.getResource(
 					article.getSubject(), article);
-			
-			
+
 			viewer.replace(parent, index, resource);
+
 			try {
 				updateChildCount(
 						resource,
@@ -124,25 +146,27 @@ class MarkedArticlesContentProvider implements ILazyTreeContentProvider {
 		} else if (parent instanceof ISalvoResource
 				&& ((ISalvoResource) parent).getObject() instanceof IArticle) {
 
-			IArticle parentArticle = (IArticle) ((ISalvoResource) parent).getObject();
-			
+			IArticle parentArticle = (IArticle) ((ISalvoResource) parent)
+					.getObject();
+
 			try {
-				IArticle article = serverStoreFacade.getFollowUps((IArticle) parentArticle)[index];
+				IArticle article = serverStoreFacade
+						.getFollowUps((IArticle) parentArticle)[index];
 				ISalvoResource resource = SalvoResourceFactory.getResource(
 						article.getSubject(), article);
-				
+
 				viewer.replace(parent, index, resource);
-				
+
 				try {
-					
+
 					updateChildCount(
 							resource,
 							serverStoreFacade.getFollowUps((IArticle) article).length);
-					
+
 				} catch (NNTPException e) {
 					updateChildCount(resource, 0);
 				}
-				
+
 			} catch (NNTPException e) {
 				Debug.log(getClass(), e);
 			}

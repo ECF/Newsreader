@@ -22,6 +22,8 @@ import org.eclipse.ecf.salvo.ui.tools.PreferencesUtil;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
@@ -35,69 +37,82 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
+import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Menu;
 
 /**
- * This ViewPart provides the Digest View of Salvo
- * Digest View shows a digest of articles the user interested in    
+ * This ViewPart provides the Digest View of Salvo Digest View shows a digest of
+ * articles the user interested in
+ * 
  * @author isuru
  * 
  * Plese note that this functionality is still under construction
- *
+ * 
  */
-public class DigestView extends ViewPart{
-	
-	public static final String ID = "org.eclipse.ecf.salvo.ui.internal.views.digest.DigestView"; //$NON-NLS-1$
+public class DigestView extends ViewPart {
+
+	public static final String ID = "org.eclipse.ecf.salvo.ui.internal.views.digest.DigestView";
 	private final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
 	private TreeViewer treeViewer;
 	private Combo combo;
-	private Action selectServer; 
-	
+	private Action selectServerAction;
+
 	public DigestView() {
 	}
 
 	/**
 	 * Create contents of the view part.
 	 * 
-	 * @param parent Parent composite
+	 * @param parent
+	 *            Parent composite
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
+
 		Composite container = toolkit.createComposite(parent, SWT.NONE);
 		toolkit.paintBordersFor(container);
 		container.setLayout(new GridLayout(2, false));
+
 		new Label(container, SWT.NONE);
 		{
 			combo = new Combo(container, SWT.READ_ONLY);
-			combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+			combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
+					1, 1));
 			toolkit.adapt(combo);
 			toolkit.paintBordersFor(combo);
-			
+
 			combo.add("Show My Articles");
 			combo.add("Show Marked Articles");
-			
+
 			combo.addSelectionListener(new SelectionListener() {
-				
+
 				public void widgetSelected(SelectionEvent arg0) {
-					if(combo.getSelectionIndex() == 0){
-						treeViewer.setContentProvider(new ThisUserArticlesContentProvider(treeViewer));
+
+					if (combo.getSelectionIndex() == 0) {
+						treeViewer
+								.setContentProvider(new ThisUserArticlesContentProvider(
+										treeViewer));
 					} else {
-						treeViewer.setContentProvider(new MarkedArticlesContentProvider(treeViewer));
+						treeViewer
+								.setContentProvider(new MarkedArticlesContentProvider(
+										treeViewer));
 					}
-					
+
 				}
-				
+
 				public void widgetDefaultSelected(SelectionEvent arg0) {
 				}
 			});
-			
+
 		}
+
 		new Label(container, SWT.NONE);
 		{
-			treeViewer = new TreeViewer(container, SWT.BORDER |SWT.VIRTUAL);
+			treeViewer = new TreeViewer(container, SWT.BORDER | SWT.VIRTUAL);
 			Tree tree = treeViewer.getTree();
 			tree.setLinesVisible(true);
 			tree.setHeaderVisible(true);
@@ -119,17 +134,20 @@ public class DigestView extends ViewPart{
 				trclmnDate.setWidth(100);
 				trclmnDate.setText("Date");
 			}
-			
+
 			treeViewer.setLabelProvider(new DigestViewTreeLabelProvider());
-			treeViewer.setContentProvider(new MarkedArticlesContentProvider(treeViewer));
-			treeViewer.setInput(getServer());
+			treeViewer.setContentProvider(new MarkedArticlesContentProvider(
+					treeViewer));
+			treeViewer.setInput(getSelectedServer());
+
 			combo.select(1);
-			
+
 		}
 
 		createActions();
 		initializeToolBar();
 		initializeMenu();
+		initializeContextMenu(treeViewer);
 	}
 
 	public void dispose() {
@@ -141,17 +159,20 @@ public class DigestView extends ViewPart{
 	 * Create the actions.
 	 */
 	private void createActions() {
-		selectServer = new Action("Select Server") {
-            public void run() { 
-            	Shell shell = new Shell();
-            	  SelectServerDialog selectServerDialog = new SelectServerDialog(shell); 
-                  selectServerDialog.open();
-                  treeViewer.setInput(getServer()); 
-               }
-       };
-       selectServer.setToolTipText("Select Server");
-       selectServer.setImageDescriptor(ImageUtils.getInstance().getImageDescriptor(
-				"addserver.gif")); // TODO: Change image descriptor
+
+		selectServerAction = new Action("Select Server") {
+			public void run() {
+				Shell shell = new Shell();
+				SelectServerDialog selectServerDialog = new SelectServerDialog(
+						shell);
+				selectServerDialog.open();
+				treeViewer.setInput(getSelectedServer());
+			}
+		};
+		selectServerAction.setToolTipText("Select Server");
+		selectServerAction.setImageDescriptor(ImageUtils.getInstance()
+				.getImageDescriptor("addserver.gif")); // TODO: Change image
+														// descriptor
 	}
 
 	/**
@@ -159,7 +180,7 @@ public class DigestView extends ViewPart{
 	 */
 	private void initializeToolBar() {
 		IToolBarManager tbm = getViewSite().getActionBars().getToolBarManager();
-		tbm.add(selectServer);
+		tbm.add(selectServerAction);
 	}
 
 	/**
@@ -167,37 +188,65 @@ public class DigestView extends ViewPart{
 	 */
 	private void initializeMenu() {
 		IMenuManager manager = getViewSite().getActionBars().getMenuManager();
-		manager.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager arg0) {
+		manager.add(selectServerAction);
+	}
+
+	/**
+	 * Initialize the context menu.
+	 */
+	private void initializeContextMenu(TreeViewer viewer) {
+
+		MenuManager menuMgr = new MenuManager();
+		menuMgr.setRemoveAllWhenShown(true);
+		menuMgr.addMenuListener(new IMenuListener() {
+			public void menuAboutToShow(IMenuManager mgr) {
+				fillContextMenu(mgr);
 			}
 		});
-		
-		manager.add(selectServer);
+
+		// Create menu.
+		Menu menu = menuMgr.createContextMenu(viewer.getControl());
+		viewer.getControl().setMenu(menu);
+
+		// Register menu for extension.
+		getSite().registerContextMenu(menuMgr, viewer);
+
+	}
+
+	/**
+	 * Fill context menu
+	 */
+	protected void fillContextMenu(IMenuManager mgr) {
+		mgr.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
 	@Override
 	public void setFocus() {
 	}
-	
-	public IServer getServer(){
+
+	/**
+	 * Get selected server
+	 */
+	private IServer getSelectedServer() {
+
 		String selectedServerForDigest = PreferencesUtil.instance()
-		.loadPluginSettings("selectedServerForDigest");
-		
+				.loadPluginSettings("selectedServerForDigest");
+
 		IServer[] servers;
 		try {
-			servers = ServerStoreFactory.instance()
-			.getServerStoreFacade().getFirstStore().getServers();
+			servers = ServerStoreFactory.instance().getServerStoreFacade()
+					.getFirstStore().getServers();
 
-			for (int i=0,length = servers.length; i<length; i++){
-				if (servers[i].getID().equals(selectedServerForDigest)){
+			for (int i = 0, length = servers.length; i < length; i++) {
+				if (servers[i].getID().equals(selectedServerForDigest)) {
 					return servers[i];
 				}
 			}
-			
+
 		} catch (NNTPException e) {
 			Debug.log(getClass(), e);
 		}
-			
+
 		return null;
 	}
 }
