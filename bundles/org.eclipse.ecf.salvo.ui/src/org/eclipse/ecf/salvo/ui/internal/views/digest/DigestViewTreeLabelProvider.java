@@ -24,11 +24,25 @@ import org.eclipse.ecf.protocol.nntp.model.IArticle;
 import org.eclipse.ecf.protocol.nntp.model.INewsgroup;
 import org.eclipse.ecf.salvo.ui.internal.resources.ISalvoResource;
 import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.graphics.Color;
 
-class DigestViewTreeLabelProvider implements ITableLabelProvider {
+class DigestViewTreeLabelProvider implements ITableLabelProvider, ITableColorProvider {
 
+	private static Color newsgroupForgroundColor;
+	private static Color newsgroupBackgroundColor;
+	private static Color mineColor;
+
+	static {
+		newsgroupForgroundColor = Display.getDefault().getSystemColor(SWT.COLOR_DARK_BLUE);
+		mineColor = Display.getDefault().getSystemColor(SWT.COLOR_MAGENTA);
+		newsgroupBackgroundColor = Display.getDefault().getSystemColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT);
+	}
+	
 	public void addListener(ILabelProviderListener arg0) {
 	}
 
@@ -76,6 +90,32 @@ class DigestViewTreeLabelProvider implements ITableLabelProvider {
 				return DecoderUtil.decodeEncodedWords(node.getSubject());
 			} else {
 				return DateParser.parseRFC822(node.getDate()).toString();
+			}
+		}
+		return null;
+	}
+
+	public Color getBackground(Object element, int columnIndex) {
+		
+		if (element instanceof INewsgroup) {
+			return newsgroupBackgroundColor;
+		} 
+		return null;
+	}
+
+	public Color getForeground(Object element, int columnIndex) {
+		
+		if (element instanceof INewsgroup) {
+
+			return newsgroupForgroundColor;
+
+		} else if (element instanceof ISalvoResource
+				&& ((ISalvoResource) element).getObject() instanceof IArticle){
+			
+			IArticle article = (IArticle) ((ISalvoResource) element).getObject();
+			
+			if (article.isMine()) {
+				return mineColor;
 			}
 		}
 		return null;
