@@ -22,6 +22,7 @@ import org.apache.james.mime4j.codec.DecoderUtil;
 import org.eclipse.ecf.protocol.nntp.core.DateParser;
 import org.eclipse.ecf.protocol.nntp.model.IArticle;
 import org.eclipse.ecf.protocol.nntp.model.INewsgroup;
+import org.eclipse.ecf.salvo.ui.internal.resources.ISalvoResource;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
@@ -65,9 +66,11 @@ class DigestViewTreeLabelProvider implements ITableLabelProvider {
 				return "";
 			}
 			
-		} else if (element instanceof IArticle){
+		} else if (element instanceof ISalvoResource
+				&& ((ISalvoResource) element).getObject() instanceof IArticle){
 		
-			IArticle node = (IArticle) element;
+			IArticle node = (IArticle) ((ISalvoResource) element)
+			.getObject();
 			
 			if (columnIndex == 0) {
 				return DecoderUtil.decodeEncodedWords(node.getSubject());

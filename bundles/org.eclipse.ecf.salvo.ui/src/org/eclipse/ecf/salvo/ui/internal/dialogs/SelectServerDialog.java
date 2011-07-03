@@ -91,7 +91,6 @@ public class SelectServerDialog extends Dialog {
 			public void widgetDefaultSelected(SelectionEvent arg0) {
 			}
 		});
-		
 
 		return container;
 	}

@@ -18,9 +18,7 @@ import org.eclipse.ecf.protocol.nntp.model.INewsgroup;
 import org.eclipse.ecf.protocol.nntp.model.IServer;
 import org.eclipse.ecf.protocol.nntp.model.IServerStoreFacade;
 import org.eclipse.ecf.protocol.nntp.model.NNTPException;
-import org.eclipse.ecf.protocol.nntp.model.NNTPIOException;
 import org.eclipse.ecf.protocol.nntp.model.StoreException;
-import org.eclipse.ecf.protocol.nntp.model.UnexpectedResponseException;
 import org.eclipse.ecf.salvo.ui.internal.resources.ISalvoResource;
 import org.eclipse.ecf.salvo.ui.internal.resources.SalvoResourceFactory;
 import org.eclipse.jface.viewers.ILazyTreeContentProvider;
@@ -28,19 +26,21 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 
 /**
- * This provides the MarkedArticles for Digest View tree
+ * This provides the ThisUserArticles for Digest View tree
  * 
  * @author isuru
  * 
- *         Plese note that this functionality is still under construction
+ * Plese note that this functionality is still under construction
  * 
+ * 
+ * TODO: Handle Duplicates
  */
-class MarkedArticlesContentProvider implements ILazyTreeContentProvider {
+class ThisUserArticlesContentProvider implements ILazyTreeContentProvider {
 
 	private TreeViewer viewer;
 	private IServerStoreFacade serverStoreFacade;
 
-	public MarkedArticlesContentProvider(TreeViewer viewer) {
+	public ThisUserArticlesContentProvider(TreeViewer viewer) {
 		this.viewer = viewer;
 		serverStoreFacade = ServerStoreFactory.instance()
 				.getServerStoreFacade();
@@ -71,7 +71,7 @@ class MarkedArticlesContentProvider implements ILazyTreeContentProvider {
 		if (element instanceof INewsgroup) {
 
 			INewsgroup node = (INewsgroup) element;
-			length = serverStoreFacade.getMarkedArticles(node).length;
+			length = serverStoreFacade.getThisUserArticles(node).length;
 
 		} else if (element instanceof IServer) {
 
@@ -107,12 +107,12 @@ class MarkedArticlesContentProvider implements ILazyTreeContentProvider {
 
 		} else if (parent instanceof INewsgroup) {
 
-			IArticle article = serverStoreFacade.getMarkedArticles((INewsgroup) parent)[index];
+			IArticle article = serverStoreFacade.getThisUserArticles((INewsgroup) parent)[index];
 			ISalvoResource resource = SalvoResourceFactory.getResource(
 					article.getSubject(), article);
 			
-			
 			viewer.replace(parent, index, resource);
+
 			try {
 				updateChildCount(
 						resource,
