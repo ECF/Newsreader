@@ -120,11 +120,12 @@ public class DigestView extends ViewPart {
 			tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
 					1));
 			toolkit.paintBordersFor(tree);
+			
 			{
 				TreeViewerColumn treeViewerColumn = new TreeViewerColumn(
 						treeViewer, SWT.NONE);
 				TreeColumn trclmnSubject = treeViewerColumn.getColumn();
-				trclmnSubject.setWidth(433);
+				trclmnSubject.setWidth(300);
 				trclmnSubject.setText("Subject");
 			}
 			{
@@ -147,7 +148,7 @@ public class DigestView extends ViewPart {
 		createActions();
 		initializeToolBar();
 		initializeMenu();
-		initializeContextMenu(treeViewer);
+		initializeContextMenu();
 	}
 
 	public void dispose() {
@@ -194,7 +195,7 @@ public class DigestView extends ViewPart {
 	/**
 	 * Initialize the context menu.
 	 */
-	private void initializeContextMenu(TreeViewer viewer) {
+	private void initializeContextMenu() {
 
 		MenuManager menuMgr = new MenuManager();
 		menuMgr.setRemoveAllWhenShown(true);
@@ -205,11 +206,11 @@ public class DigestView extends ViewPart {
 		});
 
 		// Create menu.
-		Menu menu = menuMgr.createContextMenu(viewer.getControl());
-		viewer.getControl().setMenu(menu);
+		Menu menu = menuMgr.createContextMenu(treeViewer.getControl());
+		treeViewer.getControl().setMenu(menu);
 
 		// Register menu for extension.
-		getSite().registerContextMenu(menuMgr, viewer);
+		getSite().registerContextMenu(menuMgr, treeViewer);
 
 	}
 
