@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 
+import org.eclipse.ecf.protocol.nntp.core.Debug;
 import org.eclipse.ecf.protocol.nntp.core.StoreStore;
 import org.eclipse.ecf.protocol.nntp.core.StringUtils;
 import org.eclipse.ecf.protocol.nntp.model.IArticle;
@@ -344,10 +345,17 @@ public class ServerStoreFacade implements IServerStoreFacade {
 		// FIXME Decide if article bodies should be stored in the store or
 		// always fetched from server.
 		IArticle[] result = null;
+		
 		if (getFirstStore() != null)
+			
+			Debug.log(getClass(), "Trying to Fetch articles from store...");
 			result = getFirstStore().getFollowUps(article);
+		
 		if (result == null) {
+			
 			try {
+				Debug.log(getClass(), "Trying to Fetch articles from server...");
+				
 				result = article.getServer().getServerConnection()
 						.getFollowUps(article);
 			} catch (NNTPConnectException e) {
