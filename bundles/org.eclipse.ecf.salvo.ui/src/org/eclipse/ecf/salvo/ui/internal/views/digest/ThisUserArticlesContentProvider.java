@@ -60,13 +60,9 @@ class ThisUserArticlesContentProvider implements ILazyTreeContentProvider {
 	 */
 	public Object getParent(Object element) {
 
-		if (element instanceof INewsgroup) {
-			return ((INewsgroup) element).getServer();
-		} else if (element instanceof ISalvoResource
-				&& ((ISalvoResource) element).getObject() instanceof IArticle) {
-			return ((IArticle) element).getNewsgroup();
+		if (element instanceof ISalvoResource) {
+			return ((ISalvoResource) element).getParent();
 		}
-
 		return null;
 	}
 
