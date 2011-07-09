@@ -33,7 +33,8 @@ import org.eclipse.jface.viewers.Viewer;
  *         Plese note that this functionality is still under construction
  * 
  * 
- *         TODO: Handle Duplicates
+ *         TODO: Remove Duplicate articles
+ *         		 Show whole tread for the replied articles	
  */
 class ThisUserArticlesContentProvider implements ILazyTreeContentProvider {
 
