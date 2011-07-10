@@ -48,8 +48,6 @@ import org.eclipse.swt.widgets.Menu;
  * This ViewPart provides the Digest View of Salvo Digest View shows a digest of
  * articles the user interested in
  * 
- * @author isuru
- * 
  * Plese note that this functionality is still under construction
  * 
  */
@@ -85,14 +83,14 @@ public class DigestView extends ViewPart {
 			toolkit.adapt(combo);
 			toolkit.paintBordersFor(combo);
 
+			combo.add("Show Threads I am following");
 			combo.add("Show My Articles");
-			combo.add("Show Marked Articles");
 
 			combo.addSelectionListener(new SelectionListener() {
 
 				public void widgetSelected(SelectionEvent arg0) {
 
-					if (combo.getSelectionIndex() == 0) {
+					if (combo.getSelectionIndex() == 1) {
 						treeViewer
 								.setContentProvider(new ThisUserArticlesContentProvider(
 										treeViewer));
@@ -141,7 +139,7 @@ public class DigestView extends ViewPart {
 					treeViewer));
 			treeViewer.setInput(getSelectedServer());
 
-			combo.select(1);
+			combo.select(0);
 
 		}
 
