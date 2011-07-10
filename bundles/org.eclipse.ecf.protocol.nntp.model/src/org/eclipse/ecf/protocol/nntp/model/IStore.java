@@ -129,4 +129,15 @@ public interface IStore extends IStoreEventProvider, IInputOutputSystem,
 	 * @return marked articles for all newsgroups
 	 */
 	public IArticle[] getAllMarkedArticles(IServer server);
+	
+	/**
+	 * Get article from messageId
+	 * 
+	 * @param newsgroup
+	 *            Newsgroup
+	 * @param msgId message Id of article
+	 * @return article which has the particular message id
+	 * 
+	 */
+	public IArticle getArticleByMsgId(INewsgroup newsgroup, String msgId);
 }
