@@ -172,8 +172,8 @@ public class DigestView extends ViewPart {
 		};
 		selectServerAction.setToolTipText("Select Server");
 		selectServerAction.setImageDescriptor(ImageUtils.getInstance()
-				.getImageDescriptor("addserver.gif")); // TODO: Change image
-														// descriptor
+				.getImageDescriptor("selectServer.gif")); 
+														
 	}
 
 	/**
