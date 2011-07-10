@@ -30,11 +30,6 @@ import org.eclipse.jface.viewers.Viewer;
  * 
  * @author isuru
  * 
- *         Plese note that this functionality is still under construction
- * 
- * 
- *         TODO: Remove Duplicate articles
- *         		 Show whole tread for the replied articles	
  */
 class ThisUserArticlesContentProvider implements ILazyTreeContentProvider {
 
@@ -81,8 +76,8 @@ class ThisUserArticlesContentProvider implements ILazyTreeContentProvider {
 
 		if (element instanceof INewsgroup) {
 
-			length = serverStoreFacade
-					.getThisUserArticles((INewsgroup) element).length;
+			length = (serverStoreFacade
+					.getFirstArticleOfThisUserThreads((INewsgroup) element)).length;
 
 		} else if (element instanceof IServer) {
 
@@ -128,7 +123,7 @@ class ThisUserArticlesContentProvider implements ILazyTreeContentProvider {
 		} else if (parent instanceof INewsgroup) {
 
 			IArticle article = serverStoreFacade
-					.getThisUserArticles((INewsgroup) parent)[index];
+					.getFirstArticleOfThisUserThreads((INewsgroup) parent)[index];
 			ISalvoResource resource = SalvoResourceFactory.getResource(
 					article.getSubject(), article);
 
