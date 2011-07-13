@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.ecf.salvo.ui.internal.views.digest;
 
+import java.util.ArrayList;
+
 import org.eclipse.ecf.protocol.nntp.core.Debug;
 import org.eclipse.ecf.protocol.nntp.core.ServerStoreFactory;
 import org.eclipse.ecf.protocol.nntp.model.IArticle;
@@ -35,6 +37,8 @@ class ThisUserArticlesContentProvider implements ILazyTreeContentProvider {
 
 	private TreeViewer viewer;
 	private IServerStoreFacade serverStoreFacade;
+	private INewsgroup[] newsgroups;
+	
 
 	public ThisUserArticlesContentProvider(TreeViewer viewer) {
 		this.viewer = viewer;
@@ -46,6 +50,32 @@ class ThisUserArticlesContentProvider implements ILazyTreeContentProvider {
 	}
 
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		newsgroups = getNotEmptyNewsgroups((IServer) newInput);
+	}
+	
+	/**
+	 * Get not empty newsgroups
+	 * @return not empty newsgroups
+	 */
+	private INewsgroup[] getNotEmptyNewsgroups(IServer server){
+		
+		ArrayList<INewsgroup> result = new ArrayList<INewsgroup>(); 
+		
+		try {
+			INewsgroup[] allNewsgroups = serverStoreFacade.getSubscribedNewsgroups(server);
+			
+			for (INewsgroup newsgroup : allNewsgroups) {
+				if ((serverStoreFacade
+						.getFirstArticleOfThisUserThreads(newsgroup)).length != 0) {
+					result.add(newsgroup);
+				}
+			}
+			
+		} catch (StoreException e) {
+			Debug.log(getClass(), "Error loading subscribed newsgroups from server");
+		}
+		
+		return (INewsgroup[]) result.toArray(new INewsgroup[0]);
 	}
 
 	/**
@@ -81,12 +111,7 @@ class ThisUserArticlesContentProvider implements ILazyTreeContentProvider {
 
 		} else if (element instanceof IServer) {
 
-			try {
-				length = serverStoreFacade
-						.getSubscribedNewsgroups((IServer) element).length;
-			} catch (StoreException e) {
-				Debug.log(getClass(), e);
-			}
+			length = newsgroups.length;
 
 		} else if (element instanceof ISalvoResource
 				&& ((ISalvoResource) element).getObject() instanceof IArticle) {
@@ -96,7 +121,7 @@ class ThisUserArticlesContentProvider implements ILazyTreeContentProvider {
 		viewer.setChildCount(element, length);
 
 	}
-
+	
 	/**
 	 * Buld the tree with adding child elements for the parent element
 	 * 
@@ -109,16 +134,9 @@ class ThisUserArticlesContentProvider implements ILazyTreeContentProvider {
 
 		if (parent instanceof IServer) {
 
-			try {
-				INewsgroup newsgroup = serverStoreFacade
-						.getSubscribedNewsgroups((IServer) parent)[index];
-
-				viewer.replace(parent, index, newsgroup);
-				updateChildCount(newsgroup, -1);
-
-			} catch (StoreException e) {
-				Debug.log(getClass(), e);
-			}
+			INewsgroup newsgroup = newsgroups[index];
+			viewer.replace(parent, index, newsgroup);
+			updateChildCount(newsgroup, -1);
 
 		} else if (parent instanceof INewsgroup) {
 
