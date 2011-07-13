@@ -230,6 +230,15 @@ public class DigestView extends ViewPart {
 
 		String selectedServerForDigest = PreferencesUtil.instance()
 				.loadPluginSettings("selectedServerForDigest");
+		
+		if (selectedServerForDigest.equals("null")) {
+			try {
+				return ServerStoreFactory.instance().getServerStoreFacade()
+					.getFirstStore().getServers()[0];
+			} catch (NNTPException e) {
+				Debug.log(getClass(), e);
+			}
+		}
 
 		IServer[] servers;
 		try {
