@@ -104,9 +104,9 @@ class DigestViewTreeLabelProvider implements ITableLabelProvider,
 
 	public Color getBackground(Object element, int columnIndex) {
 
-		if (element instanceof INewsgroup) {
+		/*if (element instanceof INewsgroup) {
 			return newsgroupBackgroundColor;
-		}
+		}*/
 		return null;
 	}
 
