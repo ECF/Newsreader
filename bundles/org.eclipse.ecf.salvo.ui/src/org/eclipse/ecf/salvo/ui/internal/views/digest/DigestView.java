@@ -24,6 +24,8 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.layout.TreeColumnLayout;
+import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
@@ -109,30 +111,31 @@ public class DigestView extends ViewPart {
 		}
 
 		new Label(container, SWT.NONE);
+		final Composite treeComposite = new Composite(container, SWT.NONE);
+		treeComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
+				true));
+		
 		{
-			treeViewer = new TreeViewer(container, SWT.BORDER | SWT.VIRTUAL);
+			treeViewer = new TreeViewer(treeComposite, SWT.FULL_SELECTION | SWT.BORDER | SWT.VIRTUAL);
 			Tree tree = treeViewer.getTree();
 			tree.setLinesVisible(true);
 			tree.setHeaderVisible(true);
 			getSite().setSelectionProvider(treeViewer);
-			tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
-					1));
 			toolkit.paintBordersFor(tree);
-			
+
+			TreeColumnLayout treeColumnLayout = new TreeColumnLayout();
 			{
-				TreeViewerColumn treeViewerColumn = new TreeViewerColumn(
-						treeViewer, SWT.NONE);
-				TreeColumn trclmnSubject = treeViewerColumn.getColumn();
-				trclmnSubject.setWidth(300);
-				trclmnSubject.setText("Subject");
+				final TreeColumn subjectTreeColumn = new TreeColumn(tree, SWT.NONE);
+				subjectTreeColumn.setText("Subject");
+				treeColumnLayout.setColumnData(subjectTreeColumn, new ColumnWeightData(75));
 			}
 			{
-				TreeViewerColumn treeViewerColumn = new TreeViewerColumn(
-						treeViewer, SWT.NONE);
-				TreeColumn trclmnDate = treeViewerColumn.getColumn();
-				trclmnDate.setWidth(100);
-				trclmnDate.setText("Date");
+				final TreeColumn dateTreeColumn = new TreeColumn(tree, SWT.NONE);
+				dateTreeColumn.setText("Date");
+				treeColumnLayout.setColumnData(dateTreeColumn, new ColumnWeightData(25));
+				dateTreeColumn.setMoveable(true);
 			}
+			treeComposite.setLayout(treeColumnLayout);
 
 			treeViewer.setLabelProvider(new DigestViewTreeLabelProvider());
 			treeViewer.setContentProvider(new MarkedArticlesContentProvider(
