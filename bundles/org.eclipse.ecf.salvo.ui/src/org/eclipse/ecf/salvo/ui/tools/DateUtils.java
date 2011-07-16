@@ -54,7 +54,12 @@ public class DateUtils {
 			String formattedDate = DateFormat.getInstance().format(date); 
 			
 			if (today.equals(articleDate)) {
-				return "Today " + formattedDate.split(" ")[1] +" "+ formattedDate.split(" ")[2];
+				String[] fD = formattedDate.split(" ");
+				if (fD.length == 2) {
+					return "Today " + fD[1];
+				} else if (fD.length == 3) {
+					return "Today " + fD[1] + " " + fD[2];
+				}
 			}
 			return formattedDate;
 
