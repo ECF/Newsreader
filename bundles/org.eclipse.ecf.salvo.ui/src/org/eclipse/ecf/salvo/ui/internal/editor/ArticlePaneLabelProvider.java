@@ -18,6 +18,7 @@ import org.apache.james.mime4j.codec.DecoderUtil;
 import org.eclipse.ecf.protocol.nntp.core.DateParser;
 import org.eclipse.ecf.protocol.nntp.model.IArticle;
 import org.eclipse.ecf.salvo.ui.internal.resources.ISalvoResource;
+import org.eclipse.ecf.salvo.ui.tools.DateUtils;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableColorProvider;
@@ -51,7 +52,7 @@ public class ArticlePaneLabelProvider implements ITableLabelProvider,
 		fd.setStyle(SWT.ITALIC);
 		unreadReplies = new Font(font.getDevice(), fd);
 
-		mineColor = Display.getDefault().getSystemColor(SWT.COLOR_RED);
+		mineColor = Display.getDefault().getSystemColor(SWT.COLOR_MAGENTA);
 		commentColor = Display.getDefault().getSystemColor(
 				SWT.COLOR_DARK_MAGENTA);
 	}
@@ -73,7 +74,7 @@ public class ArticlePaneLabelProvider implements ITableLabelProvider,
 				 return DecoderUtil.decodeEncodedWords(article.getFullUserName());
 			if (columnIndex == 2) {
 				Date date = DateParser.parseRFC822(article.getDate());
-				return getNiceDate(article, date);
+				return DateUtils.instance().getNiceDate(article, date);
 			}
 			if (columnIndex == 3)
 				return article.getFormattedSize();
@@ -94,6 +95,8 @@ public class ArticlePaneLabelProvider implements ITableLabelProvider,
 	 */
 	private String getNiceDate(IArticle article, Date date) {
 
+		// TODO - Remove this method if needed. This functionality is available in DateUtil class
+		
 		// FIXME - Make a nice date
 		return date == null ? article.getDate() : DateFormat
 				.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT)

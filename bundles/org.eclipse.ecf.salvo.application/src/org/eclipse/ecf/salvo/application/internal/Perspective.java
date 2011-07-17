@@ -31,9 +31,8 @@ public class Perspective implements IPerspectiveFactory {
 		layout.createPlaceholderFolder(SALVO.APPLICATION_BOTTOMRIGHT, IPageLayout.BOTTOM, 0.7f, layout
 				.getEditorArea());
 
-//		layout.createPlaceholderFolder(SALVO.APPLICATION_RIGHT, IPageLayout.RIGHT, 0.2f, layout
-//				.getEditorArea());
-
+		layout.createPlaceholderFolder(SALVO.APPLICATION_RIGHT, IPageLayout.RIGHT, 0.6f, layout
+				.getEditorArea());
 		
 	}
 }

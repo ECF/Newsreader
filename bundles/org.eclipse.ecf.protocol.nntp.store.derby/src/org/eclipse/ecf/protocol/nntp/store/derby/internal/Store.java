@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.apache.derby.iapi.services.io.ArrayUtil;
 import org.eclipse.ecf.protocol.nntp.core.DateParser;
 import org.eclipse.ecf.protocol.nntp.core.Debug;
 import org.eclipse.ecf.protocol.nntp.core.StringUtils;
@@ -477,7 +476,6 @@ public class Store implements IStore {
 					result.add(article);
 				}
 			}
-
 			return (IArticle[]) result.toArray(new IArticle[0]);
 
 		} catch (StoreException e) {
@@ -527,14 +525,32 @@ public class Store implements IStore {
 				}
 
 			}
-			
 			return (IArticle[]) result.toArray(new IArticle[0]);
 
 		} catch (StoreException e) {
 			Debug.log(getClass(), e);
 		}
-		
 		return null;
 	}
 
+	/**
+	 * Get article from messageId
+	 * 
+	 * @param newsgroup
+	 *            Newsgroup
+	 * @param msgId message Id of article
+	 * @return article which has the particular message id
+	 * 
+	 */
+	public IArticle getArticleByMsgId(INewsgroup newsgroup, String msgId) {
+
+		try {
+			return articleDOA.getArticleByMsgId(newsgroup, msgId);
+		} catch (StoreException e) {
+			Debug.log(getClass(), e);
+		}
+		return null;
+		
+	}
+	
 }

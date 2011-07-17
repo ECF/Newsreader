@@ -73,6 +73,8 @@ public class ArticleDAO {
 
 	private PreparedStatement getMarkedArticles;
 
+	private PreparedStatement getArticleByMsgId;
+
 	public ArticleDAO(Connection connection) throws StoreException {
 		this.connection = connection;
 		prepareStatements();
@@ -154,6 +156,9 @@ public class ArticleDAO {
 
 			getMarkedArticles = connection
 					.prepareStatement("select * from article where isMarked = '1' and newsgroupId = ?");
+
+			getArticleByMsgId = connection
+					.prepareStatement("select * from article where messageID = ?");
 
 		} catch (SQLException e) {
 			throw new StoreException(e.getMessage(), e);
@@ -629,7 +634,7 @@ public class ArticleDAO {
 			if (r == null)
 				return new IArticle[0];
 
-			ArrayList result = new ArrayList();
+			ArrayList<IArticle> result = new ArrayList<IArticle>();
 
 			while (r.next()) {
 				IArticle article = ArticleFactory.createArticle(
@@ -648,5 +653,46 @@ public class ArticleDAO {
 		}
 
 	}
+
+	/**
+	 * Get a article from the MessageId
+	 * 
+	 * @param newsgroup
+	 *            Newsgroup
+	 * @param id
+	 *            MessageId
+	 * @return article corresponds to given MessageId
+	 * @throws StoreException
+	 */
+	public IArticle getArticleByMsgId(INewsgroup newsgroup, String id)
+			throws StoreException {
+		try {
+			getArticleByMsgId.setString(1, id);
+
+			getArticleByMsgId.execute();
+
+			ResultSet r = getArticleByMsgId.getResultSet();
+
+			if (r == null)
+				return null;
+
+			IArticle article = null;
+			while (r.next()) {
+				article = ArticleFactory.createArticle(getArticleNumber(r),
+						newsgroup);
+				article.setMarked(isMarked(r));
+				article.setRead(isRead(r));
+				article.setProperty("DB_ID", getArticleID(r) + "");
+				loadArticleHeaders(article, getArticleID(r));
+			}
+			r.close();
+
+			return article;
+
+		} catch (SQLException e) {
+			throw new StoreException(e.getMessage(), e);
+		}
+	}
+
 
 }
