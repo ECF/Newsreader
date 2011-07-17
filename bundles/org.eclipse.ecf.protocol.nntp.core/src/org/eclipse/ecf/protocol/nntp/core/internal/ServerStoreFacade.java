@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 
+import org.eclipse.ecf.protocol.nntp.core.Debug;
 import org.eclipse.ecf.protocol.nntp.core.StoreStore;
 import org.eclipse.ecf.protocol.nntp.core.StringUtils;
 import org.eclipse.ecf.protocol.nntp.model.IArticle;
@@ -344,10 +345,17 @@ public class ServerStoreFacade implements IServerStoreFacade {
 		// FIXME Decide if article bodies should be stored in the store or
 		// always fetched from server.
 		IArticle[] result = null;
+
 		if (getFirstStore() != null)
-			result = getFirstStore().getFollowUps(article);
+			Debug.log(getClass(), "Trying to Fetch articles from store...");
+
+		result = getFirstStore().getFollowUps(article);
+
 		if (result == null) {
+
 			try {
+				Debug.log(getClass(), "Trying to Fetch articles from server...");
+
 				result = article.getServer().getServerConnection()
 						.getFollowUps(article);
 			} catch (NNTPConnectException e) {
@@ -532,25 +540,30 @@ public class ServerStoreFacade implements IServerStoreFacade {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Get all articles of current user
-	 * @param newsgroup Newsgroup
+	 * 
+	 * @param newsgroup
+	 *            Newsgroup
 	 * @return all articles of current user of a particular newsgroup
 	 */
-	public IArticle[] getThisUserArticles(INewsgroup newsgroup){
-		return getFirstStore().getArticlesByUserId(newsgroup, newsgroup.getServer().getServerConnection().getFullUserName());
+	public IArticle[] getThisUserArticles(INewsgroup newsgroup) {
+		return getFirstStore().getArticlesByUserId(newsgroup,
+				newsgroup.getServer().getServerConnection().getFullUserName());
 	}
-	
+
 	/**
 	 * Get marked articles
-	 * @param newsgroup Newsgroup
+	 * 
+	 * @param newsgroup
+	 *            Newsgroup
 	 * @return marked articles of a particular newsgroup
 	 */
-	public IArticle[] getMarkedArticles(INewsgroup newsgroup){
+	public IArticle[] getMarkedArticles(INewsgroup newsgroup) {
 		return getFirstStore().getMarkedArticles(newsgroup);
 	}
-	
+
 	/**
 	 * 
 	 * Get all marked articles
@@ -560,5 +573,68 @@ public class ServerStoreFacade implements IServerStoreFacade {
 	public IArticle[] getAllMarkedArticles(IServer server) {
 		return getFirstStore().getAllMarkedArticles(server);
 	}
-	
+
+	/**
+	 * Get article from messageId
+	 * 
+	 * @param newsgroup
+	 *            Newsgroup
+	 * @param msgId
+	 *            message Id of article
+	 * @return article which has the particular message id
+	 * 
+	 */
+	public IArticle getArticleByMsgId(INewsgroup newsgroup, String msgId) {
+
+		return getFirstStore().getArticleByMsgId(newsgroup, msgId);
+
+	}
+
+	/**
+	 * Get the first article of a thread which corresponds to a follow-up
+	 * article
+	 * 
+	 * @param article
+	 *            a follow-up article of a thread
+	 * 
+	 * @return the first article of a thread which corresponds to the follow-up
+	 *         article
+	 */
+	public IArticle getFirstArticleOfTread(IArticle article) {
+
+		if (article.getLastReference() == null) {
+			return article;
+		} else {
+			return getFirstArticleOfTread(getArticleByMsgId(
+					article.getNewsgroup(), article.getLastReference()));
+		}
+	}
+
+	/**
+	 * get the first articles of the threads which this user has started or
+	 * replied to
+	 * 
+	 * @param newsgroup
+	 *            Newsgroup
+	 * @return First articles of the threads which this user has started or
+	 *         replied to
+	 */
+	public IArticle[] getFirstArticleOfThisUserThreads(INewsgroup newsgroup) {
+
+		IArticle[] thisUserarticles = getThisUserArticles(newsgroup);
+
+		ArrayList<IArticle> result = new ArrayList<IArticle>();
+
+		for (IArticle thisUserArticle : thisUserarticles) {
+
+			IArticle firstArticle = getFirstArticleOfTread(thisUserArticle);
+
+			if (!result.contains(firstArticle)) { // prevent duplicates
+				result.add(firstArticle);
+			}
+
+		}
+		return (IArticle[]) result.toArray(new IArticle[0]);
+	}
+
 }

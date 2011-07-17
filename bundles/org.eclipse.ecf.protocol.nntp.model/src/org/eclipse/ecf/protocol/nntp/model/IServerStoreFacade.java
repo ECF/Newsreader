@@ -95,4 +95,41 @@ public interface IServerStoreFacade extends IInputOutputSystem,
 	 * @return marked articles for all newsgroups
 	 */
 	public IArticle[] getAllMarkedArticles(IServer server);
+	
+	/**
+	 * Get article from messageId
+	 * 
+	 * @param newsgroup
+	 *            Newsgroup
+	 * @param msgId
+	 *            message Id of article
+	 * @return article which has the particular message id
+	 * 
+	 */
+	public IArticle getArticleByMsgId(INewsgroup newsgroup, String msgId);
+	
+	/**
+	 * Get the first article of a thread which corresponds to a follow-up
+	 * article
+	 * 
+	 * @param article
+	 *            a follow-up article of a thread
+	 * 
+	 * @return the first article of a thread which corresponds to the follow-up
+	 *         article
+	 */
+	public IArticle getFirstArticleOfTread(IArticle article);
+	
+	/**
+	 * get the first articles of the threads which this user has started or
+	 * replied to
+	 * 
+	 * @param newsgroup
+	 *            Newsgroup
+	 * @return First articles of the threads which this user has started or
+	 *         replied to
+	 */
+	public IArticle[] getFirstArticleOfThisUserThreads(INewsgroup newsgroup);
+	
+	
 }

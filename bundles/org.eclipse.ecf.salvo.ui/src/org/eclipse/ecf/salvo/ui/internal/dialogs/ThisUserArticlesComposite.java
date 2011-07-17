@@ -13,7 +13,9 @@ package org.eclipse.ecf.salvo.ui.internal.dialogs;
 
 import java.io.ByteArrayInputStream;
 
+import org.apache.james.mime4j.codec.DecoderUtil;
 import org.apache.james.mime4j.parser.MimeStreamParser;
+import org.eclipse.ecf.protocol.nntp.core.DateParser;
 import org.eclipse.ecf.protocol.nntp.core.Debug;
 import org.eclipse.ecf.protocol.nntp.core.ServerStoreFactory;
 import org.eclipse.ecf.protocol.nntp.model.IArticle;
@@ -129,8 +131,8 @@ public class ThisUserArticlesComposite extends Composite {
 		for (IArticle article : articles) {
 
 			TableItem tableItem = new TableItem(articleTable, SWT.NONE);
-			tableItem.setText(0, article.getSubject());
-			tableItem.setText(1, article.getHeaderAttributeValue("Date:"));
+			tableItem.setText(0, DecoderUtil.decodeEncodedWords(article.getSubject()));
+			tableItem.setText(1, DateParser.parseRFC822(article.getHeaderAttributeValue("Date:")).toString());
 
 		}
 	}

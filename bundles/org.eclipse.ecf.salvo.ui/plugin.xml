@@ -51,7 +51,7 @@
       		category="org.eclipse.ecf.salvo.ui.category1"
             class="org.eclipse.ecf.salvo.ui.internal.views.digest.DigestView"
             id="org.eclipse.ecf.salvo.ui.internal.views.digest.DigestView"
-            icon="icons/messages.gif"
+            icon="icons/icon_news.gif"
             name="News Digest View">
       </view>
    </extension>

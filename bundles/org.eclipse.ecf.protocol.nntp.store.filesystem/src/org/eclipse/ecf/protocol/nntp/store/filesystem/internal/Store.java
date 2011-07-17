@@ -1341,8 +1341,14 @@ public class Store implements IStore {
 		Debug.log(getClass(), "Not implemented yet");
 		return null;
 	}
-	
-	
+
+	/**
+	 * Get Article which has a particular message id
+	 */
+	public IArticle getArticleByMsgId(INewsgroup newsgroup, String msgId) {
+		Debug.log(getClass(), "Not implemented yet");
+		return null;
+	}
 	
 			
 }
