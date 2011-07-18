@@ -636,5 +636,33 @@ public class ServerStoreFacade implements IServerStoreFacade {
 		}
 		return (IArticle[]) result.toArray(new IArticle[0]);
 	}
+	
+	/**
+	 * Get the articleNumber of the last reply of the thread of the article
+	 * @param article 
+	 * @return articleNumber of the last reply of the thread
+	 *  
+	 */
+	public int getLastReplyArticleNumber(IArticle article){
+		int lastArticleNumber = article.getArticleNumber();
+		
+		try {
+			IArticle[] followups = getAllFollowUps(article);
+		
+			if (followups.length == 0) { // For no reply
+				return lastArticleNumber;			
+			}
+			
+			for (IArticle followupArticle : followups) {
+				if (followupArticle.getArticleNumber() > lastArticleNumber) {
+					lastArticleNumber = followupArticle.getArticleNumber();
+				}
+			}
+		} catch (NNTPException e) {
+			Debug.log(getClass(), e);
+		}
+		
+		return lastArticleNumber;
+	}
 
 }

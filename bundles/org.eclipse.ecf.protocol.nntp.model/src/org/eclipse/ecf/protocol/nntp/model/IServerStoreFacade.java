@@ -130,6 +130,13 @@ public interface IServerStoreFacade extends IInputOutputSystem,
 	 *         replied to
 	 */
 	public IArticle[] getFirstArticleOfThisUserThreads(INewsgroup newsgroup);
-	
+
+	/**
+	 * Get the articleNumber of the last reply of the thread of the article
+	 * @param article 
+	 * @return articleNumber of the last reply of the thread
+	 *  
+	 */
+	public int getLastReplyArticleNumber(IArticle newArticle);
 	
 }
