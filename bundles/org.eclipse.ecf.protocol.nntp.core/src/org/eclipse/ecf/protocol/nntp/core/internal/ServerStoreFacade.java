@@ -670,7 +670,12 @@ public class ServerStoreFacade implements IServerStoreFacade {
 		return lastArticleNumber;
 	}
 	
-	private IArticle[] orderArticlesFromNewestFirst(IArticle[] articles) {
+	/**
+	 * Order Articles from the Newest First.
+	 * @param articles articles to be ordered
+	 * @return ordered articles
+	 */
+	public IArticle[] orderArticlesFromNewestFirst(IArticle[] articles) {
 
 		Map<Integer, IArticle> unorderedArticles = new HashMap<Integer, IArticle>();
 		Integer[] lastArticleNumbers = new Integer[articles.length];
@@ -682,13 +687,13 @@ public class ServerStoreFacade implements IServerStoreFacade {
 		}
 
 		Arrays.sort(lastArticleNumbers, Collections.reverseOrder());
-		IArticle[] result = new IArticle[articles.length];
+		IArticle[] orderedArticles = new IArticle[articles.length];
 
 		for (int i = 0; i < articles.length; i++) {
-			result[i] = unorderedArticles.get(lastArticleNumbers[i]);
+			orderedArticles[i] = unorderedArticles.get(lastArticleNumbers[i]);
 		}
 
-		return result;
+		return orderedArticles;
 	}
 
 }

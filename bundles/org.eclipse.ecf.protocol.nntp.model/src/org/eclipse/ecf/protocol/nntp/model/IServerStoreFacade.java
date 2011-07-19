@@ -139,4 +139,11 @@ public interface IServerStoreFacade extends IInputOutputSystem,
 	 */
 	public int getLastReplyArticleNumber(IArticle newArticle);
 	
+	/**
+	 * Order Articles from the Newest First.
+	 * @param articles articles to be ordered
+	 * @return ordered articles
+	 */
+	public IArticle[] orderArticlesFromNewestFirst(IArticle[] articles);
+	
 }
