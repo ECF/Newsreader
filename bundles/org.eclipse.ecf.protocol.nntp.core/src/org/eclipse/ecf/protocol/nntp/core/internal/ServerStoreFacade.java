@@ -15,8 +15,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.eclipse.ecf.protocol.nntp.core.Debug;
 import org.eclipse.ecf.protocol.nntp.core.StoreStore;
@@ -561,7 +564,7 @@ public class ServerStoreFacade implements IServerStoreFacade {
 	 * @return marked articles of a particular newsgroup
 	 */
 	public IArticle[] getMarkedArticles(INewsgroup newsgroup) {
-		return getFirstStore().getMarkedArticles(newsgroup);
+		return orderArticlesFromNewestFirst (getFirstStore().getMarkedArticles(newsgroup));
 	}
 
 	/**
@@ -571,7 +574,7 @@ public class ServerStoreFacade implements IServerStoreFacade {
 	 * @return marked articles for all newsgroups
 	 */
 	public IArticle[] getAllMarkedArticles(IServer server) {
-		return getFirstStore().getAllMarkedArticles(server);
+		return orderArticlesFromNewestFirst (getFirstStore().getAllMarkedArticles(server));
 	}
 
 	/**
@@ -634,7 +637,9 @@ public class ServerStoreFacade implements IServerStoreFacade {
 			}
 
 		}
-		return (IArticle[]) result.toArray(new IArticle[0]);
+		
+		IArticle[] unorderedArticles = (IArticle[]) result.toArray(new IArticle[0]);
+		return orderArticlesFromNewestFirst(unorderedArticles); 
 	}
 	
 	/**
@@ -663,6 +668,27 @@ public class ServerStoreFacade implements IServerStoreFacade {
 		}
 		
 		return lastArticleNumber;
+	}
+	
+	private IArticle[] orderArticlesFromNewestFirst(IArticle[] articles) {
+
+		Map<Integer, IArticle> unorderedArticles = new HashMap<Integer, IArticle>();
+		Integer[] lastArticleNumbers = new Integer[articles.length];
+
+		for (int i = 0; i < articles.length; i++) {
+			int articleNumber = getLastReplyArticleNumber(articles[i]);
+			unorderedArticles.put(articleNumber, articles[i]);
+			lastArticleNumbers[i] = articleNumber;
+		}
+
+		Arrays.sort(lastArticleNumbers, Collections.reverseOrder());
+		IArticle[] result = new IArticle[articles.length];
+
+		for (int i = 0; i < articles.length; i++) {
+			result[i] = unorderedArticles.get(lastArticleNumbers[i]);
+		}
+
+		return result;
 	}
 
 }

@@ -92,6 +92,8 @@ public class DigestView extends ViewPart {
 
 				public void widgetSelected(SelectionEvent arg0) {
 
+					treeViewer.getTree().removeAll();
+					
 					if (combo.getSelectionIndex() == 1) {
 						treeViewer
 								.setContentProvider(new ThisUserArticlesContentProvider(
@@ -101,7 +103,6 @@ public class DigestView extends ViewPart {
 								.setContentProvider(new MarkedArticlesContentProvider(
 										treeViewer));
 					}
-
 				}
 
 				public void widgetDefaultSelected(SelectionEvent arg0) {
