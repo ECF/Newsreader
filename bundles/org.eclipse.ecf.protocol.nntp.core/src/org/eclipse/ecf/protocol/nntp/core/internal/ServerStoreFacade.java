@@ -97,7 +97,8 @@ public class ServerStoreFacade implements IServerStoreFacade {
 		for (int i = 0; i < getStores().length; i++) {
 			getStores()[i].subscribeNewsgroup(group);
 		}
-		updateAttributes(group);
+		syncStoreWithServer(group);
+		//updateAttributes(group);
 	}
 
 	public void subscribeServer(IServer server, String passWord)
@@ -126,6 +127,13 @@ public class ServerStoreFacade implements IServerStoreFacade {
 			getStores()[i].updateAttributes(newsgroup);
 		}
 	}
+	
+	public void updateAttributesInStore(INewsgroup newsgroup) throws NNTPIOException, UnexpectedResponseException, StoreException {
+		for (int i = 0; i < getStores().length; i++) {
+			getStores()[i].updateAttributes(newsgroup);
+		}
+	}
+	
 
 	public INewsgroup[] getSubscribedNewsgroups(IServer server)
 			throws StoreException {
@@ -412,7 +420,8 @@ public class ServerStoreFacade implements IServerStoreFacade {
 	public void replyToArticle(IArticle article, String body)
 			throws NNTPIOException, UnexpectedResponseException, StoreException {
 		article.getServer().getServerConnection().replyToArticle(article, body);
-		updateAttributes(article.getNewsgroup());
+		//updateAttributes(article.getNewsgroup());
+		syncStoreWithServer(article.getNewsgroup());
 	}
 
 	public void postNewArticle(INewsgroup[] newsgroups, String subject,
@@ -423,8 +432,8 @@ public class ServerStoreFacade implements IServerStoreFacade {
 					.getServerConnection();
 			connection.postNewArticle(newsgroups, subject, body);
 			for (int i = 0; i < newsgroups.length; i++) {
-
-				updateAttributes(newsgroups[i]);
+				syncStoreWithServer(newsgroups[i]);
+				//updateAttributes(newsgroups[i]);
 			}
 		} catch (UnexpectedResponseException e) {
 			throw new NNTPIOException(e.getMessage(), e);
@@ -694,6 +703,49 @@ public class ServerStoreFacade implements IServerStoreFacade {
 		}
 
 		return orderedArticles;
+	}
+	
+	/**
+	 * Get the high Watermark of the newsgroup (in store) 
+	 * @param newsgroup
+	 * @return the high Watermark of the newsgroup
+	 */
+	public int getStoreHighWatermark (INewsgroup newsgroup) {
+		return newsgroup.getHighWaterMark();
+	}
+	
+	/**
+	 * Get the watermarks of the newsgroup (from server) 
+	 * @param newsgroup
+	 * @return the high watermarks of the newsgroup
+	 */
+	public int[] getServerWatermarks (INewsgroup newsgroup) {
+		try {
+			return newsgroup.getServer().getServerConnection().getWaterMarks(newsgroup);
+		} catch (NNTPException e) {
+			Debug.log(getClass(), e);
+			return null;
+		}
+	}
+	
+	/**
+	 * Update store with the server
+	 * @param newsgroup Newsgroup
+	 * @return newly added articles
+	 */
+	public IArticle[] syncStoreWithServer(INewsgroup newsgroup) throws NNTPIOException, UnexpectedResponseException, StoreException {
+		
+		int storeHighWatermark = getStoreHighWatermark(newsgroup);	
+		int serverHighWatermark = getServerWatermarks(newsgroup)[2];
+		
+		IArticle[] articles = null;
+		
+		if (storeHighWatermark < serverHighWatermark) {
+			articles = getArticles(newsgroup, storeHighWatermark, serverHighWatermark);
+		}
+		updateAttributesInStore(newsgroup);
+		
+		return articles;
 	}
 
 }
