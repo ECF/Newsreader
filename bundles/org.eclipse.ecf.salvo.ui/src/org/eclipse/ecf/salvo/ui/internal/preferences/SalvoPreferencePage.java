@@ -102,11 +102,13 @@ public class SalvoPreferencePage extends PreferencePage implements
 
 					public void keyReleased(KeyEvent arg0) {
 
-						prefs.putInt("syncinterval",
-								Integer.parseInt(txtTimeInterval.getText()));
 						try {
-							prefs.flush();
-						} catch (BackingStoreException e) {
+							if (!txtTimeInterval.getText().equals("")) {
+								prefs.putInt("syncinterval", Integer
+										.parseInt(txtTimeInterval.getText()));
+								prefs.flush();
+							}
+						} catch (Exception e) {
 							Debug.log(this.getClass(), e);
 						}
 
