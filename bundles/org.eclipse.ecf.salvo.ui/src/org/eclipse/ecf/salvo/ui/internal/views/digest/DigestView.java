@@ -15,6 +15,7 @@ package org.eclipse.ecf.salvo.ui.internal.views.digest;
 import org.eclipse.ecf.protocol.nntp.core.Debug;
 import org.eclipse.ecf.protocol.nntp.core.ServerStoreFactory;
 import org.eclipse.ecf.protocol.nntp.core.StoreStore;
+import org.eclipse.ecf.protocol.nntp.model.IArticle;
 import org.eclipse.ecf.protocol.nntp.model.INewsgroup;
 import org.eclipse.ecf.protocol.nntp.model.IServer;
 import org.eclipse.ecf.protocol.nntp.model.IStore;
@@ -60,7 +61,7 @@ import org.eclipse.swt.widgets.Menu;
  * Plese note that this functionality is still under construction
  * 
  */
-public class DigestView extends ViewPart implements IStoreEventListener {
+public class DigestView extends ViewPart{
 
 	public static final String ID = "org.eclipse.ecf.salvo.ui.internal.views.digest.DigestView";
 	private final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
@@ -69,10 +70,6 @@ public class DigestView extends ViewPart implements IStoreEventListener {
 	private Action selectServerAction;
 
 	public DigestView() {
-		for (IStore store : ServerStoreFactory.instance() 
-				.getServerStoreFacade().getStores()) {
-			store.addListener(this, SALVO.EVENT_ALL_EVENTS);
-		}
 	}
 
 	/**
@@ -277,21 +274,4 @@ public class DigestView extends ViewPart implements IStoreEventListener {
 		return null;
 	}
 
-	public void storeEvent(final IStoreEvent event) {
-
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
-				if (event.getEventObject() instanceof INewsgroup
-						|| event.getEventObject() instanceof IServer) {
-
-					TreePath[] elements = treeViewer.getExpandedTreePaths();
-					treeViewer.getTree().setRedraw(false);
-					treeViewer.refresh();
-					treeViewer.setExpandedTreePaths(elements);
-					treeViewer.getTree().setRedraw(true);
-				}
-
-			}
-		});
-	}
 }
