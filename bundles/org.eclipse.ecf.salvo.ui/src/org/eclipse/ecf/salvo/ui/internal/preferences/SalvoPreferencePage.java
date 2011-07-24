@@ -14,6 +14,8 @@ package org.eclipse.ecf.salvo.ui.internal.preferences;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.ecf.protocol.nntp.core.Debug;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
@@ -29,6 +31,8 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Text;
+import org.osgi.service.prefs.BackingStoreException;
+import org.osgi.service.prefs.Preferences;
 
 public class SalvoPreferencePage extends PreferencePage implements
 		IWorkbenchPreferencePage {
@@ -49,7 +53,7 @@ public class SalvoPreferencePage extends PreferencePage implements
 
 		Composite drawing = new Composite(parent, SWT.None);
 		drawing.setLayout(new GridLayout(1, false));
-		
+
 		GridLayout gridLayout = new GridLayout(1, false);
 		{
 			grpArticleView = new Group(drawing, SWT.NONE);
@@ -70,11 +74,12 @@ public class SalvoPreferencePage extends PreferencePage implements
 		new Label(drawing, SWT.NONE);
 
 		{
-			
+
 			grpSynchronization = new Group(drawing, SWT.NONE);
 			gridLayout = new GridLayout(3, false);
 			grpSynchronization.setLayout(gridLayout);
-			grpSynchronization.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			grpSynchronization.setLayoutData(new GridData(
+					GridData.FILL_HORIZONTAL));
 			grpSynchronization.setText("Synchronization");
 
 			{
@@ -83,25 +88,38 @@ public class SalvoPreferencePage extends PreferencePage implements
 				lblSyncTimeInterval.setText("Sync. TIme Interval");
 
 				txtTimeInterval = new Text(grpSynchronization, SWT.BORDER);
-				txtTimeInterval.setText(Integer.toString(model.getSyncInterval()));
+
+				final Preferences prefs = new InstanceScope()
+						.getNode("org.eclipse.ecf.protocol.nntp.core");
+
+				txtTimeInterval.setText(Integer.toString(prefs.getInt(
+						"syncinterval", 300)));
 				GridData gridData = new GridData();
-				gridData.widthHint = 100; 
+				gridData.widthHint = 100;
 				txtTimeInterval.setLayoutData(gridData);
-				
+
 				txtTimeInterval.addKeyListener(new KeyListener() {
-					
+
 					public void keyReleased(KeyEvent arg0) {
-						model.setSyncInterval(Integer.parseInt(txtTimeInterval.getText()));	
+
+						prefs.putInt("syncinterval",
+								Integer.parseInt(txtTimeInterval.getText()));
+						try {
+							prefs.flush();
+						} catch (BackingStoreException e) {
+							Debug.log(this.getClass(), e);
+						}
+
 					}
-					
+
 					public void keyPressed(KeyEvent arg0) {
 					}
 				});
-				
+
 				Label lblSyncTimeIntervalTail = new Label(grpSynchronization,
 						SWT.NONE);
 				lblSyncTimeIntervalTail.setText("sec.");
-				
+
 			}
 		}
 

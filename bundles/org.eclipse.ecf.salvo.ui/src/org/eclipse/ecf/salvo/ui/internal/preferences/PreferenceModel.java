@@ -82,11 +82,4 @@ public class PreferenceModel {
 		return store.getString("quoteService");
 	}
 	
-	public void setSyncInterval (int interval) {
-		store.setValue("syncInterval", interval);
-	} 
-	
-	public int getSyncInterval() {
-		return store.getInt("syncInterval");
-	}
 }
