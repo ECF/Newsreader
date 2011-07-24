@@ -553,65 +553,25 @@ public class ServerStoreFacade implements IServerStoreFacade {
 		return result;
 	}
 
-	/**
-	 * Get all articles of current user
-	 * 
-	 * @param newsgroup
-	 *            Newsgroup
-	 * @return all articles of current user of a particular newsgroup
-	 */
 	public IArticle[] getThisUserArticles(INewsgroup newsgroup) {
 		return getFirstStore().getArticlesByUserId(newsgroup,
 				newsgroup.getServer().getServerConnection().getFullUserName());
 	}
 
-	/**
-	 * Get marked articles
-	 * 
-	 * @param newsgroup
-	 *            Newsgroup
-	 * @return marked articles of a particular newsgroup
-	 */
 	public IArticle[] getMarkedArticles(INewsgroup newsgroup) {
 		return orderArticlesFromNewestFirst (getFirstStore().getMarkedArticles(newsgroup));
 	}
 
-	/**
-	 * 
-	 * Get all marked articles
-	 * 
-	 * @return marked articles for all newsgroups
-	 */
 	public IArticle[] getAllMarkedArticles(IServer server) {
 		return orderArticlesFromNewestFirst (getFirstStore().getAllMarkedArticles(server));
 	}
 
-	/**
-	 * Get article from messageId
-	 * 
-	 * @param newsgroup
-	 *            Newsgroup
-	 * @param msgId
-	 *            message Id of article
-	 * @return article which has the particular message id
-	 * 
-	 */
 	public IArticle getArticleByMsgId(INewsgroup newsgroup, String msgId) {
 
 		return getFirstStore().getArticleByMsgId(newsgroup, msgId);
 
 	}
 
-	/**
-	 * Get the first article of a thread which corresponds to a follow-up
-	 * article
-	 * 
-	 * @param article
-	 *            a follow-up article of a thread
-	 * 
-	 * @return the first article of a thread which corresponds to the follow-up
-	 *         article
-	 */
 	public IArticle getFirstArticleOfTread(IArticle article) {
 
 		if (article.getLastReference() == null) {
@@ -622,15 +582,6 @@ public class ServerStoreFacade implements IServerStoreFacade {
 		}
 	}
 
-	/**
-	 * get the first articles of the threads which this user has started or
-	 * replied to
-	 * 
-	 * @param newsgroup
-	 *            Newsgroup
-	 * @return First articles of the threads which this user has started or
-	 *         replied to
-	 */
 	public IArticle[] getFirstArticleOfThisUserThreads(INewsgroup newsgroup) {
 
 		IArticle[] thisUserarticles = getThisUserArticles(newsgroup);
@@ -651,12 +602,6 @@ public class ServerStoreFacade implements IServerStoreFacade {
 		return orderArticlesFromNewestFirst(unorderedArticles); 
 	}
 	
-	/**
-	 * Get the articleNumber of the last reply of the thread of the article
-	 * @param article 
-	 * @return articleNumber of the last reply of the thread
-	 *  
-	 */
 	public int getLastReplyArticleNumber(IArticle article){
 		int lastArticleNumber = article.getArticleNumber();
 		
@@ -679,11 +624,6 @@ public class ServerStoreFacade implements IServerStoreFacade {
 		return lastArticleNumber;
 	}
 	
-	/**
-	 * Order Articles from the Newest First.
-	 * @param articles articles to be ordered
-	 * @return ordered articles
-	 */
 	public IArticle[] orderArticlesFromNewestFirst(IArticle[] articles) {
 
 		Map<Integer, IArticle> unorderedArticles = new HashMap<Integer, IArticle>();
@@ -705,20 +645,10 @@ public class ServerStoreFacade implements IServerStoreFacade {
 		return orderedArticles;
 	}
 	
-	/**
-	 * Get the high Watermark of the newsgroup (in store) 
-	 * @param newsgroup
-	 * @return the high Watermark of the newsgroup
-	 */
 	public int getStoreHighWatermark (INewsgroup newsgroup) {
 		return newsgroup.getHighWaterMark();
 	}
 	
-	/**
-	 * Get the watermarks of the newsgroup (from server) 
-	 * @param newsgroup
-	 * @return the high watermarks of the newsgroup
-	 */
 	public int[] getServerWatermarks (INewsgroup newsgroup) {
 		try {
 			return newsgroup.getServer().getServerConnection().getWaterMarks(newsgroup);
@@ -728,11 +658,6 @@ public class ServerStoreFacade implements IServerStoreFacade {
 		}
 	}
 	
-	/**
-	 * Update store with the server
-	 * @param newsgroup Newsgroup
-	 * @return newly added articles
-	 */
 	public IArticle[] syncStoreWithServer(INewsgroup newsgroup) throws NNTPIOException, UnexpectedResponseException, StoreException {
 		
 		int storeHighWatermark = getStoreHighWatermark(newsgroup);	
