@@ -668,7 +668,7 @@ public class ServerStoreFacade implements IServerStoreFacade {
 		IArticle[] articles = null;
 		
 		if (storeHighWatermark < serverHighWatermark) {
-			articles = getArticles(newsgroup, storeHighWatermark, serverHighWatermark);
+			articles = getArticles(newsgroup, storeHighWatermark+1, serverHighWatermark);
 		}
 		updateAttributesInStore(newsgroup);
 		

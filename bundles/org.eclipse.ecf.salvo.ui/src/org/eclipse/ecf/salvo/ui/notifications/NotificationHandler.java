@@ -18,11 +18,10 @@ import org.eclipse.ecf.protocol.nntp.model.IArticleEventListnersRegistry;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotificationPopup;
 import org.eclipse.swt.widgets.Display;
 
-
 public class NotificationHandler implements IArticleEventListner {
-	
+
 	private Display display;
-	
+
 	public NotificationHandler(Display display) {
 		this.display = display;
 		IArticleEventListnersRegistry articleEventListnerRegistry = ArticleEventListnersFactory
@@ -30,9 +29,16 @@ public class NotificationHandler implements IArticleEventListner {
 		articleEventListnerRegistry.addListener(this);
 	}
 
-	public void execute(IArticleEvent event) {
-		final AbstractNotificationPopup popup = new SalvoNotificationPopup(display, event.getArticles());
-		popup.open();
-	}
+	public void execute(final IArticleEvent event) {
 
+		Display.getDefault().asyncExec(new Runnable() {
+
+			public void run() {
+				AbstractNotificationPopup popup = new SalvoNotificationPopup(
+						display, event.getArticles());
+				popup.open();
+			}
+		});
+
+	}
 }

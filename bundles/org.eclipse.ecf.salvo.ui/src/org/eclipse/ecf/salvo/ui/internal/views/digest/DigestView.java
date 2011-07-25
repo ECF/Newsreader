@@ -34,7 +34,6 @@ import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -276,24 +275,21 @@ public class DigestView extends ViewPart implements IArticleEventListner {
 
 	public void execute(IArticleEvent event) {
 
-		Runnable runner = new Runnable() {
-
+		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				Display.getDefault().asyncExec(new Runnable() {
-					
-					public void run() {
-						TreePath[] elements = treeViewer.getExpandedTreePaths();
-						treeViewer.getTree().setRedraw(false);
-						treeViewer.setInput(getSelectedServer());
-						treeViewer.setExpandedTreePaths(elements);
-						treeViewer.getTree().setRedraw(true);
-					}
-				});
-			}
 
-		};
-		
-		BusyIndicator.showWhile(getSite().getShell().getDisplay(), runner);
+				try {
+					TreePath[] elements = treeViewer.getExpandedTreePaths();
+					treeViewer.getTree().setRedraw(false);
+					treeViewer.setInput(getSelectedServer());
+					treeViewer.setExpandedTreePaths(elements);
+					treeViewer.getTree().setRedraw(true);
+				} catch (Exception e) { // For no expanded paths
+					treeViewer.setInput(getSelectedServer());
+				}
+			}
+		});
+
 	}
 
 }

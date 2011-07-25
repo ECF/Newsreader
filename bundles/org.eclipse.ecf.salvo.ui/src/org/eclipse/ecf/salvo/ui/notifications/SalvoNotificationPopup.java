@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.ecf.salvo.ui.notifications;
 
+import org.apache.james.mime4j.codec.DecoderUtil;
 import org.eclipse.ecf.protocol.nntp.model.IArticle;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotificationPopup;
 import org.eclipse.swt.SWT;
@@ -58,7 +59,7 @@ public class SalvoNotificationPopup extends AbstractNotificationPopup {
 	protected void createContentArea(Composite parent) {
 		for (int i = 0; i < articles.length; i++) {
 			Label label = new Label(parent, SWT.None);
-			label.setText(articles[i].getSubject());
+			label.setText(DecoderUtil.decodeEncodedWords(articles[i].getSubject()));
 			label.setBackground(parent.getBackground());
 		}
 	}
