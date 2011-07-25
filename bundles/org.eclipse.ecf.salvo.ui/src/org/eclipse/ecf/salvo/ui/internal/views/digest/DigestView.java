@@ -279,7 +279,7 @@ public class DigestView extends ViewPart implements IArticleEventListner {
 
 				TreePath[] elements = treeViewer.getExpandedTreePaths();
 				treeViewer.getTree().setRedraw(false);
-				treeViewer.refresh();
+				treeViewer.setInput(getSelectedServer());
 				treeViewer.setExpandedTreePaths(elements);
 				treeViewer.getTree().setRedraw(true);
 
