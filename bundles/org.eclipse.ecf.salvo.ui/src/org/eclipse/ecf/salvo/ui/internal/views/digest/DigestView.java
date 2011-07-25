@@ -12,21 +12,19 @@
 
 package org.eclipse.ecf.salvo.ui.internal.views.digest;
 
+import org.eclipse.ecf.protocol.nntp.core.ArticleEventListnersFactory;
 import org.eclipse.ecf.protocol.nntp.core.Debug;
 import org.eclipse.ecf.protocol.nntp.core.ServerStoreFactory;
-import org.eclipse.ecf.protocol.nntp.core.StoreStore;
-import org.eclipse.ecf.protocol.nntp.model.IArticle;
-import org.eclipse.ecf.protocol.nntp.model.INewsgroup;
+import org.eclipse.ecf.protocol.nntp.model.IArticleEventListnersRegistry;
+import org.eclipse.ecf.protocol.nntp.model.IArticleEvent;
+import org.eclipse.ecf.protocol.nntp.model.IArticleEventListner;
 import org.eclipse.ecf.protocol.nntp.model.IServer;
-import org.eclipse.ecf.protocol.nntp.model.IStore;
-import org.eclipse.ecf.protocol.nntp.model.IStoreEvent;
-import org.eclipse.ecf.protocol.nntp.model.IStoreEventListener;
 import org.eclipse.ecf.protocol.nntp.model.NNTPException;
-import org.eclipse.ecf.protocol.nntp.model.SALVO;
 import org.eclipse.ecf.salvo.ui.internal.dialogs.SelectServerDialog;
 import org.eclipse.ecf.salvo.ui.tools.ImageUtils;
 import org.eclipse.ecf.salvo.ui.tools.PreferencesUtil;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
@@ -35,7 +33,6 @@ import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -44,15 +41,14 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Menu;
 
 /**
  * This ViewPart provides the Digest View of Salvo Digest View shows a digest of
@@ -61,7 +57,7 @@ import org.eclipse.swt.widgets.Menu;
  * Plese note that this functionality is still under construction
  * 
  */
-public class DigestView extends ViewPart{
+public class DigestView extends ViewPart implements IArticleEventListner {
 
 	public static final String ID = "org.eclipse.ecf.salvo.ui.internal.views.digest.DigestView";
 	private final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
@@ -70,6 +66,9 @@ public class DigestView extends ViewPart{
 	private Action selectServerAction;
 
 	public DigestView() {
+		IArticleEventListnersRegistry articleEventListnerRegistry = ArticleEventListnersFactory
+				.instance().getRegistry();
+		articleEventListnerRegistry.addListener(this);
 	}
 
 	/**
@@ -272,6 +271,20 @@ public class DigestView extends ViewPart{
 		}
 
 		return null;
+	}
+
+	public void execute(IArticleEvent event) {
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+
+				TreePath[] elements = treeViewer.getExpandedTreePaths();
+				treeViewer.getTree().setRedraw(false);
+				treeViewer.refresh();
+				treeViewer.setExpandedTreePaths(elements);
+				treeViewer.getTree().setRedraw(true);
+
+			}
+		});
 	}
 
 }

@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.eclipse.ecf.protocol.nntp.core.ArticleEventListnersFactory;
 import org.eclipse.ecf.protocol.nntp.core.Debug;
 import org.eclipse.ecf.protocol.nntp.core.StoreStore;
 import org.eclipse.ecf.protocol.nntp.core.StringUtils;
@@ -33,6 +34,7 @@ import org.eclipse.ecf.protocol.nntp.model.IStore;
 import org.eclipse.ecf.protocol.nntp.model.NNTPConnectException;
 import org.eclipse.ecf.protocol.nntp.model.NNTPException;
 import org.eclipse.ecf.protocol.nntp.model.NNTPIOException;
+import org.eclipse.ecf.protocol.nntp.model.ArticleEvent;
 import org.eclipse.ecf.protocol.nntp.model.SALVO;
 import org.eclipse.ecf.protocol.nntp.model.StoreException;
 import org.eclipse.ecf.protocol.nntp.model.UnexpectedResponseException;
@@ -669,6 +671,10 @@ public class ServerStoreFacade implements IServerStoreFacade {
 			articles = getArticles(newsgroup, storeHighWatermark, serverHighWatermark);
 		}
 		updateAttributesInStore(newsgroup);
+		
+		if (articles.length > 0) {
+			ArticleEventListnersFactory.instance().getRegistry().fireEvent(new ArticleEvent(articles));
+		}
 		
 		return articles;
 	}
