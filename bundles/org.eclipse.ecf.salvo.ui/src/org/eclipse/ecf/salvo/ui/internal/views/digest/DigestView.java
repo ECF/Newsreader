@@ -15,9 +15,9 @@ package org.eclipse.ecf.salvo.ui.internal.views.digest;
 import org.eclipse.ecf.protocol.nntp.core.ArticleEventListnersFactory;
 import org.eclipse.ecf.protocol.nntp.core.Debug;
 import org.eclipse.ecf.protocol.nntp.core.ServerStoreFactory;
-import org.eclipse.ecf.protocol.nntp.model.IArticleEventListnersRegistry;
 import org.eclipse.ecf.protocol.nntp.model.IArticleEvent;
 import org.eclipse.ecf.protocol.nntp.model.IArticleEventListner;
+import org.eclipse.ecf.protocol.nntp.model.IArticleEventListnersRegistry;
 import org.eclipse.ecf.protocol.nntp.model.IServer;
 import org.eclipse.ecf.protocol.nntp.model.NNTPException;
 import org.eclipse.ecf.salvo.ui.internal.dialogs.SelectServerDialog;
@@ -34,6 +34,7 @@ import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -274,17 +275,26 @@ public class DigestView extends ViewPart implements IArticleEventListner {
 	}
 
 	public void execute(IArticleEvent event) {
-		Display.getDefault().asyncExec(new Runnable() {
+
+		Runnable runner = new Runnable() {
+
 			public void run() {
 
-				TreePath[] elements = treeViewer.getExpandedTreePaths();
-				treeViewer.getTree().setRedraw(false);
-				treeViewer.setInput(getSelectedServer());
-				treeViewer.setExpandedTreePaths(elements);
-				treeViewer.getTree().setRedraw(true);
+				Display.getDefault().asyncExec(new Runnable() {
+					public void run() {
 
+						TreePath[] elements = treeViewer.getExpandedTreePaths();
+						treeViewer.getTree().setRedraw(false);
+						treeViewer.setInput(getSelectedServer());
+						treeViewer.setExpandedTreePaths(elements);
+						treeViewer.getTree().setRedraw(true);
+
+					}
+				});
 			}
-		});
-	}
 
+		};
+		
+		BusyIndicator.showWhile(getSite().getShell().getDisplay(), runner);
+	}
 }

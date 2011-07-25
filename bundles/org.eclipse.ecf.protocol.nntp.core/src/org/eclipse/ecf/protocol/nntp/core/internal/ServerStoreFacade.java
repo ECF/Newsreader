@@ -660,7 +660,7 @@ public class ServerStoreFacade implements IServerStoreFacade {
 		}
 	}
 	
-	public IArticle[] syncStoreWithServer(INewsgroup newsgroup) throws NNTPIOException, UnexpectedResponseException, StoreException {
+	public void syncStoreWithServer(INewsgroup newsgroup) throws NNTPIOException, UnexpectedResponseException, StoreException {
 		
 		int storeHighWatermark = getStoreHighWatermark(newsgroup);	
 		int serverHighWatermark = getServerWatermarks(newsgroup)[2];
@@ -672,11 +672,10 @@ public class ServerStoreFacade implements IServerStoreFacade {
 		}
 		updateAttributesInStore(newsgroup);
 		
-		if (articles.length > 0) {
+		if (articles != null) {
 			ArticleEventListnersFactory.instance().getRegistry().fireEvent(new ArticleEvent(articles));
 		}
 		
-		return articles;
 	}
 
 }

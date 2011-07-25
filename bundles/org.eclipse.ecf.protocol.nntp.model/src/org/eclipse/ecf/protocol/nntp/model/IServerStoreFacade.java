@@ -173,8 +173,7 @@ public interface IServerStoreFacade extends IInputOutputSystem,
 	/**
 	 * Update store with the server
 	 * @param newsgroup Newsgroup
-	 * @return newly added articles
 	 */
-	public IArticle[] syncStoreWithServer(INewsgroup newsgroup) throws NNTPIOException, UnexpectedResponseException, StoreException;
+	public void syncStoreWithServer(INewsgroup newsgroup) throws NNTPIOException, UnexpectedResponseException, StoreException;
 	
 }
