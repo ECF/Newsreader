@@ -279,16 +279,14 @@ public class DigestView extends ViewPart implements IArticleEventListner {
 		Runnable runner = new Runnable() {
 
 			public void run() {
-
 				Display.getDefault().asyncExec(new Runnable() {
+					
 					public void run() {
-
 						TreePath[] elements = treeViewer.getExpandedTreePaths();
 						treeViewer.getTree().setRedraw(false);
 						treeViewer.setInput(getSelectedServer());
 						treeViewer.setExpandedTreePaths(elements);
 						treeViewer.getTree().setRedraw(true);
-
 					}
 				});
 			}
@@ -297,4 +295,5 @@ public class DigestView extends ViewPart implements IArticleEventListner {
 		
 		BusyIndicator.showWhile(getSite().getShell().getDisplay(), runner);
 	}
+
 }

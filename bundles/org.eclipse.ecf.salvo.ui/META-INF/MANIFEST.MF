@@ -17,7 +17,8 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.4.1",
  org.eclipse.core.databinding.property,
  org.eclipse.jface.databinding,
  org.eclipse.ui.forms,
- org.eclipse.ecf.protocol.nntp.core
+ org.eclipse.ecf.protocol.nntp.core,
+ org.eclipse.mylyn.commons.ui;bundle-version="3.4.0"
 Bundle-Activator: org.eclipse.ecf.salvo.ui.internal.Activator
 Import-Package: org.apache.james.mime4j,
  org.apache.james.mime4j.codec,
@@ -26,7 +27,8 @@ Import-Package: org.apache.james.mime4j,
  org.eclipse.ecf.protocol.nntp.core;version="0.5.0",
  org.eclipse.ecf.protocol.nntp.model;version="0.6.0",
  org.eclipse.ecf.provider.nntp.security,
- org.eclipse.ecf.services.quotes
+ org.eclipse.ecf.services.quotes,
+ org.eclipse.mylyn.internal.provisional.commons.ui
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.ecf.salvo.ui,
  org.eclipse.ecf.salvo.ui.internal;x-internal:=true,
