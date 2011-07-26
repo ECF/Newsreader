@@ -152,7 +152,10 @@ public class DigestView extends ViewPart implements IArticleEventListner {
 			treeViewer.setLabelProvider(new DigestViewTreeLabelProvider());
 			treeViewer.setContentProvider(new MarkedArticlesContentProvider(
 					treeViewer));
-			treeViewer.setInput(getSelectedServer());
+
+			if (null != getSelectedServer()) {
+				treeViewer.setInput(getSelectedServer());
+			}
 
 			combo.select(0);
 
@@ -277,7 +280,6 @@ public class DigestView extends ViewPart implements IArticleEventListner {
 
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-
 				try {
 					TreePath[] elements = treeViewer.getExpandedTreePaths();
 					treeViewer.getTree().setRedraw(false);
@@ -285,7 +287,9 @@ public class DigestView extends ViewPart implements IArticleEventListner {
 					treeViewer.setExpandedTreePaths(elements);
 					treeViewer.getTree().setRedraw(true);
 				} catch (Exception e) { // For no expanded paths
-					treeViewer.setInput(getSelectedServer());
+					if (null != getSelectedServer()) {
+						treeViewer.setInput(getSelectedServer());
+					}
 				}
 			}
 		});
