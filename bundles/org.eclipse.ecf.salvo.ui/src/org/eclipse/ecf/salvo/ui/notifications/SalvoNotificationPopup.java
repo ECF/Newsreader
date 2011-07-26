@@ -103,23 +103,28 @@ public class SalvoNotificationPopup extends AbstractNotificationPopup {
 
 			if (articles.length < 10) {
 				for (int i = 0; i < articles.length; i++) {
-					Label label = new Label(txtComposite, SWT.None);
-					label.setText(DecoderUtil.decodeEncodedWords(articles[i]
+					Label dataLabel = new Label(txtComposite, SWT.None);
+					dataLabel.setText(DecoderUtil.decodeEncodedWords(articles[i]
 							.getSubject()));
-					label.setBackground(parent.getBackground());
+					dataLabel.setBackground(parent.getBackground());
 				}
 			} else {
 				for (int i = 0; i < 10; i++) {
-					Label label = new Label(txtComposite, SWT.None);
-					label.setText(DecoderUtil.decodeEncodedWords(articles[i]
+					Label dataLabel = new Label(txtComposite, SWT.None);
+					dataLabel.setText(DecoderUtil.decodeEncodedWords(articles[i]
 							.getSubject()));
-					label.setBackground(parent.getBackground());
+					dataLabel.setBackground(parent.getBackground());
 				}
 
-				Label label = new Label(txtComposite, SWT.None);
-				label.setText("and " + (articles.length - 10)
-						+ " other articles received");
-				label.setBackground(parent.getBackground());
+				Label lastDataLabel = new Label(txtComposite, SWT.None);
+				lastDataLabel.setText("and " + (articles.length - 10)
+						+ " other articles received.....");
+				lastDataLabel.setBackground(parent.getBackground());
+				
+				Font font = JFaceResources.getDefaultFont();
+				FontData fd = font.getFontData()[0];
+				fd.setStyle(SWT.BOLD | SWT.ITALIC);
+				lastDataLabel.setFont(new Font(font.getDevice(), fd));
 			}
 
 		}
