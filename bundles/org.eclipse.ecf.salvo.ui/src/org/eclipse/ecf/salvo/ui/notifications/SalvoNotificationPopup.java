@@ -75,13 +75,14 @@ public class SalvoNotificationPopup extends AbstractNotificationPopup {
 			imageComposite.setLayoutData(new GridData(
 					GridData.HORIZONTAL_ALIGN_BEGINNING));
 			imageComposite.setLayout(new GridLayout(1, false));
-			
+
 			// Image
 			Label lblImage = new Label(imageComposite, SWT.NONE);
-			lblImage.setImage(Activator.getDefault().getImageRegistry().get("news.gif"));
-			lblImage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
-					true, false, 1, 1));
-			
+			lblImage.setImage(Activator.getDefault().getImageRegistry()
+					.get("news.gif"));
+			lblImage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+					false, 1, 1));
+
 			// No of Articles
 			Label lblNumOfArticles = new Label(imageComposite, SWT.NONE);
 
@@ -100,12 +101,27 @@ public class SalvoNotificationPopup extends AbstractNotificationPopup {
 					GridData.HORIZONTAL_ALIGN_END));
 			txtComposite.setLayout(new GridLayout(1, false));
 
-			for (int i = 0; i < articles.length; i++) {
+			if (articles.length < 10) {
+				for (int i = 0; i < articles.length; i++) {
+					Label label = new Label(txtComposite, SWT.None);
+					label.setText(DecoderUtil.decodeEncodedWords(articles[i]
+							.getSubject()));
+					label.setBackground(parent.getBackground());
+				}
+			} else {
+				for (int i = 0; i < 10; i++) {
+					Label label = new Label(txtComposite, SWT.None);
+					label.setText(DecoderUtil.decodeEncodedWords(articles[i]
+							.getSubject()));
+					label.setBackground(parent.getBackground());
+				}
+
 				Label label = new Label(txtComposite, SWT.None);
-				label.setText(DecoderUtil.decodeEncodedWords(articles[i]
-						.getSubject()));
+				label.setText("and " + (articles.length - 10)
+						+ " other articles received");
 				label.setBackground(parent.getBackground());
 			}
+
 		}
 
 	}
