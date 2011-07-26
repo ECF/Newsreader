@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.ecf.salvo.ui.internal.wizards;
 
+
 import org.eclipse.ecf.salvo.ui.tools.ImageUtils;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;

@@ -13,11 +13,16 @@ package org.eclipse.ecf.salvo.ui.notifications;
 
 import org.apache.james.mime4j.codec.DecoderUtil;
 import org.eclipse.ecf.protocol.nntp.model.IArticle;
+import org.eclipse.ecf.salvo.ui.internal.Activator;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotificationPopup;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -25,12 +30,12 @@ import org.eclipse.swt.widgets.Label;
 public class SalvoNotificationPopup extends AbstractNotificationPopup {
 
 	private IArticle[] articles;
-	
+
 	public SalvoNotificationPopup(Display display, IArticle[] articles) {
 		super(display);
 		this.articles = articles;
 		setFadingEnabled(true);
-		//setDelayClose(2000);
+		// setDelayClose(2000);
 		scheduleAutoClose();
 	}
 
@@ -40,13 +45,16 @@ public class SalvoNotificationPopup extends AbstractNotificationPopup {
 
 		Label titleLabel = new Label(parent, SWT.NONE);
 		titleLabel.setText("New Articles Recieved");
-		titleLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
-		titleLabel.setCursor(parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND));
+		titleLabel
+				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
+		titleLabel.setCursor(parent.getDisplay().getSystemCursor(
+				SWT.CURSOR_HAND));
 
 		Label closeButton = new Label(parent, SWT.NONE);
 		closeButton.setText("x");
 		closeButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
-		closeButton.setCursor(parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND));
+		closeButton.setCursor(parent.getDisplay().getSystemCursor(
+				SWT.CURSOR_HAND));
 		closeButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
@@ -57,11 +65,49 @@ public class SalvoNotificationPopup extends AbstractNotificationPopup {
 
 	@Override
 	protected void createContentArea(Composite parent) {
-		for (int i = 0; i < articles.length; i++) {
-			Label label = new Label(parent, SWT.None);
-			label.setText(DecoderUtil.decodeEncodedWords(articles[i].getSubject()));
-			label.setBackground(parent.getBackground());
+
+		Composite composite = new Composite(parent, SWT.NULL);
+		composite.setLayout(new GridLayout(2, false));
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
+
+		{
+			Composite imageComposite = new Composite(composite, SWT.NULL);
+			imageComposite.setLayoutData(new GridData(
+					GridData.HORIZONTAL_ALIGN_BEGINNING));
+			imageComposite.setLayout(new GridLayout(1, false));
+			
+			// Image
+			Label lblImage = new Label(imageComposite, SWT.NONE);
+			lblImage.setImage(Activator.getDefault().getImageRegistry().get("news.gif"));
+			lblImage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
+					true, false, 1, 1));
+			
+			// No of Articles
+			Label lblNumOfArticles = new Label(imageComposite, SWT.NONE);
+
+			Font font = JFaceResources.getBannerFont();
+			FontData fd = font.getFontData()[0];
+			fd.setStyle(SWT.BOLD);
+			lblNumOfArticles.setFont(new Font(font.getDevice(), fd));
+			lblNumOfArticles.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
+					true, false, 1, 1));
+			lblNumOfArticles.setText(Integer.toString(articles.length));
 		}
+
+		{
+			Composite txtComposite = new Composite(composite, SWT.NULL);
+			txtComposite.setLayoutData(new GridData(
+					GridData.HORIZONTAL_ALIGN_END));
+			txtComposite.setLayout(new GridLayout(1, false));
+
+			for (int i = 0; i < articles.length; i++) {
+				Label label = new Label(txtComposite, SWT.None);
+				label.setText(DecoderUtil.decodeEncodedWords(articles[i]
+						.getSubject()));
+				label.setBackground(parent.getBackground());
+			}
+		}
+
 	}
 
 	@Override
