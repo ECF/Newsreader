@@ -44,7 +44,7 @@ public class SalvoNotificationPopup extends AbstractNotificationPopup {
 		((GridData) parent.getLayoutData()).heightHint = 24;
 
 		Label titleLabel = new Label(parent, SWT.NONE);
-		titleLabel.setText("New Articles Recieved");
+		titleLabel.setText(Integer.toString(articles.length)+" New Articles Recieved");
 		titleLabel
 				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
 		titleLabel.setCursor(parent.getDisplay().getSystemCursor(
