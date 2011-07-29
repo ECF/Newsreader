@@ -272,7 +272,7 @@ public class DigestView extends ViewPart implements IArticleEventListner {
 		} catch (NNTPException e) {
 			Debug.log(getClass(), e);
 		} catch (NullPointerException e) {
-			Debug.log(getClass(), "No store service is runnig");
+			Debug.log(getClass(), "No servers available");
 		}
 
 		return null;
