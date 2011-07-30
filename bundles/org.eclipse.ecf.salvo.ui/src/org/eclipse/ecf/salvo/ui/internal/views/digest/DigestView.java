@@ -20,6 +20,7 @@ import org.eclipse.ecf.protocol.nntp.model.IArticleEventListner;
 import org.eclipse.ecf.protocol.nntp.model.IArticleEventListnersRegistry;
 import org.eclipse.ecf.protocol.nntp.model.IServer;
 import org.eclipse.ecf.protocol.nntp.model.NNTPException;
+import org.eclipse.ecf.salvo.ui.internal.Activator;
 import org.eclipse.ecf.salvo.ui.internal.dialogs.SelectServerDialog;
 import org.eclipse.ecf.salvo.ui.tools.ImageUtils;
 import org.eclipse.ecf.salvo.ui.tools.PreferencesUtil;
@@ -49,6 +50,9 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceEvent;
+import org.osgi.framework.ServiceListener;
 
 /**
  * This ViewPart provides the Digest View of Salvo Digest View shows a digest of
@@ -57,18 +61,23 @@ import org.eclipse.ui.part.ViewPart;
  * Plese note that this functionality is still under construction
  * 
  */
-public class DigestView extends ViewPart implements IArticleEventListner {
+public class DigestView extends ViewPart implements IArticleEventListner,
+		ServiceListener {
 
 	public static final String ID = "org.eclipse.ecf.salvo.ui.internal.views.digest.DigestView";
 	private final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
 	private TreeViewer treeViewer;
 	private Combo combo;
 	private Action selectServerAction;
+	private BundleContext context;
 
 	public DigestView() {
 		IArticleEventListnersRegistry articleEventListnerRegistry = ArticleEventListnersFactory
 				.instance().getRegistry();
 		articleEventListnerRegistry.addListener(this);
+
+		context = Activator.getDefault().getBundle().getBundleContext();
+		context.addServiceListener(this);			// listening to store register/unregister
 	}
 
 	/**
@@ -296,6 +305,23 @@ public class DigestView extends ViewPart implements IArticleEventListner {
 			}
 		});
 
+	}
+
+	public void serviceChanged(ServiceEvent event) {
+
+		if (event.getType() == ServiceEvent.REGISTERED
+				| event.getType() == ServiceEvent.UNREGISTERING) {
+
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					if (null != getSelectedServer()) {
+						treeViewer.setInput(getSelectedServer());
+					} else {
+						treeViewer.getTree().removeAll();
+					}
+				}
+			});
+		}
 	}
 
 }
