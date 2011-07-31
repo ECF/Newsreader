@@ -77,7 +77,8 @@ public class DigestView extends ViewPart implements IArticleEventListner,
 		articleEventListnerRegistry.addListener(this);
 
 		context = Activator.getDefault().getBundle().getBundleContext();
-		context.addServiceListener(this);			// listening to store register/unregister
+		context.addServiceListener(this); // listening to store
+											// register/unregister
 	}
 
 	/**
@@ -314,10 +315,14 @@ public class DigestView extends ViewPart implements IArticleEventListner,
 
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
-					if (null != getSelectedServer()) {
-						treeViewer.setInput(getSelectedServer());
-					} else {
-						treeViewer.getTree().removeAll();
+					try {
+						if (null != getSelectedServer()) {
+							treeViewer.setInput(getSelectedServer());
+						} else {
+							treeViewer.getTree().removeAll();
+						}
+					} catch (Exception e) {
+						// occurs when shutting down eclipse
 					}
 				}
 			});
