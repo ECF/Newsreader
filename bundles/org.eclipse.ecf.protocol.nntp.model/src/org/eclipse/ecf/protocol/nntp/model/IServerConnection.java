@@ -164,4 +164,17 @@ public interface IServerConnection extends IBasicNNTPInterface,
 	public int getBatchsize();
 
 
+	/**
+	 * This method goes to the server and asks for the active newsgroup
+	 * attributes. These attributes are then placed back into the newsgroup. 
+	 * 
+	 * @param newsgroup
+	 * @throws NNTPConnectException
+	 * @throws NNTPIOException
+	 * @return Newsgroup attributes articleCount, lowWaterMark, highWaterMark
+	 */
+	public int[] getWaterMarks(INewsgroup newsgroup) throws NNTPIOException,
+			UnexpectedResponseException;
+	
+	
 }

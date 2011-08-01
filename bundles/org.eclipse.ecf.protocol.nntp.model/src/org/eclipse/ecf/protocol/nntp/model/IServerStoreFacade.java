@@ -130,6 +130,50 @@ public interface IServerStoreFacade extends IInputOutputSystem,
 	 *         replied to
 	 */
 	public IArticle[] getFirstArticleOfThisUserThreads(INewsgroup newsgroup);
+
+	/**
+	 * Get the articleNumber of the last reply of the thread of the article
+	 * @param article 
+	 * @return articleNumber of the last reply of the thread
+	 *  
+	 */
+	public int getLastReplyArticleNumber(IArticle newArticle);
 	
+	/**
+	 * Order Articles from the Newest First.
+	 * @param articles articles to be ordered
+	 * @return ordered articles
+	 */
+	public IArticle[] orderArticlesFromNewestFirst(IArticle[] articles);
+	
+	/**
+	 * Get the high Watermark of the newsgroup (in store) 
+	 * @param newsgroup
+	 * @return the high Watermark of the newsgroup
+	 */
+	public int getStoreHighWatermark (INewsgroup newsgroup);
+	
+	/**
+	 * Get the watermarks of the newsgroup (from server) 
+	 * @param newsgroup
+	 * @return the high watermarks of the newsgroup
+	 */
+	public int[] getServerWatermarks (INewsgroup newsgroup);
+	
+	/**
+	 * Moves the updated attributes from the newsgroup into the
+	 * store.
+	 * 
+	 * @throws NNTPIOException
+	 * @throws UnexpectedResponseException
+	 * @throws StoreException
+	 */
+	public void updateAttributesInStore(INewsgroup newsgroup) throws NNTPIOException, UnexpectedResponseException, StoreException;
+	
+	/**
+	 * Update store with the server
+	 * @param newsgroup Newsgroup
+	 */
+	public void syncStoreWithServer(INewsgroup newsgroup) throws NNTPIOException, UnexpectedResponseException, StoreException;
 	
 }

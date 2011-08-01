@@ -81,4 +81,5 @@ public class PreferenceModel {
 	public String getQuoteService() {
 		return store.getString("quoteService");
 	}
+	
 }

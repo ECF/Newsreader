@@ -16,7 +16,8 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.4.1",
  org.eclipse.core.databinding.observable,
  org.eclipse.core.databinding.property,
  org.eclipse.jface.databinding,
- org.eclipse.ui.forms
+ org.eclipse.ui.forms,
+ org.eclipse.ecf.protocol.nntp.core
 Bundle-Activator: org.eclipse.ecf.salvo.ui.internal.Activator
 Import-Package: org.apache.james.mime4j,
  org.apache.james.mime4j.codec,
@@ -26,6 +27,7 @@ Import-Package: org.apache.james.mime4j,
  org.eclipse.ecf.protocol.nntp.model;version="0.6.0",
  org.eclipse.ecf.provider.nntp.security,
  org.eclipse.ecf.services.quotes
+ 
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.ecf.salvo.ui,
  org.eclipse.ecf.salvo.ui.internal;x-internal:=true,
@@ -42,3 +44,6 @@ Export-Package: org.eclipse.ecf.salvo.ui,
  org.eclipse.ecf.salvo.ui.properties,
  org.eclipse.ecf.salvo.ui.tools,
  org.eclipse.ecf.salvo.ui.wizards
+Bundle-ClassPath: .,
+ lib/org.eclipse.mylyn.commons.screenshots_3.6.0.201107311115.jar,
+ lib/org.eclipse.mylyn.commons.ui_3.6.0.201107311117.jar
