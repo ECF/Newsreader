@@ -15,9 +15,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
+import org.eclipse.ecf.protocol.nntp.core.ArticleEventListnersFactory;
 import org.eclipse.ecf.protocol.nntp.core.Debug;
 import org.eclipse.ecf.protocol.nntp.core.StoreStore;
 import org.eclipse.ecf.protocol.nntp.core.StringUtils;
@@ -30,6 +34,7 @@ import org.eclipse.ecf.protocol.nntp.model.IStore;
 import org.eclipse.ecf.protocol.nntp.model.NNTPConnectException;
 import org.eclipse.ecf.protocol.nntp.model.NNTPException;
 import org.eclipse.ecf.protocol.nntp.model.NNTPIOException;
+import org.eclipse.ecf.protocol.nntp.model.ArticleEvent;
 import org.eclipse.ecf.protocol.nntp.model.SALVO;
 import org.eclipse.ecf.protocol.nntp.model.StoreException;
 import org.eclipse.ecf.protocol.nntp.model.UnexpectedResponseException;
@@ -94,7 +99,8 @@ public class ServerStoreFacade implements IServerStoreFacade {
 		for (int i = 0; i < getStores().length; i++) {
 			getStores()[i].subscribeNewsgroup(group);
 		}
-		updateAttributes(group);
+		syncStoreWithServer(group);
+		//updateAttributes(group);
 	}
 
 	public void subscribeServer(IServer server, String passWord)
@@ -123,6 +129,13 @@ public class ServerStoreFacade implements IServerStoreFacade {
 			getStores()[i].updateAttributes(newsgroup);
 		}
 	}
+	
+	public void updateAttributesInStore(INewsgroup newsgroup) throws NNTPIOException, UnexpectedResponseException, StoreException {
+		for (int i = 0; i < getStores().length; i++) {
+			getStores()[i].updateAttributes(newsgroup);
+		}
+	}
+	
 
 	public INewsgroup[] getSubscribedNewsgroups(IServer server)
 			throws StoreException {
@@ -409,7 +422,8 @@ public class ServerStoreFacade implements IServerStoreFacade {
 	public void replyToArticle(IArticle article, String body)
 			throws NNTPIOException, UnexpectedResponseException, StoreException {
 		article.getServer().getServerConnection().replyToArticle(article, body);
-		updateAttributes(article.getNewsgroup());
+		//updateAttributes(article.getNewsgroup());
+		syncStoreWithServer(article.getNewsgroup());
 	}
 
 	public void postNewArticle(INewsgroup[] newsgroups, String subject,
@@ -420,8 +434,8 @@ public class ServerStoreFacade implements IServerStoreFacade {
 					.getServerConnection();
 			connection.postNewArticle(newsgroups, subject, body);
 			for (int i = 0; i < newsgroups.length; i++) {
-
-				updateAttributes(newsgroups[i]);
+				syncStoreWithServer(newsgroups[i]);
+				//updateAttributes(newsgroups[i]);
 			}
 		} catch (UnexpectedResponseException e) {
 			throw new NNTPIOException(e.getMessage(), e);
@@ -541,65 +555,25 @@ public class ServerStoreFacade implements IServerStoreFacade {
 		return result;
 	}
 
-	/**
-	 * Get all articles of current user
-	 * 
-	 * @param newsgroup
-	 *            Newsgroup
-	 * @return all articles of current user of a particular newsgroup
-	 */
 	public IArticle[] getThisUserArticles(INewsgroup newsgroup) {
 		return getFirstStore().getArticlesByUserId(newsgroup,
 				newsgroup.getServer().getServerConnection().getFullUserName());
 	}
 
-	/**
-	 * Get marked articles
-	 * 
-	 * @param newsgroup
-	 *            Newsgroup
-	 * @return marked articles of a particular newsgroup
-	 */
 	public IArticle[] getMarkedArticles(INewsgroup newsgroup) {
-		return getFirstStore().getMarkedArticles(newsgroup);
+		return orderArticlesFromNewestFirst (getFirstStore().getMarkedArticles(newsgroup));
 	}
 
-	/**
-	 * 
-	 * Get all marked articles
-	 * 
-	 * @return marked articles for all newsgroups
-	 */
 	public IArticle[] getAllMarkedArticles(IServer server) {
-		return getFirstStore().getAllMarkedArticles(server);
+		return orderArticlesFromNewestFirst (getFirstStore().getAllMarkedArticles(server));
 	}
 
-	/**
-	 * Get article from messageId
-	 * 
-	 * @param newsgroup
-	 *            Newsgroup
-	 * @param msgId
-	 *            message Id of article
-	 * @return article which has the particular message id
-	 * 
-	 */
 	public IArticle getArticleByMsgId(INewsgroup newsgroup, String msgId) {
 
 		return getFirstStore().getArticleByMsgId(newsgroup, msgId);
 
 	}
 
-	/**
-	 * Get the first article of a thread which corresponds to a follow-up
-	 * article
-	 * 
-	 * @param article
-	 *            a follow-up article of a thread
-	 * 
-	 * @return the first article of a thread which corresponds to the follow-up
-	 *         article
-	 */
 	public IArticle getFirstArticleOfTread(IArticle article) {
 
 		if (article.getLastReference() == null) {
@@ -610,15 +584,6 @@ public class ServerStoreFacade implements IServerStoreFacade {
 		}
 	}
 
-	/**
-	 * get the first articles of the threads which this user has started or
-	 * replied to
-	 * 
-	 * @param newsgroup
-	 *            Newsgroup
-	 * @return First articles of the threads which this user has started or
-	 *         replied to
-	 */
 	public IArticle[] getFirstArticleOfThisUserThreads(INewsgroup newsgroup) {
 
 		IArticle[] thisUserarticles = getThisUserArticles(newsgroup);
@@ -634,7 +599,83 @@ public class ServerStoreFacade implements IServerStoreFacade {
 			}
 
 		}
-		return (IArticle[]) result.toArray(new IArticle[0]);
+		
+		IArticle[] unorderedArticles = (IArticle[]) result.toArray(new IArticle[0]);
+		return orderArticlesFromNewestFirst(unorderedArticles); 
+	}
+	
+	public int getLastReplyArticleNumber(IArticle article){
+		int lastArticleNumber = article.getArticleNumber();
+		
+		try {
+			IArticle[] followups = getAllFollowUps(article);
+		
+			if (followups.length == 0) { // For no reply
+				return lastArticleNumber;			
+			}
+			
+			for (IArticle followupArticle : followups) {
+				if (followupArticle.getArticleNumber() > lastArticleNumber) {
+					lastArticleNumber = followupArticle.getArticleNumber();
+				}
+			}
+		} catch (NNTPException e) {
+			Debug.log(getClass(), e);
+		}
+		
+		return lastArticleNumber;
+	}
+	
+	public IArticle[] orderArticlesFromNewestFirst(IArticle[] articles) {
+
+		Map<Integer, IArticle> unorderedArticles = new HashMap<Integer, IArticle>();
+		Integer[] lastArticleNumbers = new Integer[articles.length];
+
+		for (int i = 0; i < articles.length; i++) {
+			int articleNumber = getLastReplyArticleNumber(articles[i]);
+			unorderedArticles.put(articleNumber, articles[i]);
+			lastArticleNumbers[i] = articleNumber;
+		}
+
+		Arrays.sort(lastArticleNumbers, Collections.reverseOrder());
+		IArticle[] orderedArticles = new IArticle[articles.length];
+
+		for (int i = 0; i < articles.length; i++) {
+			orderedArticles[i] = unorderedArticles.get(lastArticleNumbers[i]);
+		}
+
+		return orderedArticles;
+	}
+	
+	public int getStoreHighWatermark (INewsgroup newsgroup) {
+		return newsgroup.getHighWaterMark();
+	}
+	
+	public int[] getServerWatermarks (INewsgroup newsgroup) {
+		try {
+			return newsgroup.getServer().getServerConnection().getWaterMarks(newsgroup);
+		} catch (NNTPException e) {
+			Debug.log(getClass(), e);
+			return null;
+		}
+	}
+	
+	public void syncStoreWithServer(INewsgroup newsgroup) throws NNTPIOException, UnexpectedResponseException, StoreException {
+		
+		int storeHighWatermark = getStoreHighWatermark(newsgroup);	
+		int serverHighWatermark = getServerWatermarks(newsgroup)[2];
+		
+		IArticle[] articles = null;
+		
+		if (storeHighWatermark < serverHighWatermark) {
+			articles = getArticles(newsgroup, storeHighWatermark+1, serverHighWatermark);
+		}
+		updateAttributesInStore(newsgroup);
+		
+		if (articles != null) {
+			ArticleEventListnersFactory.instance().getRegistry().fireEvent(new ArticleEvent(articles));
+		}
+		
 	}
 
 }

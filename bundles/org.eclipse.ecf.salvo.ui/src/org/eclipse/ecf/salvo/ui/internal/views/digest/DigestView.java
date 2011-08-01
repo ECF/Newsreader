@@ -12,22 +12,28 @@
 
 package org.eclipse.ecf.salvo.ui.internal.views.digest;
 
+import org.eclipse.ecf.protocol.nntp.core.ArticleEventListnersFactory;
 import org.eclipse.ecf.protocol.nntp.core.Debug;
 import org.eclipse.ecf.protocol.nntp.core.ServerStoreFactory;
+import org.eclipse.ecf.protocol.nntp.model.IArticleEvent;
+import org.eclipse.ecf.protocol.nntp.model.IArticleEventListner;
+import org.eclipse.ecf.protocol.nntp.model.IArticleEventListnersRegistry;
 import org.eclipse.ecf.protocol.nntp.model.IServer;
 import org.eclipse.ecf.protocol.nntp.model.NNTPException;
+import org.eclipse.ecf.salvo.ui.internal.Activator;
 import org.eclipse.ecf.salvo.ui.internal.dialogs.SelectServerDialog;
 import org.eclipse.ecf.salvo.ui.tools.ImageUtils;
 import org.eclipse.ecf.salvo.ui.tools.PreferencesUtil;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -36,15 +42,17 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Menu;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceEvent;
+import org.osgi.framework.ServiceListener;
 
 /**
  * This ViewPart provides the Digest View of Salvo Digest View shows a digest of
@@ -53,15 +61,24 @@ import org.eclipse.swt.widgets.Menu;
  * Plese note that this functionality is still under construction
  * 
  */
-public class DigestView extends ViewPart {
+public class DigestView extends ViewPart implements IArticleEventListner,
+		ServiceListener {
 
 	public static final String ID = "org.eclipse.ecf.salvo.ui.internal.views.digest.DigestView";
 	private final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
 	private TreeViewer treeViewer;
 	private Combo combo;
 	private Action selectServerAction;
+	private BundleContext context;
 
 	public DigestView() {
+		IArticleEventListnersRegistry articleEventListnerRegistry = ArticleEventListnersFactory
+				.instance().getRegistry();
+		articleEventListnerRegistry.addListener(this);
+
+		context = Activator.getDefault().getBundle().getBundleContext();
+		context.addServiceListener(this); // listening to store
+											// register/unregister
 	}
 
 	/**
@@ -92,6 +109,8 @@ public class DigestView extends ViewPart {
 
 				public void widgetSelected(SelectionEvent arg0) {
 
+					treeViewer.getTree().removeAll();
+
 					if (combo.getSelectionIndex() == 1) {
 						treeViewer
 								.setContentProvider(new ThisUserArticlesContentProvider(
@@ -101,7 +120,6 @@ public class DigestView extends ViewPart {
 								.setContentProvider(new MarkedArticlesContentProvider(
 										treeViewer));
 					}
-
 				}
 
 				public void widgetDefaultSelected(SelectionEvent arg0) {
@@ -112,11 +130,12 @@ public class DigestView extends ViewPart {
 
 		new Label(container, SWT.NONE);
 		final Composite treeComposite = new Composite(container, SWT.NONE);
-		treeComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
-				true));
-		
+		treeComposite
+				.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
 		{
-			treeViewer = new TreeViewer(treeComposite, SWT.FULL_SELECTION | SWT.BORDER | SWT.VIRTUAL);
+			treeViewer = new TreeViewer(treeComposite, SWT.FULL_SELECTION
+					| SWT.BORDER | SWT.VIRTUAL);
 			Tree tree = treeViewer.getTree();
 			tree.setLinesVisible(true);
 			tree.setHeaderVisible(true);
@@ -125,14 +144,17 @@ public class DigestView extends ViewPart {
 
 			TreeColumnLayout treeColumnLayout = new TreeColumnLayout();
 			{
-				final TreeColumn subjectTreeColumn = new TreeColumn(tree, SWT.NONE);
+				final TreeColumn subjectTreeColumn = new TreeColumn(tree,
+						SWT.NONE);
 				subjectTreeColumn.setText("Subject");
-				treeColumnLayout.setColumnData(subjectTreeColumn, new ColumnWeightData(75));
+				treeColumnLayout.setColumnData(subjectTreeColumn,
+						new ColumnWeightData(75));
 			}
 			{
 				final TreeColumn dateTreeColumn = new TreeColumn(tree, SWT.NONE);
 				dateTreeColumn.setText("Date");
-				treeColumnLayout.setColumnData(dateTreeColumn, new ColumnWeightData(25));
+				treeColumnLayout.setColumnData(dateTreeColumn,
+						new ColumnWeightData(25));
 				dateTreeColumn.setMoveable(true);
 			}
 			treeComposite.setLayout(treeColumnLayout);
@@ -140,7 +162,10 @@ public class DigestView extends ViewPart {
 			treeViewer.setLabelProvider(new DigestViewTreeLabelProvider());
 			treeViewer.setContentProvider(new MarkedArticlesContentProvider(
 					treeViewer));
-			treeViewer.setInput(getSelectedServer());
+
+			if (null != getSelectedServer()) {
+				treeViewer.setInput(getSelectedServer());
+			}
 
 			combo.select(0);
 
@@ -173,8 +198,8 @@ public class DigestView extends ViewPart {
 		};
 		selectServerAction.setToolTipText("Select Server");
 		selectServerAction.setImageDescriptor(ImageUtils.getInstance()
-				.getImageDescriptor("selectServer.gif")); 
-														
+				.getImageDescriptor("selectServer.gif"));
+
 	}
 
 	/**
@@ -233,11 +258,11 @@ public class DigestView extends ViewPart {
 
 		String selectedServerForDigest = PreferencesUtil.instance()
 				.loadPluginSettings("selectedServerForDigest");
-		
+
 		if (selectedServerForDigest.equals("null")) {
 			try {
 				return ServerStoreFactory.instance().getServerStoreFacade()
-					.getFirstStore().getServers()[0];
+						.getFirstStore().getServers()[0];
 			} catch (NNTPException e) {
 				Debug.log(getClass(), e);
 			}
@@ -256,8 +281,52 @@ public class DigestView extends ViewPart {
 
 		} catch (NNTPException e) {
 			Debug.log(getClass(), e);
+		} catch (NullPointerException e) {
+			Debug.log(getClass(), "No servers available");
 		}
 
 		return null;
 	}
+
+	public void execute(IArticleEvent event) {
+
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				try {
+					TreePath[] elements = treeViewer.getExpandedTreePaths();
+					treeViewer.getTree().setRedraw(false);
+					treeViewer.setInput(getSelectedServer());
+					treeViewer.setExpandedTreePaths(elements);
+					treeViewer.getTree().setRedraw(true);
+				} catch (Exception e) { // For no expanded paths
+					if (null != getSelectedServer()) {
+						treeViewer.setInput(getSelectedServer());
+					}
+				}
+			}
+		});
+
+	}
+
+	public void serviceChanged(ServiceEvent event) {
+
+		if (event.getType() == ServiceEvent.REGISTERED
+				| event.getType() == ServiceEvent.UNREGISTERING) {
+
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					try {
+						if (null != getSelectedServer()) {
+							treeViewer.setInput(getSelectedServer());
+						} else {
+							treeViewer.getTree().removeAll();
+						}
+					} catch (Exception e) {
+						// occurs when shutting down eclipse
+					}
+				}
+			});
+		}
+	}
+
 }

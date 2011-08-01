@@ -11,12 +11,14 @@
  *******************************************************************************/
 package org.eclipse.ecf.protocol.nntp.core;
 
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.ecf.protocol.nntp.model.INewsgroup;
 import org.eclipse.ecf.protocol.nntp.model.IServer;
 import org.eclipse.ecf.protocol.nntp.model.IServerStoreFacade;
 import org.eclipse.ecf.protocol.nntp.model.IStore;
 import org.eclipse.ecf.protocol.nntp.model.NNTPException;
 import org.eclipse.ecf.protocol.nntp.model.StoreException;
+import org.osgi.service.prefs.Preferences;
 
 public final class UpdateRunner implements Runnable {
 	private boolean threadRunning;
@@ -53,7 +55,7 @@ public final class UpdateRunner implements Runnable {
 						for (int k = 0; k < subscribedNewsgroups.length; k++) {
 							INewsgroup group = subscribedNewsgroups[k];
 							try {
-								facade.updateAttributes(group);
+								facade.syncStoreWithServer(group);
 							} catch (Exception e) {
 								Debug.log(this.getClass(), e);
 							}
@@ -65,9 +67,12 @@ public final class UpdateRunner implements Runnable {
 				}
 			}
 			try {
+				
+				int syncInterval = getSyncInterval();
 				Debug.log(getClass(),
-						"Salvo Thread: Update finished sleeping 600 seconds");
-				for (int i = 0; i < 600; i++)
+						"Salvo Thread: Update finished sleeping for "+syncInterval+" seconds");
+				
+				for (int i = 0; i < syncInterval; i++)
 					if (isThreadRunning() && serversClean(subscribedServers))
 						Thread.sleep(1000);
 					else
@@ -115,4 +120,14 @@ public final class UpdateRunner implements Runnable {
 		if (!isThreadRunning())
 			new Thread(this, "Salvo newsreader update thread").start();
 	}
+	
+	/*
+	 * Get the synchronization time
+	 */
+	private int getSyncInterval() {
+		Preferences prefs = new InstanceScope()
+				.getNode("org.eclipse.ecf.protocol.nntp.core");
+		return prefs.getInt("syncinterval", 300);
+	}
+	
 }

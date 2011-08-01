@@ -538,7 +538,7 @@ public class ServerConnection implements IServerConnection {
 		} else
 			newsgroup.setAttributes(0, 0, 0);
 	}
-
+	
 	public String[] getArticleBody(IArticle article) throws NNTPIOException,
 			UnexpectedResponseException {
 
@@ -818,4 +818,35 @@ public class ServerConnection implements IServerConnection {
 	public int delete(IArticle article) throws NNTPIOException {
 		throw new NNTPIOException("You cannot remove articles from the server, use cancelArticle()");
 	}
+	
+	public int[] getWaterMarks(INewsgroup newsgroup) throws NNTPIOException,
+			UnexpectedResponseException {
+
+		sendCommand("group " + newsgroup.getNewsgroupName());
+		String response = getResponse();
+
+		// 211 39270 1 39301 eclipse.tools.emf
+		// 
+		if (response == null || response.startsWith("411")) {
+			newsgroup.setAttributes(0, 0, 0);
+			return new int[] {0,0,0};
+		}
+
+		if (!response.startsWith("211"))
+			throw new UnexpectedResponseException(
+					"The group command for newsgroup "
+							+ newsgroup.getNewsgroupName() + " in server "
+							+ newsgroup.getServer().getAddress() + " returned "
+							+ response);
+
+		String[] elements = StringUtils.split(response, SALVO.SPACE);
+		if (elements.length == 5) {
+			newsgroup.setAttributes(Integer.parseInt(elements[1]), Integer
+					.parseInt(elements[2]), Integer.parseInt(elements[3]));
+			return new int[] {Integer.parseInt(elements[1]),Integer.parseInt(elements[2]),Integer.parseInt(elements[3])};
+		} else
+			newsgroup.setAttributes(0, 0, 0);
+			return new int[] {0,0,0};
+	}
+	
 }
