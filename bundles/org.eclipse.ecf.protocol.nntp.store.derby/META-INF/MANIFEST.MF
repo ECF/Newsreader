@@ -14,3 +14,4 @@ Bundle-ClassPath: .,
 Export-Package: org.eclipse.ecf.protocol.nntp.store.derby,
  org.eclipse.ecf.protocol.nntp.store.derby.internal;x-internal:=true
 Service-Component: OSGI-INF/component.xml
+Require-Bundle: org.eclipse.equinox.ds;bundle-version="1.3.0"
