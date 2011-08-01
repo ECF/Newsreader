@@ -59,9 +59,9 @@ public interface IServerStoreFacade extends IInputOutputSystem,
 	public void init();
 
 	/**
-	 * Gets the first store.
+	 * Gets the first store can be null if no store service is active.
 	 * 
-	 * @return
+	 * @return the first store or null if no store is available.
 	 */
 	public IStore getFirstStore();
 
