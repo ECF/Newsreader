@@ -419,10 +419,10 @@ public class ServerStoreFacade implements IServerStoreFacade {
 		}
 	}
 
-	public void replyToArticle(IArticle article, String body)
+	public void replyToArticle(String replySubject, IArticle article, String body)
 			throws NNTPIOException, UnexpectedResponseException, StoreException {
-		article.getServer().getServerConnection().replyToArticle(article, body);
-		//updateAttributes(article.getNewsgroup());
+		article.getServer().getServerConnection().replyToArticle(replySubject, article, body);
+
 		syncStoreWithServer(article.getNewsgroup());
 	}
 
@@ -435,7 +435,6 @@ public class ServerStoreFacade implements IServerStoreFacade {
 			connection.postNewArticle(newsgroups, subject, body);
 			for (int i = 0; i < newsgroups.length; i++) {
 				syncStoreWithServer(newsgroups[i]);
-				//updateAttributes(newsgroups[i]);
 			}
 		} catch (UnexpectedResponseException e) {
 			throw new NNTPIOException(e.getMessage(), e);

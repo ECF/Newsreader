@@ -24,19 +24,20 @@ import java.util.Date;
 public interface IBasicNNTPInterface {
 
 	/**
-	 * Replies to the given article. The subject is composed according to the
+	 * Replies to the given article. The subject should be composed according to the
 	 * etiquette "Re: " + subject if the subject of the given article does not
 	 * already start with this string.
 	 * 
 	 * @see IServerConnection#replyToArticle(IArticle, StringBuffer)
 	 * 
+	 * @param replySubject
 	 * @param article
 	 * @param buffer
 	 * @throws NNTPIOException
 	 * @throws UnexpectedResponseException
 	 * @throws StoreException
 	 */
-	public void replyToArticle(IArticle article, String buffer)
+	public void replyToArticle(String replySubject, IArticle article, String buffer)
 			throws NNTPIOException, UnexpectedResponseException, StoreException;
 
 	/**

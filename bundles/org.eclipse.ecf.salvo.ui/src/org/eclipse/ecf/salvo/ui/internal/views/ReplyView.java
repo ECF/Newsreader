@@ -169,7 +169,7 @@ public class ReplyView extends ViewPart implements ISaveablePart {
 		monitor.worked(1);
 
 		try {
-			serverStoreFacade.replyToArticle(article, buffer.toString());
+			serverStoreFacade.replyToArticle(getPartName(), article, buffer.toString());
 		} catch (NNTPException e) {
 			Debug.log(getClass(), e);
 			MessageDialog.openError(getViewSite().getShell(), "Problem posting message",

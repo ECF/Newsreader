@@ -621,7 +621,7 @@ public class ServerConnection implements IServerConnection {
 		return (IArticle[]) result.toArray(new IArticle[result.size()]);
 	}
 
-	public void replyToArticle(IArticle article, String body)
+	public void replyToArticle(String replySubject, IArticle article, String body)
 			throws NNTPIOException, UnexpectedResponseException {
 		try {
 
@@ -635,9 +635,7 @@ public class ServerConnection implements IServerConnection {
 				throw new UnexpectedResponseException(response);
 			}
 
-			sendCommand("Subject: "
-					+ (article.getSubject().startsWith("Re: ") ? article
-							.getSubject() : "Re: " + article.getSubject()));
+			sendCommand("Subject: " + article.getSubject());
 			sendCommand("Organization: " + server.getOrganization());
 			sendCommand("X-Organization: Salvo");
 			sendCommand("From: " + getUser() + " <" + getEmail() + ">");
