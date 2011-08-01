@@ -118,17 +118,20 @@ public interface IArticle extends Serializable, IProperties {
 	public int getSize();
 
 	/**
-	 * @return boolean - true if this article was already read.
+	 * @return boolean - true if this article was already read or if it is your
+	 *         own article.
 	 */
 	public boolean isRead();
 
 	/**
-	 * @return boolean - true if all the replies to this article are read.
+	 * @return boolean - true if all the replies to this article are read or if
+	 *         the unread article is your own reply.
 	 */
 	public boolean isReplyRead();
 
 	/**
-	 * Sets the read state of this article.
+	 * Sets the read state of this article if this is not your own article. Your
+	 * own articles always have the read state.
 	 * 
 	 * @param read
 	 *            true if this article was read and false if this article was
@@ -174,7 +177,6 @@ public interface IArticle extends Serializable, IProperties {
 	 *         server information.
 	 */
 	public boolean isMine();
-
 
 	/**
 	 * Called to add information to the article that can be queried at display

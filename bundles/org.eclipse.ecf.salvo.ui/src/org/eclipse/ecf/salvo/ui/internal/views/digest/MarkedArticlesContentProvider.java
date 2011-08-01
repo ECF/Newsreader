@@ -51,6 +51,8 @@ public class MarkedArticlesContentProvider implements ILazyTreeContentProvider {
 	}
 
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		if(newInput == null)
+			return;
 		newsgroups = getNotEmptyNewsgroups((IServer) newInput);
 	}
 	

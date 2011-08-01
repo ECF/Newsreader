@@ -79,6 +79,9 @@ public class ArticlePanel extends EditorPart implements ISelectionListener {
 	private final class ArticlePanelTreePaintListener implements PaintListener {
 
 		public void paintControl(PaintEvent e) {
+			
+			if(tree.getTopItem() == null)
+				return;
 
 			try {
 

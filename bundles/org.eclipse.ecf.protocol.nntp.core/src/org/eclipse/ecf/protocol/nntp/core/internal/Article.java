@@ -161,6 +161,7 @@ public class Article implements IArticle {
 	}
 
 	public String getFullUserName() {
+		
 
 		//
 		// Simplistic implementation of rfc850
@@ -179,7 +180,7 @@ public class Article implements IArticle {
 	}
 
 	public boolean isRead() {
-		return read;
+		return isMine() ? true : read;
 	}
 
 	public void setRead(boolean read) {
@@ -245,7 +246,7 @@ public class Article implements IArticle {
 	public void setThreadAttributes(IArticle[] thread) {
 		setReplyRead(true);
 		for (int i = 0; i < thread.length; i++) {
-			if (!thread[i].isRead()) {
+			if (!thread[i].isRead() && !thread[i].isMine()) {
 				setReplyRead(false);
 				break;
 			}
