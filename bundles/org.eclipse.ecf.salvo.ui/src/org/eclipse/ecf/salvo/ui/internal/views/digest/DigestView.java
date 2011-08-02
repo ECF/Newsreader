@@ -58,8 +58,6 @@ import org.osgi.framework.ServiceListener;
  * This ViewPart provides the Digest View of Salvo Digest View shows a digest of
  * articles the user interested in
  * 
- * Plese note that this functionality is still under construction
- * 
  */
 public class DigestView extends ViewPart implements IArticleEventListner,
 		ServiceListener {

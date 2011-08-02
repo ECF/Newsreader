@@ -60,12 +60,6 @@
       <perspectiveExtension
             targetID="org.eclipse.ecf.salvo.application.perspective">
          <view
-               id="org.eclipse.ui.views.PropertySheet"
-               minimized="false"
-               relationship="stack"
-               relative="org.eclipse.ecf.salvo.application.bottomleft">
-         </view>
-         <view
                id="org.eclipse.ecf.salvo.ui.internal.views.messageView"
                minimized="false"
                relationship="stack"
@@ -75,15 +69,21 @@
                id="org.eclipse.ecf.salvo.ui.internal.views.replyView"
                minimized="false"
                relationship="stack"
-               relative="org.eclipse.ecf.salvo.application.right"
+               relative="org.eclipse.ecf.salvo.application.bottomright"
                visible="false">
          </view>
          <view
                id="org.eclipse.ecf.salvo.ui.internal.views.digest.DigestView"
                minimized="false"
                relationship="stack"
-               relative="org.eclipse.ecf.salvo.application.right"
+               relative="org.eclipse.ecf.salvo.application.bottomleft"
                visible="true">
+         </view>
+         <view
+               id="org.eclipse.ui.views.PropertySheet"
+               minimized="false"
+               relationship="stack"
+               relative="org.eclipse.ecf.salvo.application.bottomleft">
          </view>
       </perspectiveExtension>
    </extension>
