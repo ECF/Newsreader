@@ -35,7 +35,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
 
@@ -43,7 +42,6 @@ public class SubscribeGroupWizardPage extends WizardPage {
 
 	private TreeViewer checkboxTreeViewer;
 	final private HashSet<Object> checkedItems = new HashSet<Object>();
-
 	public SubscribeGroupWizardPage(String pageName) {
 		super(pageName);
 		setDescription("Select the groups you want to subscribe to.");
@@ -60,8 +58,6 @@ public class SubscribeGroupWizardPage extends WizardPage {
 
 		PatternFilter filter = new PatternFilter() {
 
-			private boolean next;
-
 			@Override
 			public boolean isElementVisible(Viewer viewer, Object element) {
 
@@ -71,15 +67,19 @@ public class SubscribeGroupWizardPage extends WizardPage {
 
 				return super.isElementVisible(viewer, element);
 			}
-
 		};
 
-		FilteredTree tree = new FilteredTree(composite, SWT.CHECK, filter, true);
-		
-		checkboxTreeViewer = tree.getViewer();
-		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		filter.setIncludeLeadingWildcard(true);
+
+		FilteredTree filteredTree = new FilteredTree(composite, SWT.CHECK,
+				filter, true);
+
+		checkboxTreeViewer = filteredTree.getViewer();
+		filteredTree
+				.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		checkboxTreeViewer.setContentProvider(new NewsContentProvider());
-		checkboxTreeViewer.setLabelProvider(new NewsLabelProvider(checkedItems));
+		checkboxTreeViewer
+				.setLabelProvider(new NewsLabelProvider(checkedItems));
 		// checkboxTreeViewer.setComparator(new ViewerComparator());
 
 		// ITreeViewerListener
@@ -113,8 +113,8 @@ public class SubscribeGroupWizardPage extends WizardPage {
 
 	public void setInput(IServer server) {
 		setTitle(server.getAddress());
-		ISalvoResource s2 = SalvoResourceFactory.getResource(server
-				.getAddress(), server);
+		ISalvoResource s2 = SalvoResourceFactory.getResource(
+				server.getAddress(), server);
 		s2.setChildProvider(new NewsGroupProvider(s2));
 		checkboxTreeViewer.setInput(s2);
 	}
