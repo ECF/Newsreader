@@ -1,13 +1,14 @@
 package org.eclipse.ecf.examples.remoteservices.quotes.consumer;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
+import java.net.URL;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.osgi.framework.Bundle;
 
 import com.remainsoftware.osgilloscope.OSGilloscope;
 
@@ -24,6 +25,11 @@ public abstract class Dispatcher {
 	public class Clipper {
 		Clip clip = null;
 		String oldFile = "";
+		private Bundle bundle;
+		
+		public Clipper() {
+			bundle = Activator.getBundleContext().getBundle();
+		}
 
 		public void playClip(String file, int loop) {
 			try {
@@ -31,7 +37,8 @@ public abstract class Dispatcher {
 				if (clip == null || !file.equals(oldFile)) {
 					oldFile = file;
 					clip = AudioSystem.getClip();
-					clip.open(AudioSystem.getAudioInputStream(new File(file)));
+					URL url = bundle.getEntry(file);
+					clip.open(AudioSystem.getAudioInputStream(url));
 				}
 				if (clip.isActive())
 					return;
@@ -41,6 +48,7 @@ public abstract class Dispatcher {
 				clip.loop(loop);
 
 			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 	}

@@ -65,7 +65,7 @@ public class ConsumerUI extends Shell {
 
 		Label lblCommaSeperatedList = new Label(composite, SWT.NONE);
 		lblCommaSeperatedList.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblCommaSeperatedList.setText("Servers");
+		lblCommaSeperatedList.setText("Zookeeper Servers");
 
 		servers = (new Text(composite, SWT.BORDER));
 		servers.setToolTipText("Enter a host or a comma\r\nseparated list of hosts.");
@@ -93,7 +93,7 @@ public class ConsumerUI extends Shell {
 
 		gilloscope = new OSGilloscope(composite_2, SWT.NONE);
 		GridData gd_gilloscope = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
-		gd_gilloscope.heightHint = 100;
+		gd_gilloscope.heightHint = 200;
 		gilloscope.setLayoutData(gd_gilloscope);
 
 		Composite composite_1 = new Composite(composite_2, SWT.BORDER);
@@ -153,28 +153,45 @@ public class ConsumerUI extends Shell {
 	 * Create contents of the shell.
 	 */
 	protected void createContents() {
-		setText("ECF Zookeeper Quote Service Consumer");
+		setText("ECF Quote Service Consumer");
 		setSize(450, 381);
 
 		dispatcher = new Dispatcher() {
-
+			
+			private int active = 0;
+			
 			@Override
 			public void setValue(int value) {
-				if (isSoundRequired())
-					clipper.playClip(getActiveSoundfile(), 0);
-
-				getGilloscope().setValues(OSGilloscope.HEARTBEAT);
-
+				active = value;
+				if (value == 1) {
+					if (isSoundRequired()) {
+						clipper.playClip(getActiveSoundfile(), 1);
+					}
+					getGilloscope().setValues(OSGilloscope.HEARTBEAT);
+				} else if (isSoundRequired()){
+					clipper.playClip(getInactiveSoundfile(), 20);
+				}
 			}
 
 			public OSGilloscope getGilloscope() {
 				return gilloscope;
 			};
-
+			
+			
 			@Override
 			public boolean isServiceActive() {
-				return true;
+				return active >= 0;
 			}
+			public boolean isSoundRequired() {
+				return true;
+			};
+			
+			public String getActiveSoundfile() {
+				return "/wav/Beep.wav";
+			};
+			public String getInactiveSoundfile() {
+				return "/wav/Flatline.wav";
+			};
 		};
 
 		dispatcher.dispatch();
