@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Text;
+
 public class SelectNewsgroupWizardPage extends WizardPage {
 
 	private Composite container;
@@ -40,7 +41,7 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 	private Text searchBar;
 	private Link showArticlesLink;
 	private ArrayList<INewsgroup> newsgroups;
-	
+
 	public SelectNewsgroupWizardPage() {
 		super("Select Newsgroup");
 		setTitle("Select Newsgroup");
@@ -77,29 +78,42 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 					true, 1, 1));
 			initNewsgroupList();
 			newsgroupList.addSelectionListener(new SelectionListener() {
-				
+
 				public void widgetSelected(SelectionEvent arg0) {
-					showArticlesLink.setText("<a href=\"Show Your Articles\">Show your Articles in "+getSelectedNewsgroup().getNewsgroupName()+" </a>");
+					showArticlesLink
+							.setText("<a href=\"Show Your Articles\">Show your Articles in "
+									+ getSelectedNewsgroup().getNewsgroupName()
+									+ " </a>");
 				}
-				
-				public void widgetDefaultSelected(SelectionEvent arg0) {}
+
+				public void widgetDefaultSelected(SelectionEvent arg0) {
+				}
 			});
 		}
-		
+
 		// Link to show this user articles
 		{
 			showArticlesLink = new Link(container, SWT.NONE);
 			GridData showArticlesLinkLData = new GridData();
 			showArticlesLink.setLayoutData(showArticlesLinkLData);
-			showArticlesLink.setText("<a href=\"Show Your Articles\">Show your Articles in "+getSelectedNewsgroup().getNewsgroupName()+" </a>");
+			try {
+			showArticlesLink
+					.setText("<a href=\"Show Your Articles\">Show your Articles in "
+							+ getSelectedNewsgroup().getNewsgroupName()
+							+ " </a>");
 			showArticlesLink.addSelectionListener(new SelectionListener() {
-				
+
 				public void widgetSelected(SelectionEvent arg0) {
-					ThisUserArticlesComposite.showArticles(container.getShell(),getSelectedNewsgroup());
+					ThisUserArticlesComposite.showArticles(
+							container.getShell(), getSelectedNewsgroup());
 				}
-				
-				public void widgetDefaultSelected(SelectionEvent arg0) {}
+
+				public void widgetDefaultSelected(SelectionEvent arg0) {
+				}
 			});
+			} catch (Exception e) {
+				Debug.log(getClass(), e);
+			}
 		}
 
 		setControl(container);
@@ -112,7 +126,7 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 	 * newsgroups
 	 */
 	private void initNewsgroupList() {
-		
+
 		// Load preferences
 		String recentlySelectedNewsgroup = PreferencesUtil.instance()
 				.loadPluginSettings("recentSelectedNewsgroup");
@@ -190,20 +204,25 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 	public INewsgroup getSelectedNewsgroup() {
 
 		INewsgroup resultNewsgroup = null;
-		String selectedNewsgroupString = newsgroupList.getItem(
-				newsgroupList.getSelectionIndex()).replace(")", "");
 
-		String selectedNewsgroup = selectedNewsgroupString.split("\\(")[0]
-				.trim();
-		String selectedServer = selectedNewsgroupString.split("\\(")[1]
-				.replace("Server: ", "").trim();
+		try {
+			String selectedNewsgroupString = newsgroupList.getItem(
+					newsgroupList.getSelectionIndex()).replace(")", "");
 
-		for (INewsgroup newsgroup : newsgroups) {
-			if (newsgroup.getNewsgroupName().equals(selectedNewsgroup)
-					&& newsgroup.getServer().getAddress()
-							.equals(selectedServer)) {
-				resultNewsgroup = newsgroup;
+			String selectedNewsgroup = selectedNewsgroupString.split("\\(")[0]
+					.trim();
+			String selectedServer = selectedNewsgroupString.split("\\(")[1]
+					.replace("Server: ", "").trim();
+
+			for (INewsgroup newsgroup : newsgroups) {
+				if (newsgroup.getNewsgroupName().equals(selectedNewsgroup)
+						&& newsgroup.getServer().getAddress()
+								.equals(selectedServer)) {
+					resultNewsgroup = newsgroup;
+				}
 			}
+		} catch (Exception e) {
+			// No newsgroups
 		}
 		return resultNewsgroup;
 	}
@@ -212,7 +231,7 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 	 * Fetch all the newsgroups from the store
 	 */
 	private void fetchAllNewsgroups() {
-		
+
 		newsgroups = new ArrayList<INewsgroup>();
 
 		try {
