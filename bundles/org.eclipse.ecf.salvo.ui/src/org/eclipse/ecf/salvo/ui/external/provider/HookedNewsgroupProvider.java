@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ecf.protocol.nntp.core.Debug;
+import org.eclipse.ecf.protocol.nntp.core.NewsgroupFactory;
 import org.eclipse.ecf.protocol.nntp.core.ServerFactory;
 import org.eclipse.ecf.protocol.nntp.core.ServerStoreFactory;
 import org.eclipse.ecf.protocol.nntp.model.AbstractCredentials;
@@ -67,6 +68,8 @@ public class HookedNewsgroupProvider {
 	public INewsgroup[] getNewsgroups() {
 
 		ArrayList<INewsgroup> newsgroups = new ArrayList<INewsgroup>();
+		IServerStoreFacade storeFacade = ServerStoreFactory.instance()
+				.getServerStoreFacade();
 
 		INewsGroupProvider[] providers = getProviders();
 
@@ -77,8 +80,9 @@ public class HookedNewsgroupProvider {
 					provider.getUser(), provider.getEmail(),
 					provider.getLogin(), provider.getPassword());
 
-			// server
 			try {
+
+				// server
 				IServer server = ServerFactory.getCreateServer(
 						provider.getServerAddress(), provider.getServerPort(),
 						credentials, provider.isSecure());
@@ -89,17 +93,37 @@ public class HookedNewsgroupProvider {
 				connection.getOverviewHeaders(server);
 
 				if (!server.isSubscribed()) {
-
-					IServerStoreFacade storeFacade = ServerStoreFactory
-							.instance().getServerStoreFacade();
 					try {
 						storeFacade.subscribeServer(server,
 								provider.getPassword());
 					} catch (NNTPException e1) {
 						Debug.log(getClass(), e1);
 					}
-
 				}
+				
+				//Newsgroup
+
+				INewsgroup group = null;
+				
+				// check whether newsgroup is already subscribed
+				INewsgroup[] subscribedNewsgroups = storeFacade.getSubscribedNewsgroups(server);
+				boolean isProviderNewsgroupSubscribed = false;
+				for (INewsgroup subscribedNewsgroup : subscribedNewsgroups) {
+					if (subscribedNewsgroup.getNewsgroupName().equals(provider.getNewsgroupName())) {
+						isProviderNewsgroupSubscribed = true;
+						group = subscribedNewsgroup;
+						break;
+					}
+				}
+				
+				if (!isProviderNewsgroupSubscribed) {
+					// Attach a newsgroup to the server
+					group = NewsgroupFactory.createNewsGroup(server,
+							provider.getNewsgroupName(), provider.getNewsgroupDescription());
+					storeFacade.subscribeNewsgroup(group);   // TODO: Move to ask a question wizard performFinish() - only subscribe after posting;
+					
+				} 
+				newsgroups.add(group);
 
 			} catch (NNTPException e) {
 				Debug.log(getClass(), e);
