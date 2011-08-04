@@ -11,6 +11,8 @@ Other projects can specify their namespace and the newsgroups.
       </documentation>
    </annotation>
 
+   <include schemaLocation="schema://org.eclipse.core.expressions/schema/expressionLanguage.exsd"/>
+
    <element name="extension">
       <annotation>
          <appInfo>
@@ -50,6 +52,9 @@ Other projects can specify their namespace and the newsgroups.
 
    <element name="newsgroup">
       <complexType>
+         <sequence>
+            <element ref="enablement"/>
+         </sequence>
          <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
@@ -64,11 +69,14 @@ Other projects can specify their namespace and the newsgroups.
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="projectNamespace" type="string" use="required">
+         <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
                   
                </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.ecf.salvo.ui.external.provider.INewsGroupProvider"/>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
