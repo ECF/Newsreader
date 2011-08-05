@@ -27,6 +27,7 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -90,6 +91,14 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 			btnCheckPickSuggested.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
+					if (btnCheckPickSuggested.getSelection()) {
+						cboSuggestedNewgroups.setEnabled(true);
+						newsgroupList.setEnabled(false);
+						newsgroupList.select(cboSuggestedNewgroups.getSelectionIndex());
+					} else {
+						cboSuggestedNewgroups.setEnabled(false);
+						newsgroupList.setEnabled(true);
+					}
 				}
 			});
 			btnCheckPickSuggested.setText("Pick Suggested Newsgroup");
@@ -97,13 +106,28 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 
 		// Combobox of suggested newsgroups
 		{
-			cboSuggestedNewgroups = new Combo(container, SWT.NONE);
+			cboSuggestedNewgroups = new Combo(container, SWT.READ_ONLY);
 			cboSuggestedNewgroups.setLayoutData(new GridData(SWT.FILL,
 					SWT.CENTER, true, false, 1, 1));
 			fillCboSuggestedNewsgroups();
 			
-			cboSuggestedNewgroups.select(0);
+			if (cboSuggestedNewgroups.getItemCount() == 0) {
+				btnCheckPickSuggested.setEnabled(false);
+			} else {
+				cboSuggestedNewgroups.select(0);
+			}
 			
+			cboSuggestedNewgroups.addSelectionListener(new SelectionListener() {
+				
+				public void widgetSelected(SelectionEvent e) {
+					newsgroupList.select(cboSuggestedNewgroups.getSelectionIndex());
+				}
+				
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+			});
+			
+			cboSuggestedNewgroups.setEnabled(false);
 		}
 		setPageComplete(true); // TODO: fix bug when no newsgroup
 
@@ -114,9 +138,10 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 			
 			String newsgroupName = newsgroup.getNewsgroupName();
 			String serverAddress = newsgroup.getServer().getAddress();
+			String description = newsgroup.getDescription();
 
 			cboSuggestedNewgroups.add(newsgroupName + "  (Server: " + serverAddress
-					+ ")");
+					+ ") -  " + description);
 			
 		}
 	}
