@@ -18,19 +18,20 @@ import org.eclipse.ecf.protocol.nntp.core.ServerStoreFactory;
 import org.eclipse.ecf.protocol.nntp.model.INewsgroup;
 import org.eclipse.ecf.protocol.nntp.model.IServer;
 import org.eclipse.ecf.protocol.nntp.model.NNTPException;
-import org.eclipse.ecf.salvo.ui.internal.dialogs.ThisUserArticlesComposite;
+import org.eclipse.ecf.salvo.ui.external.provider.HookedNewsgroupProvider;
 import org.eclipse.ecf.salvo.ui.tools.ImageUtils;
 import org.eclipse.ecf.salvo.ui.tools.PreferencesUtil;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Text;
 
@@ -39,13 +40,16 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 	private Composite container;
 	private List newsgroupList;
 	private Text searchBar;
-	private Link showArticlesLink;
 	private ArrayList<INewsgroup> newsgroups;
+	private Button btnCheckPickSuggested;
+	private Combo cboSuggestedNewgroups;
+	private INewsgroup[] hookedNewsgroups;
 
 	public SelectNewsgroupWizardPage() {
 		super("Select Newsgroup");
 		setTitle("Select Newsgroup");
 		setDescription("Select the Newsgroup you want to ask the question");
+		initHookedNewsgroups();
 		fetchAllNewsgroups();
 		setImageDescriptor(ImageUtils.getInstance().getImageDescriptor(
 				"selectnewsgroup.png"));
@@ -77,48 +81,44 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 			newsgroupList.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
 					true, 1, 1));
 			initNewsgroupList();
-			newsgroupList.addSelectionListener(new SelectionListener() {
-
-				public void widgetSelected(SelectionEvent arg0) {
-					showArticlesLink
-							.setText("<a href=\"Show Your Articles\">Show your Articles in "
-									+ getSelectedNewsgroup().getNewsgroupName()
-									+ " </a>");
-				}
-
-				public void widgetDefaultSelected(SelectionEvent arg0) {
-				}
-			});
 		}
-
-		// Link to show this user articles
-		{
-			showArticlesLink = new Link(container, SWT.NONE);
-			GridData showArticlesLinkLData = new GridData();
-			showArticlesLink.setLayoutData(showArticlesLinkLData);
-			try {
-			showArticlesLink
-					.setText("<a href=\"Show Your Articles\">Show your Articles in "
-							+ getSelectedNewsgroup().getNewsgroupName()
-							+ " </a>");
-			showArticlesLink.addSelectionListener(new SelectionListener() {
-
-				public void widgetSelected(SelectionEvent arg0) {
-					ThisUserArticlesComposite.showArticles(
-							container.getShell(), getSelectedNewsgroup());
-				}
-
-				public void widgetDefaultSelected(SelectionEvent arg0) {
-				}
-			});
-			} catch (Exception e) {
-				Debug.log(getClass(), e);
-			}
-		}
-
 		setControl(container);
-		setPageComplete(true);
 
+		// Checkbox to enable combo box
+		{
+			btnCheckPickSuggested = new Button(container, SWT.CHECK);
+			btnCheckPickSuggested.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+				}
+			});
+			btnCheckPickSuggested.setText("Pick Suggested Newsgroup");
+		}
+
+		// Combobox of suggested newsgroups
+		{
+			cboSuggestedNewgroups = new Combo(container, SWT.NONE);
+			cboSuggestedNewgroups.setLayoutData(new GridData(SWT.FILL,
+					SWT.CENTER, true, false, 1, 1));
+			fillCboSuggestedNewsgroups();
+			
+			cboSuggestedNewgroups.select(0);
+			
+		}
+		setPageComplete(true); // TODO: fix bug when no newsgroup
+
+	}
+
+	private void fillCboSuggestedNewsgroups() {
+		for (INewsgroup newsgroup : hookedNewsgroups) {
+			
+			String newsgroupName = newsgroup.getNewsgroupName();
+			String serverAddress = newsgroup.getServer().getAddress();
+
+			cboSuggestedNewgroups.add(newsgroupName + "  (Server: " + serverAddress
+					+ ")");
+			
+		}
 	}
 
 	/**
@@ -234,6 +234,10 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 
 		newsgroups = new ArrayList<INewsgroup>();
 
+		for (INewsgroup newsgroup : hookedNewsgroups) {
+			newsgroups.add(newsgroup);
+		}
+
 		try {
 			for (IServer server : ServerStoreFactory.instance()
 					.getServerStoreFacade().getFirstStore().getServers()) {
@@ -249,6 +253,16 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 		} catch (NNTPException e) {
 			Debug.log(this.getClass(), e);
 		}
+
+	}
+
+	/**
+	 * init hooked newgroups
+	 */
+	private void initHookedNewsgroups() {
+
+		hookedNewsgroups = HookedNewsgroupProvider.instance()
+				.getNewsgroups();
 
 	}
 

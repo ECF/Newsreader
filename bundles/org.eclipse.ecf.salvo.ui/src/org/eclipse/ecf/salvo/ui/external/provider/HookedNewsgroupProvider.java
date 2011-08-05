@@ -45,6 +45,15 @@ public class HookedNewsgroupProvider {
 
 	private static final String EXTENSIONPOINT_ID = "org.eclipse.ecf.salvo.ui.newsgroupProvider";
 
+	private static HookedNewsgroupProvider INSTANCE;
+	
+	public static HookedNewsgroupProvider instance() {
+		if (INSTANCE == null) {
+			INSTANCE = new HookedNewsgroupProvider();
+		}
+		return INSTANCE;
+	}
+	
 	private EvaluationContext getEvaluationContext() {
 
 		// the active part
@@ -120,7 +129,7 @@ public class HookedNewsgroupProvider {
 					// Attach a newsgroup to the server
 					group = NewsgroupFactory.createNewsGroup(server,
 							provider.getNewsgroupName(), provider.getNewsgroupDescription());
-					storeFacade.subscribeNewsgroup(group);   // TODO: Move to ask a question wizard performFinish() - only subscribe after posting;
+					//storeFacade.subscribeNewsgroup(group);   // TODO: Move to ask a question wizard performFinish() - only subscribe after posting;
 					
 				} 
 				newsgroups.add(group);
@@ -130,7 +139,6 @@ public class HookedNewsgroupProvider {
 			}
 
 		}
-
 		return (INewsgroup[]) newsgroups.toArray(new INewsgroup[0]);
 	}
 
@@ -158,7 +166,6 @@ public class HookedNewsgroupProvider {
 					final Object provider = newsgroup
 							.createExecutableExtension("class");
 					newsgroupProvider.add((INewsGroupProvider) provider);
-
 				}
 
 			} catch (CoreException e) {
