@@ -57,6 +57,7 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 	}
 
 	public void createControl(Composite parent) {
+		
 		// Container
 		container = new Composite(parent, SWT.NULL);
 		container.setLayout(new GridLayout(1, false));
@@ -72,7 +73,6 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 					setFilteredListItems();
 				}
 			});
-
 		}
 
 		// Newsgroup List
@@ -113,6 +113,7 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 			
 			if (cboSuggestedNewgroups.getItemCount() == 0) {
 				btnCheckPickSuggested.setEnabled(false);
+				cboSuggestedNewgroups.add("No suggestions found");
 			} else {
 				cboSuggestedNewgroups.select(0);
 			}
@@ -126,10 +127,13 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 				public void widgetDefaultSelected(SelectionEvent e) {
 				}
 			});
-			
 			cboSuggestedNewgroups.setEnabled(false);
 		}
-		setPageComplete(true); // TODO: fix bug when no newsgroup
+		
+		// Page completeness
+		if (newsgroupList.getItemCount() == 0) {
+			setPageComplete(false);
+		}
 
 	}
 
