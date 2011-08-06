@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Test
+Bundle-SymbolicName: org.eclipse.ecf.salvo.newsgroupprovider.test;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.eclipse.ecf.salvo.newsgroupprovider.test.Activator
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.ecf.salvo.ui
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
