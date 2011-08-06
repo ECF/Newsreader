@@ -1,14 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!-- Copyright (c) 2011 University Of Moratuwa
-                                                                      
- All rights reserved. This program and the accompanying materials     
- are made available under the terms of the Eclipse Public License v1.0
- which accompanies this distribution, and is available at             
- http://www.eclipse.org/legal/epl-v10.html                            
-                                                                      
- Contributors:                                                        
-     Isuru Udana - UI Integration in the Workbench
--->
+<!-- Schema file written by PDE -->
 <schema targetNamespace="org.eclipse.ecf.salvo.ui" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appInfo>
@@ -138,63 +129,92 @@ Multiple newsgroups can be added.
 
 import org.eclipse.ecf.salvo.ui.external.provider.INewsGroupProvider;
 
-
 public class TestNewsgroupProvider implements INewsGroupProvider {
 
- public TestNewsgroupProvider() {
- }
+	private String user;
+	private String password;
+	private String org;
+	private String login;
+	private String email;
+	private String serverAddress;
+	private int serverPort;
+	private boolean isSecure;
+	private String newsgroupName;
+	private String newsgroupDescription;
+	
+	public TestNewsgroupProvider() {
+	}
 
- @Override
- public String getUser() {
-  return &quot;Foo Bar&quot;;
- }
+	@Override
+	public String getUser() {
+		return user;
+	}
 
- @Override
- public String getPassword() {
-  return &quot;flinder1f7&quot;;
- }
+	@Override
+	public String getPassword() {
+		return password;
+	}
 
- @Override
- public String getOrganization() {
-  return &quot;eclipse.org&quot;;
- }
+	@Override
+	public String getOrganization() {
+		return org;
+	}
 
- @Override
- public String getLogin() {
-  return &quot;exquisitus&quot;;
- }
+	@Override
+	public String getLogin() {
+		return login;
+	}
 
- @Override
- public String getEmail() {
-  return &quot;foo.bar@foobar.org&quot;;
- }
+	@Override
+	public String getEmail() {
+		return email;
+	}
 
- @Override
- public String getServerAddress() {
-  return &quot;news.eclipse.org&quot;;
- }
- 
- @Override
- public int getServerPort() {
-  return 119;
- }
- 
- @Override
- public boolean isSecure() {
-  return true;
- }
+	@Override
+	public String getServerAddress() {
+		return serverAddress;
+	}
+	
+	@Override
+	public int getServerPort() {
+		return serverPort;
+	}
+	
+	@Override
+	public boolean isSecure() {
+		return isSecure;
+	}
 
- @Override
- public String getNewsgroupName() {
-  return &quot;eclipse.test&quot;;
- }
+	@Override
+	public String getNewsgroupName() {
+		return newsgroupName;
+	}
 
- @Override
- public String getNewsgroupDescription() {
-  return &quot;For testing purposes&quot;;
- }
+	@Override
+	public String getNewsgroupDescription() {
+		return newsgroupDescription;
+	}
 
-}   
+	@Override
+	public boolean init() {
+		// Initializing parameter. User Input dialog can be defined here
+		
+		user = &quot;Foo Bar&quot;;
+		password = &quot;flinder1f7&quot;;
+		org = &quot;eclipse.org&quot;;
+		login = &quot;exquisitus&quot;;
+		email = &quot;foo.bar@foobar.org&quot;;
+		serverAddress = &quot;news.eclipse.org&quot;;
+		serverPort = 119;
+		isSecure = true;
+		newsgroupName = &quot;eclipse.test&quot;;
+		newsgroupDescription = &quot;For testing purposes&quot;;
+		
+		return true;
+	}
+
+}
+
 
 &lt;/pre&gt;
 &lt;/p&gt;
@@ -208,7 +228,10 @@ public class TestNewsgroupProvider implements INewsGroupProvider {
       <documentation>
          &lt;p&gt;&lt;b&gt; Providing newsgroup Information&lt;/b&gt;&lt;/p&gt;
 &lt;p&gt;
-All providers must implement the &lt;code&gt;INewsGroupProvider&lt;/code&gt;. There you can specify information needed to connect to the newsgroup. 
+All providers must implement the &lt;code&gt;INewsGroupProvider&lt;/code&gt;. There you can specify information needed to connect to the newsgroup.
+&lt;/p&gt; 
+&lt;p&gt; 
+An User Input dialog can be placed on the &lt;code&gt;init&lt;/code&gt; method.
 &lt;/p&gt;
 @see Examples
 
@@ -241,7 +264,7 @@ It is defined using &lt;code&gt;&lt;enablement&gt;&lt;/code&gt; segment.
          <meta.section type="copyright"/>
       </appInfo>
       <documentation>
-          Copyright (c) 2011 University Of Moratuwa
+         Copyright (c) 2011 University Of Moratuwa
                                                                       
  All rights reserved. This program and the accompanying materials     
  are made available under the terms of the Eclipse Public License v1.0
@@ -250,7 +273,6 @@ It is defined using &lt;code&gt;&lt;enablement&gt;&lt;/code&gt; segment.
                                                                       
  Contributors:                                                        
      Isuru Udana - UI Integration in the Workbench
- 
       </documentation>
    </annotation>
 

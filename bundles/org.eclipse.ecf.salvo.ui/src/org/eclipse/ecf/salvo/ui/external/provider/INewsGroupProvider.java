@@ -15,27 +15,62 @@ package org.eclipse.ecf.salvo.ui.external.provider;
 
 public interface INewsGroupProvider {
 	
-	// get credentials
+	/**
+	 * Initialize parameters
+	 * User Input dialog can be placed here
+	 * @return initialization is success or not
+	 */
+	public boolean init();
+	
+	/**
+	 * @return the user name
+	 */
 	public String getUser();
 
+	/**
+	 * @return password 
+	 */
 	public String getPassword();
 
+	/**
+	 * @return organization
+	 */
 	public String getOrganization();
 
+	/**
+	 * @return login
+	 */
 	public String getLogin();
 
+	/**
+	 * @return email
+	 */
 	public String getEmail();
 	
-	// get server
+	/**
+	 * @return server address
+	 */
 	public String getServerAddress();
 	
+	/**
+	 * @return server port
+	 */
 	public int getServerPort();
 	
+	/**
+	 * 
+	 * @return whether server is secure
+	 */
 	public boolean isSecure();
 	
-	//get newsgroup
+	/**
+	 * @return get newsgroup name
+	 */
 	public String getNewsgroupName();
-	
+
+	/**
+	 * @return get newsgroup address
+	 */
 	public String getNewsgroupDescription();
 
 }

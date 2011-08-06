@@ -14,57 +14,86 @@ import org.eclipse.ecf.salvo.ui.external.provider.INewsGroupProvider;
 
 public class TestNewsgroupProvider implements INewsGroupProvider {
 
+	private String user;
+	private String password;
+	private String org;
+	private String login;
+	private String email;
+	private String serverAddress;
+	private int serverPort;
+	private boolean isSecure;
+	private String newsgroupName;
+	private String newsgroupDescription;
+	
 	public TestNewsgroupProvider() {
 	}
 
 	@Override
 	public String getUser() {
-		return "Foo Bar";
+		return user;
 	}
 
 	@Override
 	public String getPassword() {
-		return "flinder1f7";
+		return password;
 	}
 
 	@Override
 	public String getOrganization() {
-		return "eclipse.org";
+		return org;
 	}
 
 	@Override
 	public String getLogin() {
-		return "exquisitus";
+		return login;
 	}
 
 	@Override
 	public String getEmail() {
-		return "foo.bar@foobar.org";
+		return email;
 	}
 
 	@Override
 	public String getServerAddress() {
-		return "news.eclipse.org";
+		return serverAddress;
 	}
 	
 	@Override
 	public int getServerPort() {
-		return 119;
+		return serverPort;
 	}
 	
 	@Override
 	public boolean isSecure() {
-		return true;
+		return isSecure;
 	}
 
 	@Override
 	public String getNewsgroupName() {
-		return "eclipse.test";
+		return newsgroupName;
 	}
 
 	@Override
 	public String getNewsgroupDescription() {
-		return "For testing purposes";
+		return newsgroupDescription;
+	}
+
+	@Override
+	public boolean init() {
+		// Initializing parameter. User Input dialog can be defined here
+		
+		user = "Foo Bar";
+		password = "flinder1f7";
+		org = "eclipse.org";
+		login = "exquisitus";
+		email = "foo.bar@foobar.org";
+		serverAddress = "news.eclipse.org";
+		serverPort = 119;
+		isSecure = true;
+		newsgroupName = "eclipse.test";
+		newsgroupDescription = "For testing purposes";
+		
+		return true;
 	}
 
 }
