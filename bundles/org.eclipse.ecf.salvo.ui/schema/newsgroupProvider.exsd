@@ -1,5 +1,14 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!-- Schema file written by PDE -->
+<!-- Copyright (c) 2011 University Of Moratuwa
+                                                                      
+ All rights reserved. This program and the accompanying materials     
+ are made available under the terms of the Eclipse Public License v1.0
+ which accompanies this distribution, and is available at             
+ http://www.eclipse.org/legal/epl-v10.html                            
+                                                                      
+ Contributors:                                                        
+     Isuru Udana - UI Integration in the Workbench
+-->
 <schema targetNamespace="org.eclipse.ecf.salvo.ui" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appInfo>
@@ -12,7 +21,6 @@ Other projects can specify their newsgroups.
 Multiple newsgroups can be added.
 &lt;/p&gt;
 @see Examples
-
       </documentation>
    </annotation>
 
@@ -133,63 +141,63 @@ import org.eclipse.ecf.salvo.ui.external.provider.INewsGroupProvider;
 
 public class TestNewsgroupProvider implements INewsGroupProvider {
 
-	public TestNewsgroupProvider() {
-	}
+ public TestNewsgroupProvider() {
+ }
 
-	@Override
-	public String getUser() {
-		return &quot;Foo Bar&quot;;
-	}
+ @Override
+ public String getUser() {
+  return &quot;Foo Bar&quot;;
+ }
 
-	@Override
-	public String getPassword() {
-		return &quot;flinder1f7&quot;;
-	}
+ @Override
+ public String getPassword() {
+  return &quot;flinder1f7&quot;;
+ }
 
-	@Override
-	public String getOrganization() {
-		return &quot;eclipse.org&quot;;
-	}
+ @Override
+ public String getOrganization() {
+  return &quot;eclipse.org&quot;;
+ }
 
-	@Override
-	public String getLogin() {
-		return &quot;exquisitus&quot;;
-	}
+ @Override
+ public String getLogin() {
+  return &quot;exquisitus&quot;;
+ }
 
-	@Override
-	public String getEmail() {
-		return &quot;foo.bar@foobar.org&quot;;
-	}
+ @Override
+ public String getEmail() {
+  return &quot;foo.bar@foobar.org&quot;;
+ }
 
-	@Override
-	public String getServerAddress() {
-		return &quot;news.eclipse.org&quot;;
-	}
-	
-	@Override
-	public int getServerPort() {
-		return 119;
-	}
-	
-	@Override
-	public boolean isSecure() {
-		return true;
-	}
+ @Override
+ public String getServerAddress() {
+  return &quot;news.eclipse.org&quot;;
+ }
+ 
+ @Override
+ public int getServerPort() {
+  return 119;
+ }
+ 
+ @Override
+ public boolean isSecure() {
+  return true;
+ }
 
-	@Override
-	public String getNewsgroupName() {
-		return &quot;eclipse.test&quot;;
-	}
+ @Override
+ public String getNewsgroupName() {
+  return &quot;eclipse.test&quot;;
+ }
 
-	@Override
-	public String getNewsgroupDescription() {
-		return &quot;For testing purposes&quot;;
-	}
+ @Override
+ public String getNewsgroupDescription() {
+  return &quot;For testing purposes&quot;;
+ }
 
 }   
 
 &lt;/pre&gt;
-&lt;/p&gt;   
+&lt;/p&gt;
       </documentation>
    </annotation>
 
@@ -212,11 +220,11 @@ It is defined using &lt;code&gt;&lt;enablement&gt;&lt;/code&gt; segment.
 
 &lt;pre&gt;
 &lt;enablement&gt;
-	&lt;with variable=&quot;activePartId&quot;&gt;
-		&lt;equals
-			value=&quot;org.eclipse.ecf.salvo.ui.internal.views.messageView&quot;&gt;
-		&lt;/equals&gt;
-	&lt;/with&gt;
+ &lt;with variable=&quot;activePartId&quot;&gt;
+  &lt;equals
+   value=&quot;org.eclipse.ecf.salvo.ui.internal.views.messageView&quot;&gt;
+  &lt;/equals&gt;
+ &lt;/with&gt;
 &lt;/enablement&gt;
 &lt;/pre&gt;
 
@@ -224,9 +232,6 @@ It is defined using &lt;code&gt;&lt;enablement&gt;&lt;/code&gt; segment.
 &lt;p&gt;activePartId - Active Part Id&lt;/p&gt;
 &lt;p&gt;activeEditorId - Active Editor Id&lt;/p&gt;
 &lt;p&gt;activePerspectiveId - Active Perspective Id&lt;/p&gt;
-
-
-
       </documentation>
    </annotation>
 
@@ -236,17 +241,16 @@ It is defined using &lt;code&gt;&lt;enablement&gt;&lt;/code&gt; segment.
          <meta.section type="copyright"/>
       </appInfo>
       <documentation>
-         /*******************************************************************************
- *  Copyright (c) 2011 University Of Moratuwa
- *                                                                      
- * All rights reserved. This program and the accompanying materials     
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at             
- * http://www.eclipse.org/legal/epl-v10.html                            
- *                                                                      
- * Contributors:                                                        
- *    Isuru Udana - UI Integration in the Workbench
- *******************************************************************************/
+          Copyright (c) 2011 University Of Moratuwa
+                                                                      
+ All rights reserved. This program and the accompanying materials     
+ are made available under the terms of the Eclipse Public License v1.0
+ which accompanies this distribution, and is available at             
+ http://www.eclipse.org/legal/epl-v10.html                            
+                                                                      
+ Contributors:                                                        
+     Isuru Udana - UI Integration in the Workbench
+ 
       </documentation>
    </annotation>
 

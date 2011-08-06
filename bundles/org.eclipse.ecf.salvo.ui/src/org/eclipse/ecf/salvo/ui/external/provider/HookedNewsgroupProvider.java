@@ -67,11 +67,12 @@ public class HookedNewsgroupProvider {
 		EvaluationContext context = new EvaluationContext(null, activePart
 				.getSite().getId());
 
-		// Adding context variables		
+		// Adding context variables
 		context.addVariable("activePartId", activePart.getSite().getId());
-		
+
 		if (activeEditorPart != null) {
-		  context.addVariable("activeEditorId", activeEditorPart.getSite().getId());
+			context.addVariable("activeEditorId", activeEditorPart.getSite()
+					.getId());
 		}
 
 		return context;
@@ -94,17 +95,29 @@ public class HookedNewsgroupProvider {
 
 			try {
 				// server
-				IServer server = ServerFactory.getCreateServer(
-						provider.getServerAddress(), provider.getServerPort(),
-						credentials, provider.isSecure());
-				IServerConnection connection = server.getServerConnection();
-				connection.disconnect();
-				connection.connect();
-				connection.setModeReader(server);
-				connection.getOverviewHeaders(server);
+				IServer server = null;
 
-				// Subscribe Server
-				if (!server.isSubscribed()) {
+				for (IServer currentServer : storeFacade.getServers()) {
+					if ((currentServer.getAddress().equals(provider
+							.getServerAddress()))
+							&& (currentServer.getPort() == provider
+									.getServerPort())) {
+						server = currentServer;
+					}
+				}
+
+				if (server == null) {
+					server = ServerFactory.getCreateServer(
+							provider.getServerAddress(),
+							provider.getServerPort(), credentials,
+							provider.isSecure());
+					IServerConnection connection = server.getServerConnection();
+					connection.disconnect();
+					connection.connect();
+					connection.setModeReader(server);
+					connection.getOverviewHeaders(server);
+
+					// Subscribe Server
 					try {
 						storeFacade.subscribeServer(server,
 								provider.getPassword());
@@ -137,8 +150,9 @@ public class HookedNewsgroupProvider {
 							provider.getNewsgroupDescription());
 				}
 				newsgroups.add(group);
-				// Subscribing to the newsgroup is done in performFinish() of the wizard.
-				
+				// Subscribing to the newsgroup is done in performFinish() of
+				// the wizard.
+
 			} catch (NNTPException e) {
 				Debug.log(getClass(), e);
 			}
