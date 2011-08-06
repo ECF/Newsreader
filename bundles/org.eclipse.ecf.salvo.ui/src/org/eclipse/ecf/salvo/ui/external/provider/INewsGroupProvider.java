@@ -16,7 +16,7 @@ package org.eclipse.ecf.salvo.ui.external.provider;
 public interface INewsGroupProvider {
 	
 	/**
-	 * Initialize parameters
+	 * Initialize User input parameters
 	 * User Input dialog can be placed here
 	 * @return initialization is success or not
 	 */

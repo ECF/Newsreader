@@ -127,20 +127,15 @@ Multiple newsgroups can be added.
 
 &lt;pre&gt;
 
+
 import org.eclipse.ecf.salvo.ui.external.provider.INewsGroupProvider;
 
 public class TestNewsgroupProvider implements INewsGroupProvider {
 
 	private String user;
 	private String password;
-	private String org;
 	private String login;
 	private String email;
-	private String serverAddress;
-	private int serverPort;
-	private boolean isSecure;
-	private String newsgroupName;
-	private String newsgroupDescription;
 	
 	public TestNewsgroupProvider() {
 	}
@@ -157,7 +152,7 @@ public class TestNewsgroupProvider implements INewsGroupProvider {
 
 	@Override
 	public String getOrganization() {
-		return org;
+		return &quot;eclipse.org&quot;;
 	}
 
 	@Override
@@ -172,43 +167,37 @@ public class TestNewsgroupProvider implements INewsGroupProvider {
 
 	@Override
 	public String getServerAddress() {
-		return serverAddress;
+		return &quot;news.eclipse.org&quot;;
 	}
 	
 	@Override
 	public int getServerPort() {
-		return serverPort;
+		return 119;
 	}
 	
 	@Override
 	public boolean isSecure() {
-		return isSecure;
+		return true;
 	}
 
 	@Override
 	public String getNewsgroupName() {
-		return newsgroupName;
+		return &quot;eclipse.test&quot;;
 	}
 
 	@Override
 	public String getNewsgroupDescription() {
-		return newsgroupDescription;
+		return &quot;For testing purposes&quot;;
 	}
 
 	@Override
 	public boolean init() {
-		// Initializing parameter. User Input dialog can be defined here
+		// Initializing user input parameter. User Input dialog can be defined here
 		
 		user = &quot;Foo Bar&quot;;
 		password = &quot;flinder1f7&quot;;
-		org = &quot;eclipse.org&quot;;
 		login = &quot;exquisitus&quot;;
 		email = &quot;foo.bar@foobar.org&quot;;
-		serverAddress = &quot;news.eclipse.org&quot;;
-		serverPort = 119;
-		isSecure = true;
-		newsgroupName = &quot;eclipse.test&quot;;
-		newsgroupDescription = &quot;For testing purposes&quot;;
 		
 		return true;
 	}

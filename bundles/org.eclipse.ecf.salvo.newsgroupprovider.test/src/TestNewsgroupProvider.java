@@ -16,14 +16,8 @@ public class TestNewsgroupProvider implements INewsGroupProvider {
 
 	private String user;
 	private String password;
-	private String org;
 	private String login;
 	private String email;
-	private String serverAddress;
-	private int serverPort;
-	private boolean isSecure;
-	private String newsgroupName;
-	private String newsgroupDescription;
 	
 	public TestNewsgroupProvider() {
 	}
@@ -40,7 +34,7 @@ public class TestNewsgroupProvider implements INewsGroupProvider {
 
 	@Override
 	public String getOrganization() {
-		return org;
+		return "eclipse.org";
 	}
 
 	@Override
@@ -55,43 +49,37 @@ public class TestNewsgroupProvider implements INewsGroupProvider {
 
 	@Override
 	public String getServerAddress() {
-		return serverAddress;
+		return "news.eclipse.org";
 	}
 	
 	@Override
 	public int getServerPort() {
-		return serverPort;
+		return 119;
 	}
 	
 	@Override
 	public boolean isSecure() {
-		return isSecure;
+		return true;
 	}
 
 	@Override
 	public String getNewsgroupName() {
-		return newsgroupName;
+		return "eclipse.test";
 	}
 
 	@Override
 	public String getNewsgroupDescription() {
-		return newsgroupDescription;
+		return "For testing purposes";
 	}
 
 	@Override
 	public boolean init() {
-		// Initializing parameter. User Input dialog can be defined here
+		// Initializing user input parameter. User Input dialog can be defined here
 		
 		user = "Foo Bar";
 		password = "flinder1f7";
-		org = "eclipse.org";
 		login = "exquisitus";
 		email = "foo.bar@foobar.org";
-		serverAddress = "news.eclipse.org";
-		serverPort = 119;
-		isSecure = true;
-		newsgroupName = "eclipse.test";
-		newsgroupDescription = "For testing purposes";
 		
 		return true;
 	}

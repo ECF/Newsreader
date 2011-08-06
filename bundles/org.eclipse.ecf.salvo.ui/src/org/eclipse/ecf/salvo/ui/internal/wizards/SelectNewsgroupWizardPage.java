@@ -227,7 +227,6 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 
 	/**
 	 * Get the selected Newsgroup from the list
-	 * 
 	 * @return selected Newsgroup
 	 */
 	public INewsgroup getSelectedNewsgroup() {
@@ -293,7 +292,7 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 	}
 
 	/**
-	 * init hooked newgroups providers
+	 * initialize hooked newsgroup providers
 	 */
 	private void initHookedNewsgroupsProviders() {
 		hookedNewsgroupProviders = HookedNewsgroupProvider.instance()
