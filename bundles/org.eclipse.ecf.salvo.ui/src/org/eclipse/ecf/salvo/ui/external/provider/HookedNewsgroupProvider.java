@@ -47,6 +47,10 @@ public class HookedNewsgroupProvider {
 
 	private static HookedNewsgroupProvider INSTANCE;
 
+	/**
+	 * 
+	 * @return a instance of HookedNewsgroupProvider
+	 */
 	public static HookedNewsgroupProvider instance() {
 		if (INSTANCE == null) {
 			INSTANCE = new HookedNewsgroupProvider();
@@ -54,6 +58,10 @@ public class HookedNewsgroupProvider {
 		return INSTANCE;
 	}
 
+	/**
+	 * 
+	 * @return Evaluation Context to evaluate core expression
+	 */
 	private EvaluationContext getEvaluationContext() {
 
 		// the active part
@@ -78,90 +86,99 @@ public class HookedNewsgroupProvider {
 		return context;
 	}
 
-	public INewsgroup[] getNewsgroups() {
+	/**
+	 * Get the Newsgroup from the Newsgroup Provider
+	 * 
+	 * @param provider
+	 *            INewsGroupProvider
+	 * @return the INewsgroup of the INewsGroupProvider
+	 */
+	public INewsgroup getNewsgroup(INewsGroupProvider provider) {
 
-		ArrayList<INewsgroup> newsgroups = new ArrayList<INewsgroup>();
 		IServerStoreFacade storeFacade = ServerStoreFactory.instance()
 				.getServerStoreFacade();
 
-		INewsGroupProvider[] providers = getProviders();
+		INewsgroup group = null;
 
-		for (INewsGroupProvider provider : providers) {
+		try {
+			// server
+			IServer server = null;
 
-			// credentials
-			final AbstractCredentials credentials = new AbstractCredentials(
-					provider.getUser(), provider.getEmail(),
-					provider.getLogin(), provider.getPassword());
-
-			try {
-				// server
-				IServer server = null;
-
-				for (IServer currentServer : storeFacade.getServers()) {
-					if ((currentServer.getAddress().equals(provider
-							.getServerAddress()))
-							&& (currentServer.getPort() == provider
-									.getServerPort())) {
-						server = currentServer;
-					}
+			for (IServer currentServer : storeFacade.getServers()) {
+				if ((currentServer.getAddress().equals(provider
+						.getServerAddress()))
+						&& (currentServer.getPort() == provider.getServerPort())) {
+					server = currentServer;
 				}
-
-				if (server == null) {
-					server = ServerFactory.getCreateServer(
-							provider.getServerAddress(),
-							provider.getServerPort(), credentials,
-							provider.isSecure());
-					IServerConnection connection = server.getServerConnection();
-					connection.disconnect();
-					connection.connect();
-					connection.setModeReader(server);
-					connection.getOverviewHeaders(server);
-
-					// Subscribe Server
-					try {
-						storeFacade.subscribeServer(server,
-								provider.getPassword());
-					} catch (NNTPException e1) {
-						Debug.log(getClass(), e1);
-					}
-				}
-
-				// Newsgroup
-				INewsgroup group = null;
-
-				// check whether newsgroup is already subscribed
-				INewsgroup[] subscribedNewsgroups = storeFacade
-						.getSubscribedNewsgroups(server);
-				boolean isProviderNewsgroupSubscribed = false;
-				for (INewsgroup subscribedNewsgroup : subscribedNewsgroups) {
-					if (subscribedNewsgroup.getNewsgroupName().equals(
-							provider.getNewsgroupName())) {
-						isProviderNewsgroupSubscribed = true;
-						group = subscribedNewsgroup;
-						break;
-					}
-				}
-
-				// If newsgroup is not alread subscribed create a new newsgroup
-				if (!isProviderNewsgroupSubscribed) {
-					// Attach a newsgroup to the server
-					group = NewsgroupFactory.createNewsGroup(server,
-							provider.getNewsgroupName(),
-							provider.getNewsgroupDescription());
-				}
-				newsgroups.add(group);
-				// Subscribing to the newsgroup is done in performFinish() of
-				// the wizard.
-
-			} catch (NNTPException e) {
-				Debug.log(getClass(), e);
 			}
 
+			if (server == null) {
+
+				// credentials
+				String password = provider.getPassword();
+
+				final AbstractCredentials credentials = new AbstractCredentials(
+						provider.getUser(), provider.getEmail(),
+						provider.getLogin(), password);
+
+				// create server
+				server = ServerFactory.getCreateServer(
+						provider.getServerAddress(), provider.getServerPort(),
+						credentials, provider.isSecure());
+				IServerConnection connection = server.getServerConnection();
+				connection.disconnect();
+				connection.connect();
+				connection.setModeReader(server);
+				connection.getOverviewHeaders(server);
+
+				// Subscribe Server
+				try {
+					storeFacade.subscribeServer(server, password);
+				} catch (NNTPException e1) {
+					Debug.log(getClass(), e1);
+				}
+			}
+
+			// Newsgroup
+
+			// check whether newsgroup is already subscribed
+			INewsgroup[] subscribedNewsgroups = storeFacade
+					.getSubscribedNewsgroups(server);
+			boolean isProviderNewsgroupSubscribed = false;
+			for (INewsgroup subscribedNewsgroup : subscribedNewsgroups) {
+				if (subscribedNewsgroup.getNewsgroupName().equals(
+						provider.getNewsgroupName())) {
+					isProviderNewsgroupSubscribed = true;
+					group = subscribedNewsgroup;
+					break;
+				}
+			}
+
+			// If newsgroup is not already subscribed create a new newsgroup
+			if (!isProviderNewsgroupSubscribed) {
+				// Attach a newsgroup to the server
+				group = NewsgroupFactory.createNewsGroup(server,
+						provider.getNewsgroupName(),
+						provider.getNewsgroupDescription());
+			}
+
+			// Subscribing to the newsgroup is done in performFinish() of
+			// the wizard.
+
+		} catch (NNTPException e) {
+			Debug.log(getClass(), e);
 		}
-		return (INewsgroup[]) newsgroups.toArray(new INewsgroup[0]);
+
+		return group;
 	}
 
-	private INewsGroupProvider[] getProviders() {
+	/**
+	 * Get the newsgroup providers matches the current context - Suggested
+	 * newsgroup providers
+	 * 
+	 * @return NewsGroup Providers
+	 */
+	public INewsGroupProvider[] getProviders() {
 
 		final ArrayList<INewsGroupProvider> newsgroupProvider = new ArrayList<INewsGroupProvider>();
 

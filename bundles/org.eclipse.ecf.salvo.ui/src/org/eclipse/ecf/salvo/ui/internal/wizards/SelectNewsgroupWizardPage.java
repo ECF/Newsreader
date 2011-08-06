@@ -19,6 +19,7 @@ import org.eclipse.ecf.protocol.nntp.model.INewsgroup;
 import org.eclipse.ecf.protocol.nntp.model.IServer;
 import org.eclipse.ecf.protocol.nntp.model.NNTPException;
 import org.eclipse.ecf.salvo.ui.external.provider.HookedNewsgroupProvider;
+import org.eclipse.ecf.salvo.ui.external.provider.INewsGroupProvider;
 import org.eclipse.ecf.salvo.ui.tools.ImageUtils;
 import org.eclipse.ecf.salvo.ui.tools.PreferencesUtil;
 import org.eclipse.jface.wizard.WizardPage;
@@ -27,7 +28,6 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -44,20 +44,20 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 	private ArrayList<INewsgroup> newsgroups;
 	private Button btnCheckPickSuggested;
 	private Combo cboSuggestedNewgroups;
-	private INewsgroup[] hookedNewsgroups;
+	private INewsGroupProvider[] hookedNewsgroupProviders;
 
 	public SelectNewsgroupWizardPage() {
 		super("Select Newsgroup");
 		setTitle("Select Newsgroup");
 		setDescription("Select the Newsgroup you want to ask the question");
-		initHookedNewsgroups();
+		initHookedNewsgroupsProviders();
 		fetchAllNewsgroups();
 		setImageDescriptor(ImageUtils.getInstance().getImageDescriptor(
 				"selectnewsgroup.png"));
 	}
 
 	public void createControl(Composite parent) {
-		
+
 		// Container
 		container = new Composite(parent, SWT.NULL);
 		container.setLayout(new GridLayout(1, false));
@@ -100,9 +100,6 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 						cboSuggestedNewgroups.setEnabled(true);
 						newsgroupList.setEnabled(false);
 						searchBar.setEnabled(false);
-						searchBar.setText("");
-						setFilteredListItems();
-						newsgroupList.select(cboSuggestedNewgroups.getSelectionIndex());
 						setPageComplete(true);
 					} else {
 						cboSuggestedNewgroups.setEnabled(false);
@@ -120,25 +117,15 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 			cboSuggestedNewgroups.setLayoutData(new GridData(SWT.FILL,
 					SWT.CENTER, true, false, 1, 1));
 			fillCboSuggestedNewsgroups();
-			
+
 			if (cboSuggestedNewgroups.getItemCount() == 0) {
 				btnCheckPickSuggested.setEnabled(false);
 				cboSuggestedNewgroups.add("No suggestions found");
-			} 
+			}
 			cboSuggestedNewgroups.select(0);
-			
-			cboSuggestedNewgroups.addSelectionListener(new SelectionListener() {
-				
-				public void widgetSelected(SelectionEvent e) {
-					newsgroupList.select(cboSuggestedNewgroups.getSelectionIndex());
-				}
-				
-				public void widgetDefaultSelected(SelectionEvent e) {
-				}
-			});
 			cboSuggestedNewgroups.setEnabled(false);
 		}
-		
+
 		// Page completeness
 		if (newsgroupList.getItemCount() == 0) {
 			setPageComplete(false);
@@ -148,16 +135,18 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 
 	}
 
+	/**
+	 * Fill CboSugesstedNewsgroups combo box
+	 */
 	private void fillCboSuggestedNewsgroups() {
-		for (INewsgroup newsgroup : hookedNewsgroups) {
-			
-			String newsgroupName = newsgroup.getNewsgroupName();
-			String serverAddress = newsgroup.getServer().getAddress();
-			String description = newsgroup.getDescription();
+		for (INewsGroupProvider newsgroupProvider : hookedNewsgroupProviders) {
 
-			cboSuggestedNewgroups.add(newsgroupName + "  (Server: " + serverAddress
-					+ ") -  " + description);
-			
+			String newsgroupName = newsgroupProvider.getNewsgroupName();
+			String serverAddress = newsgroupProvider.getServerAddress();
+			String description = newsgroupProvider.getNewsgroupDescription();
+
+			cboSuggestedNewgroups.add(newsgroupName + "  (Server: "
+					+ serverAddress + ") -  " + description);
 		}
 	}
 
@@ -245,24 +234,30 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 
 		INewsgroup resultNewsgroup = null;
 
-		try {
-			String selectedNewsgroupString = newsgroupList.getItem(
-					newsgroupList.getSelectionIndex()).replace(")", "");
+		if (!btnCheckPickSuggested.getSelection()) {
 
-			String selectedNewsgroup = selectedNewsgroupString.split("\\(")[0]
-					.trim();
-			String selectedServer = selectedNewsgroupString.split("\\(")[1]
-					.replace("Server: ", "").trim();
+			try {
+				String selectedNewsgroupString = newsgroupList.getItem(
+						newsgroupList.getSelectionIndex()).replace(")", "");
 
-			for (INewsgroup newsgroup : newsgroups) {
-				if (newsgroup.getNewsgroupName().equals(selectedNewsgroup)
-						&& newsgroup.getServer().getAddress()
-								.equals(selectedServer)) {
-					resultNewsgroup = newsgroup;
+				String selectedNewsgroup = selectedNewsgroupString.split("\\(")[0]
+						.trim();
+				String selectedServer = selectedNewsgroupString.split("\\(")[1]
+						.replace("Server: ", "").trim();
+
+				for (INewsgroup newsgroup : newsgroups) {
+					if (newsgroup.getNewsgroupName().equals(selectedNewsgroup)
+							&& newsgroup.getServer().getAddress()
+									.equals(selectedServer)) {
+						resultNewsgroup = newsgroup;
+					}
 				}
+			} catch (Exception e) {
+				// No newsgroups
 			}
-		} catch (Exception e) {
-			// No newsgroups
+		} else {
+			INewsGroupProvider provider = hookedNewsgroupProviders[cboSuggestedNewgroups.getSelectionIndex()];
+			resultNewsgroup = HookedNewsgroupProvider.instance().getNewsgroup(provider);
 		}
 		return resultNewsgroup;
 	}
@@ -274,13 +269,6 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 
 		newsgroups = new ArrayList<INewsgroup>();
 
-		for (INewsgroup newsgroup : hookedNewsgroups) {
-			
-			if (!newsgroups.contains(newsgroup)) {
-				newsgroups.add(newsgroup);
-			}
-		}
-
 		try {
 			for (IServer server : ServerStoreFactory.instance()
 					.getServerStoreFacade().getFirstStore().getServers()) {
@@ -289,7 +277,7 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 						.getServerStoreFacade().getSubscribedNewsgroups(server);
 
 				for (INewsgroup group : groups) {
-					
+
 					if (!newsgroups.contains(group)) {
 						newsgroups.add(group);
 					}
@@ -303,13 +291,11 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 	}
 
 	/**
-	 * init hooked newgroups
+	 * init hooked newgroups providers
 	 */
-	private void initHookedNewsgroups() {
-
-		hookedNewsgroups = HookedNewsgroupProvider.instance()
-				.getNewsgroups();
-
+	private void initHookedNewsgroupsProviders() {
+		hookedNewsgroupProviders = HookedNewsgroupProvider.instance()
+				.getProviders();
 	}
 
 }
