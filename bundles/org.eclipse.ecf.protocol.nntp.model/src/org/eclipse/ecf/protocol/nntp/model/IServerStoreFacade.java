@@ -173,7 +173,8 @@ public interface IServerStoreFacade extends IInputOutputSystem,
 	/**
 	 * Update store with the server
 	 * @param newsgroup Newsgroup
+	 * @param isNewArticlePosted whether a new article is posted just before sync. 
 	 */
-	public void syncStoreWithServer(INewsgroup newsgroup) throws NNTPIOException, UnexpectedResponseException, StoreException;
+	public void syncStoreWithServer(INewsgroup newsgroup, boolean isNewArticlePosted) throws NNTPIOException, UnexpectedResponseException, StoreException;
 	
 }

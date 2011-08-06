@@ -14,15 +14,20 @@ package org.eclipse.ecf.protocol.nntp.model;
 public class ArticleEvent implements IArticleEvent{
 	
 	private IArticle[] articles;
+	private boolean isFireNotification;
 	
-	public ArticleEvent(IArticle[] articles) {
-		super();
+	public ArticleEvent(IArticle[] articles, boolean isFireNotification) {
 		this.articles = articles;
+		this.isFireNotification = isFireNotification;
 	}
 
 	public IArticle[] getArticles(){
 		return articles;
 		
+	}
+
+	public boolean isFireNotification() {
+		return isFireNotification;
 	}	
 
 }

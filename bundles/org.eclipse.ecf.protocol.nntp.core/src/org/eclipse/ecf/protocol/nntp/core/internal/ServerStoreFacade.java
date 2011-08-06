@@ -99,7 +99,7 @@ public class ServerStoreFacade implements IServerStoreFacade {
 		for (int i = 0; i < getStores().length; i++) {
 			getStores()[i].subscribeNewsgroup(group);
 		}
-		syncStoreWithServer(group);
+		syncStoreWithServer(group,false);
 		//updateAttributes(group);
 	}
 
@@ -423,7 +423,7 @@ public class ServerStoreFacade implements IServerStoreFacade {
 			throws NNTPIOException, UnexpectedResponseException, StoreException {
 		article.getServer().getServerConnection().replyToArticle(replySubject, article, body);
 
-		syncStoreWithServer(article.getNewsgroup());
+		syncStoreWithServer(article.getNewsgroup(),true);
 	}
 
 	public void postNewArticle(INewsgroup[] newsgroups, String subject,
@@ -435,7 +435,7 @@ public class ServerStoreFacade implements IServerStoreFacade {
 			connection.postNewArticle(newsgroups, subject, body);
 			for (int i = 0; i < newsgroups.length; i++) {
 				if (newsgroups[i].isSubscribed()) {
-					syncStoreWithServer(newsgroups[i]);
+					syncStoreWithServer(newsgroups[i],true);
 				}
 			}
 		} catch (UnexpectedResponseException e) {
@@ -661,7 +661,7 @@ public class ServerStoreFacade implements IServerStoreFacade {
 		}
 	}
 	
-	public void syncStoreWithServer(INewsgroup newsgroup) throws NNTPIOException, UnexpectedResponseException, StoreException {
+	public void syncStoreWithServer(INewsgroup newsgroup, boolean isNewArticlePosted) throws NNTPIOException, UnexpectedResponseException, StoreException {
 		
 		int storeHighWatermark = getStoreHighWatermark(newsgroup);	
 		int serverHighWatermark = getServerWatermarks(newsgroup)[2];
@@ -674,8 +674,12 @@ public class ServerStoreFacade implements IServerStoreFacade {
 		updateAttributesInStore(newsgroup);
 		
 		if (articles != null) {
-			ArticleEventListnersFactory.instance().getRegistry().fireEvent(new ArticleEvent(articles));
-		}
+			if (isNewArticlePosted && articles.length == 1) {
+				ArticleEventListnersFactory.instance().getRegistry().fireEvent(new ArticleEvent(articles,false));
+			} else {
+				ArticleEventListnersFactory.instance().getRegistry().fireEvent(new ArticleEvent(articles,true));
+			}
+		} 
 		
 	}
 
