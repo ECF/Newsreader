@@ -6,8 +6,13 @@
          <meta.schema plugin="org.eclipse.ecf.salvo.ui" id="newsgroupProvider" name="Salvo Newsgroup Provider"/>
       </appInfo>
       <documentation>
-         This extension point allows other eclipse projects to hook into salvo.
-Other projects can specify their namespace and the newsgroups.
+         &lt;p&gt;
+This extension point allows other eclipse projects to hook into salvo.
+Other projects can specify their newsgroups. 
+Multiple newsgroups can be added.
+&lt;/p&gt;
+@see Examples
+
       </documentation>
    </annotation>
 
@@ -82,21 +87,109 @@ Other projects can specify their namespace and the newsgroups.
       </complexType>
    </element>
 
-   <annotation>
-      <appInfo>
-         <meta.section type="since"/>
-      </appInfo>
-      <documentation>
-         [Enter the first release in which this extension point appears.]
-      </documentation>
-   </annotation>
 
    <annotation>
       <appInfo>
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         [Enter extension point usage example here.]
+         &lt;p&gt;
+&lt;pre&gt;
+&lt;extension
+         point=&quot;org.eclipse.ecf.salvo.ui.newsgroupProvider&quot;&gt;
+      &lt;newsgroup
+            class=&quot;TestNewsgroupProvider&quot;
+            description=&quot;test newsgroup&quot;
+            name=&quot;org.eclipse.ecf.salvo.newsgroupprovider.test.newsgroup1&quot;&gt;
+         &lt;enablement&gt;
+            &lt;with
+                  variable=&quot;activePartId&quot;&gt;
+               &lt;or&gt;
+                  &lt;equals
+                        value=&quot;org.eclipse.ecf.salvo.ui.internal.views.messageView&quot;&gt;
+                  &lt;/equals&gt;
+                  &lt;equals
+                        value=&quot;org.eclipse.ecf.salvo.ui.internal.views.digest.DigestView&quot;&gt;
+                  &lt;/equals&gt;
+               &lt;/or&gt;
+            &lt;/with&gt;
+         &lt;/enablement&gt;
+      &lt;/newsgroup&gt;
+   &lt;/extension&gt;
+   
+&lt;/pre&gt;   
+&lt;/p&gt;
+
+&lt;p&gt;
+&lt;b&gt;Sample implementation INewsgroupProvider&lt;/b&gt;   
+&lt;/p&gt;
+  
+&lt;p&gt;  
+
+&lt;pre&gt;
+
+import org.eclipse.ecf.salvo.ui.external.provider.INewsGroupProvider;
+
+
+public class TestNewsgroupProvider implements INewsGroupProvider {
+
+	public TestNewsgroupProvider() {
+	}
+
+	@Override
+	public String getUser() {
+		return &quot;Foo Bar&quot;;
+	}
+
+	@Override
+	public String getPassword() {
+		return &quot;flinder1f7&quot;;
+	}
+
+	@Override
+	public String getOrganization() {
+		return &quot;eclipse.org&quot;;
+	}
+
+	@Override
+	public String getLogin() {
+		return &quot;exquisitus&quot;;
+	}
+
+	@Override
+	public String getEmail() {
+		return &quot;foo.bar@foobar.org&quot;;
+	}
+
+	@Override
+	public String getServerAddress() {
+		return &quot;news.eclipse.org&quot;;
+	}
+	
+	@Override
+	public int getServerPort() {
+		return 119;
+	}
+	
+	@Override
+	public boolean isSecure() {
+		return true;
+	}
+
+	@Override
+	public String getNewsgroupName() {
+		return &quot;eclipse.test&quot;;
+	}
+
+	@Override
+	public String getNewsgroupDescription() {
+		return &quot;For testing purposes&quot;;
+	}
+
+}   
+
+&lt;/pre&gt;
+&lt;/p&gt;   
       </documentation>
    </annotation>
 
@@ -105,18 +198,56 @@ Other projects can specify their namespace and the newsgroups.
          <meta.section type="apiinfo"/>
       </appInfo>
       <documentation>
-         [Enter API information here.]
+         &lt;p&gt;&lt;b&gt; Providing newsgroup Information&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;
+All providers must implement the &lt;code&gt;INewsGroupProvider&lt;/code&gt;. There you can specify information needed to connect to the newsgroup. 
+&lt;/p&gt;
+@see Examples
+
+&lt;p&gt;&lt;b&gt; Newsgroup Activation &lt;/b&gt; &lt;/p&gt;
+&lt;p&gt;
+A provider can decide when to activate the newsgroup.
+It is defined using &lt;code&gt;&lt;enablement&gt;&lt;/code&gt; segment.
+&lt;/p&gt;
+
+&lt;pre&gt;
+&lt;enablement&gt;
+	&lt;with variable=&quot;activePartId&quot;&gt;
+		&lt;equals
+			value=&quot;org.eclipse.ecf.salvo.ui.internal.views.messageView&quot;&gt;
+		&lt;/equals&gt;
+	&lt;/with&gt;
+&lt;/enablement&gt;
+&lt;/pre&gt;
+
+&lt;p&gt;&lt;b&gt; variables&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;activePartId - Active Part Id&lt;/p&gt;
+&lt;p&gt;activeEditorId - Active Editor Id&lt;/p&gt;
+&lt;p&gt;activePerspectiveId - Active Perspective Id&lt;/p&gt;
+
+
+
       </documentation>
    </annotation>
+
 
    <annotation>
       <appInfo>
-         <meta.section type="implementation"/>
+         <meta.section type="copyright"/>
       </appInfo>
       <documentation>
-         [Enter information about supplied implementation of this extension point.]
+         /*******************************************************************************
+ *  Copyright (c) 2011 University Of Moratuwa
+ *                                                                      
+ * All rights reserved. This program and the accompanying materials     
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at             
+ * http://www.eclipse.org/legal/epl-v10.html                            
+ *                                                                      
+ * Contributors:                                                        
+ *    Isuru Udana - UI Integration in the Workbench
+ *******************************************************************************/
       </documentation>
    </annotation>
-
 
 </schema>
