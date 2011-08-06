@@ -19,7 +19,11 @@ import org.eclipse.ecf.protocol.nntp.model.IArticleEvent;
 import org.eclipse.ecf.protocol.nntp.model.IArticleEventListner;
 import org.eclipse.ecf.protocol.nntp.model.IArticleEventListnersRegistry;
 import org.eclipse.ecf.protocol.nntp.model.IServer;
+import org.eclipse.ecf.protocol.nntp.model.IStore;
+import org.eclipse.ecf.protocol.nntp.model.IStoreEvent;
+import org.eclipse.ecf.protocol.nntp.model.IStoreEventListener;
 import org.eclipse.ecf.protocol.nntp.model.NNTPException;
+import org.eclipse.ecf.protocol.nntp.model.SALVO;
 import org.eclipse.ecf.salvo.ui.internal.Activator;
 import org.eclipse.ecf.salvo.ui.internal.dialogs.SelectServerDialog;
 import org.eclipse.ecf.salvo.ui.tools.ImageUtils;
@@ -60,7 +64,7 @@ import org.osgi.framework.ServiceListener;
  * 
  */
 public class DigestView extends ViewPart implements IArticleEventListner,
-		ServiceListener {
+		ServiceListener, IStoreEventListener {
 
 	public static final String ID = "org.eclipse.ecf.salvo.ui.internal.views.digest.DigestView";
 	private final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
@@ -77,6 +81,11 @@ public class DigestView extends ViewPart implements IArticleEventListner,
 		context = Activator.getDefault().getBundle().getBundleContext();
 		context.addServiceListener(this); // listening to store
 											// register/unregister
+
+		for (IStore store : ServerStoreFactory.instance()
+				.getServerStoreFacade().getStores()) {
+			store.addListener(this, SALVO.EVENT_SUBSCRIBE_UNSUBSCRIBE);
+		}
 	}
 
 	/**
@@ -327,6 +336,22 @@ public class DigestView extends ViewPart implements IArticleEventListner,
 				}
 			});
 		}
+	}
+
+	public void storeEvent(IStoreEvent event) {
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				try {
+					if (null != getSelectedServer()) {
+						treeViewer.setInput(getSelectedServer());
+					} else {
+						treeViewer.getTree().removeAll();
+					}
+				} catch (Exception e) {
+				}
+			}
+		});
+
 	}
 
 }

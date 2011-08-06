@@ -66,6 +66,8 @@ public class SALVO {
 	public static final int EVENT_ALL_EVENTS = EVENT_CHANGE | EVENT_REMOVE
 			| EVENT_ADD | EVENT_RELOAD | EVENT_UNSUBSCRIBE | EVENT_SUBSCRIBE
 			| EVENT_REGISTER_STORE | EVENT_UNREGISTER_STORE;
+	
+	public static final int EVENT_SUBSCRIBE_UNSUBSCRIBE = EVENT_SUBSCRIBE | EVENT_UNSUBSCRIBE;
 
 	/**
 	 * The home of Salvo. Could be used by IStore objects to save stuff.
