@@ -114,9 +114,9 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 			if (cboSuggestedNewgroups.getItemCount() == 0) {
 				btnCheckPickSuggested.setEnabled(false);
 				cboSuggestedNewgroups.add("No suggestions found");
-			} else {
-				cboSuggestedNewgroups.select(0);
-			}
+			} 
+			cboSuggestedNewgroups.select(0);
+			
 			
 			cboSuggestedNewgroups.addSelectionListener(new SelectionListener() {
 				

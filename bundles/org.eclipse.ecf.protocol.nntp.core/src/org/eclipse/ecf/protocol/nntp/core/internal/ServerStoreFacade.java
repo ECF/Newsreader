@@ -434,7 +434,9 @@ public class ServerStoreFacade implements IServerStoreFacade {
 					.getServerConnection();
 			connection.postNewArticle(newsgroups, subject, body);
 			for (int i = 0; i < newsgroups.length; i++) {
-				syncStoreWithServer(newsgroups[i]);
+				if (newsgroups[i].isSubscribed()) {
+					syncStoreWithServer(newsgroups[i]);
+				}
 			}
 		} catch (UnexpectedResponseException e) {
 			throw new NNTPIOException(e.getMessage(), e);

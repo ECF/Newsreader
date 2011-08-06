@@ -46,14 +46,14 @@ public class HookedNewsgroupProvider {
 	private static final String EXTENSIONPOINT_ID = "org.eclipse.ecf.salvo.ui.newsgroupProvider";
 
 	private static HookedNewsgroupProvider INSTANCE;
-	
+
 	public static HookedNewsgroupProvider instance() {
 		if (INSTANCE == null) {
 			INSTANCE = new HookedNewsgroupProvider();
 		}
 		return INSTANCE;
 	}
-	
+
 	private EvaluationContext getEvaluationContext() {
 
 		// the active part
@@ -61,17 +61,20 @@ public class HookedNewsgroupProvider {
 				.getActiveWorkbenchWindow().getActivePage().getActivePart();
 
 		// the active editor part
-		IEditorPart editorPart = Activator.getDefault().getWorkbench()
+		IEditorPart activeEditorPart = Activator.getDefault().getWorkbench()
 				.getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 
 		EvaluationContext context = new EvaluationContext(null, activePart
 				.getSite().getId());
 
+		// Adding context variables		
 		context.addVariable("activePartId", activePart.getSite().getId());
-		// context.addVariable("activeEditorId", editorPart.getSite().getId());
+		
+		if (activeEditorPart != null) {
+		  context.addVariable("activeEditorId", activeEditorPart.getSite().getId());
+		}
 
 		return context;
-
 	}
 
 	public INewsgroup[] getNewsgroups() {
@@ -90,7 +93,6 @@ public class HookedNewsgroupProvider {
 					provider.getLogin(), provider.getPassword());
 
 			try {
-
 				// server
 				IServer server = ServerFactory.getCreateServer(
 						provider.getServerAddress(), provider.getServerPort(),
@@ -101,6 +103,7 @@ public class HookedNewsgroupProvider {
 				connection.setModeReader(server);
 				connection.getOverviewHeaders(server);
 
+				// Subscribe Server
 				if (!server.isSubscribed()) {
 					try {
 						storeFacade.subscribeServer(server,
@@ -109,31 +112,33 @@ public class HookedNewsgroupProvider {
 						Debug.log(getClass(), e1);
 					}
 				}
-				
-				//Newsgroup
 
+				// Newsgroup
 				INewsgroup group = null;
-				
+
 				// check whether newsgroup is already subscribed
-				INewsgroup[] subscribedNewsgroups = storeFacade.getSubscribedNewsgroups(server);
+				INewsgroup[] subscribedNewsgroups = storeFacade
+						.getSubscribedNewsgroups(server);
 				boolean isProviderNewsgroupSubscribed = false;
 				for (INewsgroup subscribedNewsgroup : subscribedNewsgroups) {
-					if (subscribedNewsgroup.getNewsgroupName().equals(provider.getNewsgroupName())) {
+					if (subscribedNewsgroup.getNewsgroupName().equals(
+							provider.getNewsgroupName())) {
 						isProviderNewsgroupSubscribed = true;
 						group = subscribedNewsgroup;
 						break;
 					}
 				}
-				
+
+				// If newsgroup is not alread subscribed create a new newsgroup
 				if (!isProviderNewsgroupSubscribed) {
 					// Attach a newsgroup to the server
 					group = NewsgroupFactory.createNewsGroup(server,
-							provider.getNewsgroupName(), provider.getNewsgroupDescription());
-					//storeFacade.subscribeNewsgroup(group);   // TODO: Move to ask a question wizard performFinish() - only subscribe after posting;
-					
-				} 
+							provider.getNewsgroupName(),
+							provider.getNewsgroupDescription());
+				}
 				newsgroups.add(group);
-
+				// Subscribing to the newsgroup is done in performFinish() of the wizard.
+				
 			} catch (NNTPException e) {
 				Debug.log(getClass(), e);
 			}
@@ -173,7 +178,6 @@ public class HookedNewsgroupProvider {
 			}
 
 		}
-
 		return (INewsGroupProvider[]) newsgroupProvider
 				.toArray(new INewsGroupProvider[0]);
 	}

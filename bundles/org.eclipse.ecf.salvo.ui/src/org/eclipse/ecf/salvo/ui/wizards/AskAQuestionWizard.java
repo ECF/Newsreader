@@ -74,16 +74,26 @@ public class AskAQuestionWizard extends Wizard {
 		IServerStoreFacade serverStoreFacade = ServerStoreFactory.instance()
 				.getServerStoreFacade();
 		try {
+			
+			// posting article
 			serverStoreFacade.postNewArticle(new INewsgroup[] { group },
 					subject, body);
+			
+			// Subscribe newsgroup
+			if (!group.isSubscribed()) {
+				serverStoreFacade.subscribeNewsgroup(group);
+			}
+			
 			MessageDialog.openInformation(getShell(), "Article Posted",
 					"Your question is posted to " + group.getNewsgroupName());
+			
 		}  catch (NNTPException e) {
 			MessageDialog.openError(getShell(), "Problem posting message",
 					"The message could not be posted. \n\r" + e.getMessage());
 			Debug.log(this.getClass(), e);
+			e.printStackTrace();
+			
 		} 
-
 		return true;
 	}
 
