@@ -61,7 +61,7 @@ public class AskAQuestionWizard extends Wizard {
 	public boolean performFinish() {
 
 		INewsgroup group = selectNewsgroupWizardPage.getSelectedNewsgroup();
-
+		
 		// Saving preferences
 		PreferencesUtil.instance().savePluginSettings(
 				"recentSelectedNewsgroup", group.getNewsgroupName());
@@ -80,7 +80,7 @@ public class AskAQuestionWizard extends Wizard {
 					subject, body);
 			
 			// Subscribe newsgroup
-			if (!group.isSubscribed()) {
+			if (!group.isSubscribed() && composeNewArticleWizardPage.doSubscribe()) {
 				serverStoreFacade.subscribeNewsgroup(group);
 			}
 			
@@ -93,7 +93,7 @@ public class AskAQuestionWizard extends Wizard {
 			Debug.log(this.getClass(), e);
 			e.printStackTrace();
 			
-		} 
+		}
 		return true;
 	}
 

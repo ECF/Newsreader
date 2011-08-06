@@ -22,6 +22,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 /**
  * This wizard page can be used to compose a new article.
@@ -34,6 +37,7 @@ public class ComposeNewArticleWizardPage extends WizardPage {
 	private Text bodyText;
 	private Text subjectText;
 	private Composite composite;
+	private Button btnSubscribeToNewsgroup;
 
 	public ComposeNewArticleWizardPage() {
 		super("Compose Question");
@@ -87,7 +91,13 @@ public class ComposeNewArticleWizardPage extends WizardPage {
 			});
 		}
 
+		// checkbox 
 		setControl(composite);
+		{
+			btnSubscribeToNewsgroup = new Button(composite, SWT.CHECK);
+			btnSubscribeToNewsgroup.setText("Subscribe to Newsgroup after posting the question");
+			btnSubscribeToNewsgroup.setSelection(true);
+		}
 		setPageComplete(false);
 
 	}
@@ -121,5 +131,13 @@ public class ComposeNewArticleWizardPage extends WizardPage {
 	public String getSubject() {
 		return subjectText.getText();
 	}
+	
+	/**
+	 * @return whether to subscribe to newsgroup
+	 */
+	public boolean doSubscribe() {
+		return btnSubscribeToNewsgroup.getSelection();
+	}
+	
 
 }

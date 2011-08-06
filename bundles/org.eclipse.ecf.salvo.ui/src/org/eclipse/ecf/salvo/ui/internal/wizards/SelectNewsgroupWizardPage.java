@@ -71,6 +71,11 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 				@Override
 				public void keyReleased(KeyEvent e) {
 					setFilteredListItems();
+					if (newsgroupList.getItemCount() == 0) {
+						setPageComplete(false);
+					} else {
+						setPageComplete(true);
+					}
 				}
 			});
 		}
@@ -94,10 +99,15 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 					if (btnCheckPickSuggested.getSelection()) {
 						cboSuggestedNewgroups.setEnabled(true);
 						newsgroupList.setEnabled(false);
+						searchBar.setEnabled(false);
+						searchBar.setText("");
+						setFilteredListItems();
 						newsgroupList.select(cboSuggestedNewgroups.getSelectionIndex());
+						setPageComplete(true);
 					} else {
 						cboSuggestedNewgroups.setEnabled(false);
 						newsgroupList.setEnabled(true);
+						searchBar.setEnabled(true);
 					}
 				}
 			});
@@ -117,7 +127,6 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 			} 
 			cboSuggestedNewgroups.select(0);
 			
-			
 			cboSuggestedNewgroups.addSelectionListener(new SelectionListener() {
 				
 				public void widgetSelected(SelectionEvent e) {
@@ -133,6 +142,8 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 		// Page completeness
 		if (newsgroupList.getItemCount() == 0) {
 			setPageComplete(false);
+			newsgroupList.setEnabled(false);
+			searchBar.setEnabled(false);
 		}
 
 	}
@@ -264,7 +275,10 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 		newsgroups = new ArrayList<INewsgroup>();
 
 		for (INewsgroup newsgroup : hookedNewsgroups) {
-			newsgroups.add(newsgroup);
+			
+			if (!newsgroups.contains(newsgroup)) {
+				newsgroups.add(newsgroup);
+			}
 		}
 
 		try {
@@ -275,7 +289,10 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 						.getServerStoreFacade().getSubscribedNewsgroups(server);
 
 				for (INewsgroup group : groups) {
-					newsgroups.add(group);
+					
+					if (!newsgroups.contains(group)) {
+						newsgroups.add(group);
+					}
 				}
 
 			}
