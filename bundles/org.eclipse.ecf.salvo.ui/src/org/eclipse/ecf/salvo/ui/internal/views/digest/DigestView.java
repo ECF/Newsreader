@@ -72,11 +72,9 @@ public class DigestView extends ViewPart implements IArticleEventListner,
 	private Combo combo;
 	private Action selectServerAction;
 	private BundleContext context;
-
+	private IArticleEventListnersRegistry articleEventListnerRegistry;
+	
 	public DigestView() {
-		IArticleEventListnersRegistry articleEventListnerRegistry = ArticleEventListnersFactory
-				.instance().getRegistry();
-		articleEventListnerRegistry.addListener(this);
 
 		context = Activator.getDefault().getBundle().getBundleContext();
 		context.addServiceListener(this); // listening to store
@@ -86,6 +84,11 @@ public class DigestView extends ViewPart implements IArticleEventListner,
 				.getServerStoreFacade().getStores()) {
 			store.addListener(this, SALVO.EVENT_SUBSCRIBE_UNSUBSCRIBE);
 		}
+
+		 articleEventListnerRegistry = ArticleEventListnersFactory
+				.instance().getRegistry();
+		articleEventListnerRegistry.addListener(this);
+
 	}
 
 	/**
@@ -117,16 +120,7 @@ public class DigestView extends ViewPart implements IArticleEventListner,
 				public void widgetSelected(SelectionEvent arg0) {
 
 					treeViewer.getTree().removeAll();
-
-					if (combo.getSelectionIndex() == 1) {
-						treeViewer
-								.setContentProvider(new ThisUserArticlesContentProvider(
-										treeViewer));
-					} else {
-						treeViewer
-								.setContentProvider(new MarkedArticlesContentProvider(
-										treeViewer));
-					}
+					selectContentProvider();
 				}
 
 				public void widgetDefaultSelected(SelectionEvent arg0) {
@@ -287,10 +281,13 @@ public class DigestView extends ViewPart implements IArticleEventListner,
 					return servers[i];
 				}
 			}
+			return servers[0];
 
 		} catch (NNTPException e) {
 			Debug.log(getClass(), e);
 		} catch (NullPointerException e) {
+			Debug.log(getClass(), "No servers available");
+		} catch (ArrayIndexOutOfBoundsException e) {
 			Debug.log(getClass(), "No servers available");
 		}
 
@@ -298,7 +295,6 @@ public class DigestView extends ViewPart implements IArticleEventListner,
 	}
 
 	public void execute(IArticleEvent event) {
-
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				try {
@@ -309,7 +305,11 @@ public class DigestView extends ViewPart implements IArticleEventListner,
 					treeViewer.getTree().setRedraw(true);
 				} catch (Exception e) { // For no expanded paths
 					if (null != getSelectedServer()) {
-						treeViewer.setInput(getSelectedServer());
+						try {
+							treeViewer.setInput(getSelectedServer());
+						} catch (Exception e1) {
+							Debug.log(getClass(), e);
+						}
 					}
 				}
 			}
@@ -331,7 +331,7 @@ public class DigestView extends ViewPart implements IArticleEventListner,
 							treeViewer.getTree().removeAll();
 						}
 					} catch (Exception e) {
-						// occurs when shutting down eclipse
+						// Occurs when shutting down eclipse
 					}
 				}
 			});
@@ -339,6 +339,8 @@ public class DigestView extends ViewPart implements IArticleEventListner,
 	}
 
 	public void storeEvent(IStoreEvent event) {
+		articleEventListnerRegistry.removeListner(this);
+		selectContentProvider();
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				try {
@@ -348,10 +350,33 @@ public class DigestView extends ViewPart implements IArticleEventListner,
 						treeViewer.getTree().removeAll();
 					}
 				} catch (Exception e) {
+					Debug.log(getClass(), e);
 				}
+				articleEventListnerRegistry.addListener(getArticleListener());
 			}
 		});
+	}
 
+	/**
+	 * select content provider for the view
+	 */
+	private void selectContentProvider() {
+		if (combo.getSelectionIndex() == 1) {
+			treeViewer
+					.setContentProvider(new ThisUserArticlesContentProvider(
+							treeViewer));
+		} else {
+			treeViewer
+					.setContentProvider(new MarkedArticlesContentProvider(
+							treeViewer));
+		}
+	}
+
+	/**
+	 * get new article listener 
+	 */
+	private IArticleEventListner getArticleListener(){
+		return this;
 	}
 
 }
