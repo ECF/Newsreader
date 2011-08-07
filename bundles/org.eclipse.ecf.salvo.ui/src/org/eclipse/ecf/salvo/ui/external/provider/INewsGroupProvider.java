@@ -16,11 +16,11 @@ package org.eclipse.ecf.salvo.ui.external.provider;
 public interface INewsGroupProvider {
 	
 	/**
-	 * Initialize User input parameters
+	 * Initialize credentials (user,password,login,email)
 	 * User Input dialog can be placed here
 	 * @return initialization is success or not
 	 */
-	public boolean init();
+	public boolean initCredentials();
 	
 	/**
 	 * @return the user name

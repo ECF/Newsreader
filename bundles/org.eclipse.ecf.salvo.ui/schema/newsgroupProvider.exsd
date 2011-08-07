@@ -132,75 +132,75 @@ import org.eclipse.ecf.salvo.ui.external.provider.INewsGroupProvider;
 
 public class TestNewsgroupProvider implements INewsGroupProvider {
 
-	private String user;
-	private String password;
-	private String login;
-	private String email;
-	
-	public TestNewsgroupProvider() {
-	}
+ private String user;
+ private String password;
+ private String login;
+ private String email;
+ 
+ public TestNewsgroupProvider() {
+ }
 
-	@Override
-	public String getUser() {
-		return user;
-	}
+ @Override
+ public String getUser() {
+  return user;
+ }
 
-	@Override
-	public String getPassword() {
-		return password;
-	}
+ @Override
+ public String getPassword() {
+  return password;
+ }
 
-	@Override
-	public String getOrganization() {
-		return &quot;eclipse.org&quot;;
-	}
+ @Override
+ public String getOrganization() {
+  return &quot;eclipse.org&quot;;
+ }
 
-	@Override
-	public String getLogin() {
-		return login;
-	}
+ @Override
+ public String getLogin() {
+  return login;
+ }
 
-	@Override
-	public String getEmail() {
-		return email;
-	}
+ @Override
+ public String getEmail() {
+  return email;
+ }
 
-	@Override
-	public String getServerAddress() {
-		return &quot;news.eclipse.org&quot;;
-	}
-	
-	@Override
-	public int getServerPort() {
-		return 119;
-	}
-	
-	@Override
-	public boolean isSecure() {
-		return true;
-	}
+ @Override
+ public String getServerAddress() {
+  return &quot;news.eclipse.org&quot;;
+ }
+ 
+ @Override
+ public int getServerPort() {
+  return 119;
+ }
+ 
+ @Override
+ public boolean isSecure() {
+  return true;
+ }
 
-	@Override
-	public String getNewsgroupName() {
-		return &quot;eclipse.test&quot;;
-	}
+ @Override
+ public String getNewsgroupName() {
+  return &quot;eclipse.test&quot;;
+ }
 
-	@Override
-	public String getNewsgroupDescription() {
-		return &quot;For testing purposes&quot;;
-	}
+ @Override
+ public String getNewsgroupDescription() {
+  return &quot;For testing purposes&quot;;
+ }
 
-	@Override
-	public boolean init() {
-		// Initializing user input parameter. User Input dialog can be defined here
-		
-		user = &quot;Foo Bar&quot;;
-		password = &quot;flinder1f7&quot;;
-		login = &quot;exquisitus&quot;;
-		email = &quot;foo.bar@foobar.org&quot;;
-		
-		return true;
-	}
+ @Override
+ public boolean initCredentials() {
+		// Initializing credentials. User Input dialog can be defined here
+  
+  user = &quot;Foo Bar&quot;;
+  password = &quot;flinder1f7&quot;;
+  login = &quot;exquisitus&quot;;
+  email = &quot;foo.bar@foobar.org&quot;;
+  
+  return true;
+ }
 
 }
 
@@ -220,7 +220,7 @@ public class TestNewsgroupProvider implements INewsGroupProvider {
 All providers must implement the &lt;code&gt;INewsGroupProvider&lt;/code&gt;. There you can specify information needed to connect to the newsgroup.
 &lt;/p&gt; 
 &lt;p&gt; 
-An User Input dialog can be placed on the &lt;code&gt;init&lt;/code&gt; method.
+An User Input dialog can be placed on the &lt;code&gt;initCredentials&lt;/code&gt; method.
 &lt;/p&gt;
 @see Examples
 

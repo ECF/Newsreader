@@ -73,8 +73,8 @@ public class TestNewsgroupProvider implements INewsGroupProvider {
 	}
 
 	@Override
-	public boolean init() {
-		// Initializing user input parameter. User Input dialog can be defined here
+	public boolean initCredentials() {
+		// Initializing credentials. User Input dialog can be defined here
 		
 		user = "Foo Bar";
 		password = "flinder1f7";

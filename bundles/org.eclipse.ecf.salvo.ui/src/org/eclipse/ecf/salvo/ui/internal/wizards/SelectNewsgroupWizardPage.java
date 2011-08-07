@@ -256,7 +256,7 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 			}
 		} else {
 			INewsGroupProvider provider = hookedNewsgroupProviders[cboSuggestedNewgroups.getSelectionIndex()];
-			if (provider.init()) {
+			if (provider.initCredentials()) {
 				resultNewsgroup = HookedNewsgroupProvider.instance().getNewsgroup(provider);
 			}
 		}
