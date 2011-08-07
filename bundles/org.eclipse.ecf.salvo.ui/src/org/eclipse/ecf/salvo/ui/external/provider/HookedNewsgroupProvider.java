@@ -32,6 +32,7 @@ import org.eclipse.ecf.protocol.nntp.model.IServerStoreFacade;
 import org.eclipse.ecf.protocol.nntp.model.NNTPException;
 import org.eclipse.ecf.salvo.ui.internal.Activator;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**
@@ -72,6 +73,11 @@ public class HookedNewsgroupProvider {
 		IEditorPart activeEditorPart = Activator.getDefault().getWorkbench()
 				.getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 
+		// the active perspective
+		IPerspectiveDescriptor activePerspective = Activator.getDefault()
+				.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+				.getPerspective();
+
 		EvaluationContext context = new EvaluationContext(null, activePart
 				.getSite().getId());
 
@@ -81,6 +87,10 @@ public class HookedNewsgroupProvider {
 		if (activeEditorPart != null) {
 			context.addVariable("activeEditorId", activeEditorPart.getSite()
 					.getId());
+		}
+		
+		if (activePerspective != null) {
+			context.addVariable("activePerspectiveId", activePerspective.getId());
 		}
 
 		return context;

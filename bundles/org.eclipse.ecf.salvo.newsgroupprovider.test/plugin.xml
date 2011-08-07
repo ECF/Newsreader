@@ -18,17 +18,26 @@
             description="test newsgroup"
             name="org.eclipse.ecf.salvo.newsgroupprovider.test.newsgroup1">
          <enablement>
-            <with
-                  variable="activePartId">
-               <or>
+            <or>
+               <with
+                     variable="activePartId">
                   <equals
                         value="org.eclipse.ecf.salvo.ui.internal.views.messageView">
                   </equals>
+               </with>
+               <with
+                     variable="activeEditorId">
                   <equals
-                        value="org.eclipse.ecf.salvo.ui.internal.views.digest.DigestView">
+                        value="org.eclipse.ecf.salvo.ui.articlepanel">
                   </equals>
-               </or>
-            </with>
+               </with>
+               <with
+                     variable="activePerspectiveId">
+                  <equals
+                        value="org.eclipse.ecf.salvo.application.perspective">
+                  </equals>
+               </with>
+            </or>
          </enablement>
       </newsgroup>
    </extension>

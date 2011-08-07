@@ -192,7 +192,7 @@ public class TestNewsgroupProvider implements INewsGroupProvider {
 
  @Override
  public boolean initCredentials() {
-		// Initializing credentials. User Input dialog can be defined here
+  // Initializing credentials. User Input dialog can be defined here
   
   user = &quot;Foo Bar&quot;;
   password = &quot;flinder1f7&quot;;
@@ -232,11 +232,26 @@ It is defined using &lt;code&gt;&lt;enablement&gt;&lt;/code&gt; segment.
 
 &lt;pre&gt;
 &lt;enablement&gt;
- &lt;with variable=&quot;activePartId&quot;&gt;
-  &lt;equals
-   value=&quot;org.eclipse.ecf.salvo.ui.internal.views.messageView&quot;&gt;
-  &lt;/equals&gt;
- &lt;/with&gt;
+	&lt;or&gt;
+		&lt;with
+			variable=&quot;activePartId&quot;&gt;
+			&lt;equals
+				value=&quot;org.eclipse.ecf.salvo.ui.internal.views.messageView&quot;&gt;
+			&lt;/equals&gt;
+		&lt;/with&gt;
+		&lt;with
+			variable=&quot;activeEditorId&quot;&gt;
+			&lt;equals
+				value=&quot;org.eclipse.ecf.salvo.ui.articlepanel&quot;&gt;
+			&lt;/equals&gt;
+		&lt;/with&gt;
+		&lt;with
+			variable=&quot;activePerspectiveId&quot;&gt;
+			&lt;equals
+				value=&quot;org.eclipse.ecf.salvo.application.perspective&quot;&gt;
+			&lt;/equals&gt;
+		&lt;/with&gt;
+	&lt;/or&gt;
 &lt;/enablement&gt;
 &lt;/pre&gt;
 
