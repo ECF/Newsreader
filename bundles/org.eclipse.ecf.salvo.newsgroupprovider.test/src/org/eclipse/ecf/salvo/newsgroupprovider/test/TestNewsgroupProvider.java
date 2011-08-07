@@ -9,6 +9,8 @@
  * Contributors:                                                        
  *    Isuru Udana - UI Integration in the Workbench
  *******************************************************************************/
+package org.eclipse.ecf.salvo.newsgroupprovider.test;
+
 import org.eclipse.ecf.salvo.ui.external.provider.INewsGroupProvider;
 
 

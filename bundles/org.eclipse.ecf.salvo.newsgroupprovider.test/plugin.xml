@@ -14,7 +14,7 @@
    <extension
          point="org.eclipse.ecf.salvo.ui.newsgroupProvider">
       <newsgroup
-            class="TestNewsgroupProvider"
+            class="org.eclipse.ecf.salvo.newsgroupprovider.test.TestNewsgroupProvider"
             description="test newsgroup"
             name="org.eclipse.ecf.salvo.newsgroupprovider.test.newsgroup1">
          <enablement>
