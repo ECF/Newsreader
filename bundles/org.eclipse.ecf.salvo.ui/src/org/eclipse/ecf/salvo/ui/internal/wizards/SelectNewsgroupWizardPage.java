@@ -33,6 +33,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Text;
 
@@ -41,17 +42,18 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 	private Composite container;
 	private List newsgroupList;
 	private Text searchBar;
-	private ArrayList<INewsgroup> newsgroups;
-	private Button btnCheckPickSuggested;
+	private ArrayList<INewsgroup> subscribedNewsgroups;
+	private Button btnCheckPickSubscribed;
 	private Combo cboSuggestedNewgroups;
 	private INewsGroupProvider[] hookedNewsgroupProviders;
+	private Label lblSuggested;
 
 	public SelectNewsgroupWizardPage() {
 		super("Select Newsgroup");
 		setTitle("Select Newsgroup");
 		setDescription("Select the Newsgroup you want to ask the question");
 		initHookedNewsgroupsProviders();
-		fetchAllNewsgroups();
+		fetchSubscribedNewsgroups();
 		setImageDescriptor(ImageUtils.getInstance().getImageDescriptor(
 				"selectnewsgroup.png"));
 	}
@@ -62,87 +64,90 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 		container = new Composite(parent, SWT.NULL);
 		container.setLayout(new GridLayout(1, false));
 		setControl(container);
-		
-		// Search bar
-		{
-			searchBar = new Text(container, SWT.BORDER);
-			searchBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
-					false, 1, 1));
-			searchBar.addKeyListener(new KeyAdapter() {
-				@Override
-				public void keyReleased(KeyEvent e) {
-					setFilteredListItems();
-					if (newsgroupList.getItemCount() == 0) {
-						setPageComplete(false);
-					} else {
-						setPageComplete(true);
-					}
-				}
-			});
-		}
 
-		// Newsgroup List
-		{
-			newsgroupList = new List(container, SWT.SINGLE | SWT.BORDER
-					| SWT.V_SCROLL);
-			newsgroupList.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
-					true, 1, 1));
-			initNewsgroupList();
-		}
-
-		// Checkbox to enable combo box
-		{
-			btnCheckPickSuggested = new Button(container, SWT.CHECK);
-			btnCheckPickSuggested.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					if (btnCheckPickSuggested.getSelection()) {
-						cboSuggestedNewgroups.setEnabled(true);
-						newsgroupList.setEnabled(false);
-						searchBar.setEnabled(false);
-						setPageComplete(true);
-					} else {
-						cboSuggestedNewgroups.setEnabled(false);
-						newsgroupList.setEnabled(true);
-						searchBar.setEnabled(true);
-					}
-				}
-			});
-			btnCheckPickSuggested.setText("Pick Suggested Newsgroup");
-		}
-
-		// Combobox of suggested newsgroups
-		{
-			cboSuggestedNewgroups = new Combo(container, SWT.READ_ONLY);
-			cboSuggestedNewgroups.setLayoutData(new GridData(SWT.FILL,
-					SWT.CENTER, true, false, 1, 1));
-			fillCboSuggestedNewsgroups();
-
-			if (cboSuggestedNewgroups.getItemCount() == 0) {
-				btnCheckPickSuggested.setEnabled(false);
-				cboSuggestedNewgroups.setEnabled(false);
-				cboSuggestedNewgroups.add("No suggestions found");
-			} else {
-				btnCheckPickSuggested.setEnabled(true);
-				btnCheckPickSuggested.setSelection(true);
-				cboSuggestedNewgroups.setEnabled(true);
-				newsgroupList.setEnabled(false);
-				searchBar.setEnabled(false);
+		if (isHookedNewsgroupsAvailable()) {
+			// Label Suggested
+			{
+				lblSuggested = new Label(container, SWT.NULL);
+				lblSuggested.setText("Suggested Newsgroups");
 			}
-			cboSuggestedNewgroups.select(0);
+			// Combobox of suggested newsgroups
+			{
+				cboSuggestedNewgroups = new Combo(container, SWT.READ_ONLY);
+				cboSuggestedNewgroups.setLayoutData(new GridData(SWT.FILL,
+						SWT.CENTER, true, false, 1, 1));
+				fillCboSuggestedNewsgroups();
+				cboSuggestedNewgroups.select(0);
+			}
 		}
-		
-		if (newsgroupList.getItemCount() == 0) {
-			btnCheckPickSuggested.setEnabled(false);
+
+		if (isHookedNewsgroupsAvailable() && isSubscribedNewsgroupsAvailable()) {
+			// Checkbox
+			{
+				btnCheckPickSubscribed = new Button(container, SWT.CHECK);
+				btnCheckPickSubscribed
+						.addSelectionListener(new SelectionAdapter() {
+							@Override
+							public void widgetSelected(SelectionEvent e) {
+								if (btnCheckPickSubscribed.getSelection()) {
+									cboSuggestedNewgroups.setEnabled(false);
+									lblSuggested.setEnabled(false);
+									newsgroupList.setEnabled(true);
+									searchBar.setEnabled(true);
+								} else {
+									cboSuggestedNewgroups.setEnabled(true);
+									lblSuggested.setEnabled(true);
+									newsgroupList.setEnabled(false);
+									searchBar.setEnabled(false);
+									searchBar.setText("");
+									setPageComplete(true);
+								}
+							}
+						});
+				btnCheckPickSubscribed
+						.setText("Pick from subscribed newsgroups");
+			}
+		}
+
+		if (isSubscribedNewsgroupsAvailable()) {
+			// Search bar
+			{
+				searchBar = new Text(container, SWT.BORDER);
+				searchBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
+						true, false, 1, 1));
+				searchBar.addKeyListener(new KeyAdapter() {
+					@Override
+					public void keyReleased(KeyEvent e) {
+						setFilteredListItems();
+						if (newsgroupList.getItemCount() == 0) {
+							setPageComplete(false);
+						} else {
+							setPageComplete(true);
+						}
+					}
+				});
+			}
+			// Newsgroup List
+			{
+				newsgroupList = new List(container, SWT.SINGLE | SWT.BORDER
+						| SWT.V_SCROLL);
+				newsgroupList.setLayoutData(new GridData(SWT.FILL, SWT.FILL,
+						true, true, 1, 1));
+				initNewsgroupList();
+			}
+		}
+
+		if (isHookedNewsgroupsAvailable() && isSubscribedNewsgroupsAvailable()) {
+			cboSuggestedNewgroups.setEnabled(true);
+			btnCheckPickSubscribed.setSelection(false);
+			newsgroupList.setEnabled(false);
+			searchBar.setEnabled(false);
 		}
 
 		// Page completeness
-		if (newsgroupList.getItemCount() == 0 && !btnCheckPickSuggested.getSelection()) {
+		if (!isHookedNewsgroupsAvailable()
+				&& !isSubscribedNewsgroupsAvailable()) {
 			setPageComplete(false);
-			btnCheckPickSuggested.setEnabled(false);
-			cboSuggestedNewgroups.setEnabled(false);
-			newsgroupList.setEnabled(false);
-			searchBar.setEnabled(false);
 		}
 
 	}
@@ -176,10 +181,12 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 
 		int selectionIndex = 0;
 
-		for (int i = 0, size = newsgroups.size(); i < size; i++) {
+		for (int i = 0, size = subscribedNewsgroups.size(); i < size; i++) {
 
-			String newsgroupName = newsgroups.get(i).getNewsgroupName();
-			String serverAddress = newsgroups.get(i).getServer().getAddress();
+			String newsgroupName = subscribedNewsgroups.get(i)
+					.getNewsgroupName();
+			String serverAddress = subscribedNewsgroups.get(i).getServer()
+					.getAddress();
 
 			newsgroupList.add(newsgroupName + "  (Server: " + serverAddress
 					+ ")");
@@ -199,10 +206,9 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 	 * bar
 	 */
 	private void setFilteredListItems() {
-
 		newsgroupList.removeAll();
 
-		for (INewsgroup newsgroup : newsgroups) {
+		for (INewsgroup newsgroup : subscribedNewsgroups) {
 			if (matchPattern(newsgroup.getNewsgroupName())) {
 				String newsgroupName = newsgroup.getNewsgroupName();
 				String serverAddress = newsgroup.getServer().getAddress();
@@ -212,7 +218,6 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 			}
 		}
 		newsgroupList.select(0);
-
 	}
 
 	/**
@@ -239,52 +244,82 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 
 	/**
 	 * Get the selected Newsgroup from the list
+	 * 
 	 * @return selected Newsgroup
 	 */
 	public INewsgroup getSelectedNewsgroup() {
 
 		INewsgroup resultNewsgroup = null;
 
-		if (!btnCheckPickSuggested.getSelection()) {
+		if (isHookedNewsgroupsAvailable() && isSubscribedNewsgroupsAvailable()) {
+			if (btnCheckPickSubscribed.getSelection()) {
+				resultNewsgroup = getSelectedSubscribedNewsgroup();
+			} else {
+				resultNewsgroup = getSelectedHookedNewsgroup();
+			}
+		} else if (isHookedNewsgroupsAvailable()) {
+			resultNewsgroup = getSelectedHookedNewsgroup();
+		} else {
+			resultNewsgroup = getSelectedSubscribedNewsgroup();
+		}
 
-			try {
-				String selectedNewsgroupString = newsgroupList.getItem(
-						newsgroupList.getSelectionIndex()).replace(")", "");
+		return resultNewsgroup;
+	}
 
-				String selectedNewsgroup = selectedNewsgroupString.split("\\(")[0]
-						.trim();
-				String selectedServer = selectedNewsgroupString.split("\\(")[1]
-						.replace("Server: ", "").trim();
+	/**
+	 * Get the selected hooked newsgroup
+	 */
+	private INewsgroup getSelectedHookedNewsgroup() {
+		INewsgroup resultNewsgroup = null;
 
-				for (INewsgroup newsgroup : newsgroups) {
-					if (newsgroup.getNewsgroupName().equals(selectedNewsgroup)
-							&& newsgroup.getServer().getAddress()
-									.equals(selectedServer)) {
-						resultNewsgroup = newsgroup;
-					}
-				}
-			} catch (Exception e) {
-				// No newsgroups
+		INewsGroupProvider provider = hookedNewsgroupProviders[cboSuggestedNewgroups
+				.getSelectionIndex()];
+		if (!HookedNewsgroupProvider.instance().isServerSubscribed(provider)) {
+			if (provider.initCredentials()) {
+				resultNewsgroup = HookedNewsgroupProvider.instance()
+						.getNewsgroup(provider);
 			}
 		} else {
-			INewsGroupProvider provider = hookedNewsgroupProviders[cboSuggestedNewgroups.getSelectionIndex()];
-			if (!HookedNewsgroupProvider.instance().isServerSubscribed(provider)) {
-				if (provider.initCredentials()) {
-					resultNewsgroup = HookedNewsgroupProvider.instance().getNewsgroup(provider);
-				}	
-			} else {
-				resultNewsgroup = HookedNewsgroupProvider.instance().getNewsgroup(provider);
-			}
+			resultNewsgroup = HookedNewsgroupProvider.instance().getNewsgroup(
+					provider);
 		}
 		return resultNewsgroup;
 	}
 
 	/**
-	 * Fetch all the newsgroups from the store
+	 * Get the selected subscribed newsgroup
 	 */
-	private void fetchAllNewsgroups() {
+	private INewsgroup getSelectedSubscribedNewsgroup() {
+		INewsgroup resultNewsgroup = null;
 
-		newsgroups = new ArrayList<INewsgroup>();
+		try {
+			String selectedNewsgroupString = newsgroupList.getItem(
+					newsgroupList.getSelectionIndex()).replace(")", "");
+
+			String selectedNewsgroup = selectedNewsgroupString.split("\\(")[0]
+					.trim();
+			String selectedServer = selectedNewsgroupString.split("\\(")[1]
+					.replace("Server: ", "").trim();
+
+			for (INewsgroup newsgroup : subscribedNewsgroups) {
+				if (newsgroup.getNewsgroupName().equals(selectedNewsgroup)
+						&& newsgroup.getServer().getAddress()
+								.equals(selectedServer)) {
+					resultNewsgroup = newsgroup;
+				}
+			}
+		} catch (Exception e) {
+			// No newsgroups
+		}
+		return resultNewsgroup;
+	}
+
+	/**
+	 * Fetch all subscribed newsgroups from the store
+	 */
+	private void fetchSubscribedNewsgroups() {
+
+		subscribedNewsgroups = new ArrayList<INewsgroup>();
 
 		try {
 			for (IServer server : ServerStoreFactory.instance()
@@ -295,8 +330,8 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 
 				for (INewsgroup group : groups) {
 
-					if (!newsgroups.contains(group)) {
-						newsgroups.add(group);
+					if (!subscribedNewsgroups.contains(group)) {
+						subscribedNewsgroups.add(group);
 					}
 				}
 
@@ -313,6 +348,26 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 	private void initHookedNewsgroupsProviders() {
 		hookedNewsgroupProviders = HookedNewsgroupProvider.instance()
 				.getProviders();
+	}
+
+	/**
+	 * check whether subscribed newsgroups available
+	 */
+	private boolean isSubscribedNewsgroupsAvailable() {
+		if (subscribedNewsgroups.size() == 0) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * check whether hooked newsgroups available
+	 */
+	private boolean isHookedNewsgroupsAvailable() {
+		if (hookedNewsgroupProviders.length == 0) {
+			return false;
+		}
+		return true;
 	}
 
 }

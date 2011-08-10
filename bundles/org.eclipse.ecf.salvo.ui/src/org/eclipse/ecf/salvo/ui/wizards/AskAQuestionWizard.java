@@ -37,7 +37,6 @@ public class AskAQuestionWizard extends Wizard {
 		super();
 		setNeedsProgressMonitor(true);
 		setWindowTitle("Ask a Question");
-
 	}
 
 	@Override
