@@ -147,6 +147,8 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 		// Page completeness
 		if (!isHookedNewsgroupsAvailable()
 				&& !isSubscribedNewsgroupsAvailable()) {
+			lblSuggested = new Label(container, SWT.NULL);
+			lblSuggested.setText("No Newsgroups available");
 			setPageComplete(false);
 		}
 
