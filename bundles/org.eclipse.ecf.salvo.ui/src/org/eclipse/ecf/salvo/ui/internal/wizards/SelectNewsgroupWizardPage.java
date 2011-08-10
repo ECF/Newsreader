@@ -61,7 +61,8 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 		// Container
 		container = new Composite(parent, SWT.NULL);
 		container.setLayout(new GridLayout(1, false));
-
+		setControl(container);
+		
 		// Search bar
 		{
 			searchBar = new Text(container, SWT.BORDER);
@@ -88,7 +89,6 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 					true, 1, 1));
 			initNewsgroupList();
 		}
-		setControl(container);
 
 		// Checkbox to enable combo box
 		{
@@ -120,15 +120,27 @@ public class SelectNewsgroupWizardPage extends WizardPage {
 
 			if (cboSuggestedNewgroups.getItemCount() == 0) {
 				btnCheckPickSuggested.setEnabled(false);
+				cboSuggestedNewgroups.setEnabled(false);
 				cboSuggestedNewgroups.add("No suggestions found");
+			} else {
+				btnCheckPickSuggested.setEnabled(true);
+				btnCheckPickSuggested.setSelection(true);
+				cboSuggestedNewgroups.setEnabled(true);
+				newsgroupList.setEnabled(false);
+				searchBar.setEnabled(false);
 			}
 			cboSuggestedNewgroups.select(0);
-			cboSuggestedNewgroups.setEnabled(false);
+		}
+		
+		if (newsgroupList.getItemCount() == 0) {
+			btnCheckPickSuggested.setEnabled(false);
 		}
 
 		// Page completeness
-		if (newsgroupList.getItemCount() == 0) {
+		if (newsgroupList.getItemCount() == 0 && !btnCheckPickSuggested.getSelection()) {
 			setPageComplete(false);
+			btnCheckPickSuggested.setEnabled(false);
+			cboSuggestedNewgroups.setEnabled(false);
 			newsgroupList.setEnabled(false);
 			searchBar.setEnabled(false);
 		}
