@@ -88,12 +88,38 @@ public class HookedNewsgroupProvider {
 			context.addVariable("activeEditorId", activeEditorPart.getSite()
 					.getId());
 		}
-		
+
 		if (activePerspective != null) {
-			context.addVariable("activePerspectiveId", activePerspective.getId());
+			context.addVariable("activePerspectiveId",
+					activePerspective.getId());
 		}
 
 		return context;
+	}
+
+	/**
+	 * Check whether server defined by the provider is already subscribed
+	 * 
+	 * @param provider
+	 *            Newsgroup Provider
+	 * @return whether server defined by the provider is already subscribed
+	 */
+	public boolean isServerSubscribed(INewsGroupProvider provider) {
+		IServerStoreFacade storeFacade = ServerStoreFactory.instance()
+				.getServerStoreFacade();
+
+		try {
+			for (IServer currentServer : storeFacade.getServers()) {
+				if ((currentServer.getAddress().equals(provider
+						.getServerAddress()))
+						&& (currentServer.getPort() == provider.getServerPort())) {
+					return true;
+				}
+			}
+		} catch (NNTPException e) {
+			Debug.log(getClass(), e);
+		}
+		return false;
 	}
 
 	/**
