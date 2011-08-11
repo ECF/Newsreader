@@ -15,4 +15,5 @@ public interface IArticleEvent {
 
 	public IArticle[] getArticles();
 	
+	public boolean isFireNotification();
 }

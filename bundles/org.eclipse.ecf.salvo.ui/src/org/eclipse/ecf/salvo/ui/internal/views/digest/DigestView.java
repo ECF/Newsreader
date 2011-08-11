@@ -19,7 +19,11 @@ import org.eclipse.ecf.protocol.nntp.model.IArticleEvent;
 import org.eclipse.ecf.protocol.nntp.model.IArticleEventListner;
 import org.eclipse.ecf.protocol.nntp.model.IArticleEventListnersRegistry;
 import org.eclipse.ecf.protocol.nntp.model.IServer;
+import org.eclipse.ecf.protocol.nntp.model.IStore;
+import org.eclipse.ecf.protocol.nntp.model.IStoreEvent;
+import org.eclipse.ecf.protocol.nntp.model.IStoreEventListener;
 import org.eclipse.ecf.protocol.nntp.model.NNTPException;
+import org.eclipse.ecf.protocol.nntp.model.SALVO;
 import org.eclipse.ecf.salvo.ui.internal.Activator;
 import org.eclipse.ecf.salvo.ui.internal.dialogs.SelectServerDialog;
 import org.eclipse.ecf.salvo.ui.tools.ImageUtils;
@@ -60,7 +64,7 @@ import org.osgi.framework.ServiceListener;
  * 
  */
 public class DigestView extends ViewPart implements IArticleEventListner,
-		ServiceListener {
+		ServiceListener, IStoreEventListener {
 
 	public static final String ID = "org.eclipse.ecf.salvo.ui.internal.views.digest.DigestView";
 	private final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
@@ -68,15 +72,23 @@ public class DigestView extends ViewPart implements IArticleEventListner,
 	private Combo combo;
 	private Action selectServerAction;
 	private BundleContext context;
-
+	private IArticleEventListnersRegistry articleEventListnerRegistry;
+	
 	public DigestView() {
-		IArticleEventListnersRegistry articleEventListnerRegistry = ArticleEventListnersFactory
-				.instance().getRegistry();
-		articleEventListnerRegistry.addListener(this);
 
 		context = Activator.getDefault().getBundle().getBundleContext();
 		context.addServiceListener(this); // listening to store
 											// register/unregister
+
+		for (IStore store : ServerStoreFactory.instance()
+				.getServerStoreFacade().getStores()) {
+			store.addListener(this, SALVO.EVENT_SUBSCRIBE_UNSUBSCRIBE);
+		}
+
+		 articleEventListnerRegistry = ArticleEventListnersFactory
+				.instance().getRegistry();
+		articleEventListnerRegistry.addListener(this);
+
 	}
 
 	/**
@@ -108,16 +120,7 @@ public class DigestView extends ViewPart implements IArticleEventListner,
 				public void widgetSelected(SelectionEvent arg0) {
 
 					treeViewer.getTree().removeAll();
-
-					if (combo.getSelectionIndex() == 1) {
-						treeViewer
-								.setContentProvider(new ThisUserArticlesContentProvider(
-										treeViewer));
-					} else {
-						treeViewer
-								.setContentProvider(new MarkedArticlesContentProvider(
-										treeViewer));
-					}
+					selectContentProvider();
 				}
 
 				public void widgetDefaultSelected(SelectionEvent arg0) {
@@ -278,10 +281,13 @@ public class DigestView extends ViewPart implements IArticleEventListner,
 					return servers[i];
 				}
 			}
+			return servers[0];
 
 		} catch (NNTPException e) {
 			Debug.log(getClass(), e);
 		} catch (NullPointerException e) {
+			Debug.log(getClass(), "No servers available");
+		} catch (ArrayIndexOutOfBoundsException e) {
 			Debug.log(getClass(), "No servers available");
 		}
 
@@ -289,7 +295,6 @@ public class DigestView extends ViewPart implements IArticleEventListner,
 	}
 
 	public void execute(IArticleEvent event) {
-
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				try {
@@ -300,7 +305,11 @@ public class DigestView extends ViewPart implements IArticleEventListner,
 					treeViewer.getTree().setRedraw(true);
 				} catch (Exception e) { // For no expanded paths
 					if (null != getSelectedServer()) {
-						treeViewer.setInput(getSelectedServer());
+						try {
+							treeViewer.setInput(getSelectedServer());
+						} catch (Exception e1) {
+							Debug.log(getClass(), e);
+						}
 					}
 				}
 			}
@@ -322,11 +331,52 @@ public class DigestView extends ViewPart implements IArticleEventListner,
 							treeViewer.getTree().removeAll();
 						}
 					} catch (Exception e) {
-						// occurs when shutting down eclipse
+						// Occurs when shutting down eclipse
 					}
 				}
 			});
 		}
+	}
+
+	public void storeEvent(IStoreEvent event) {
+		articleEventListnerRegistry.removeListner(this);
+		selectContentProvider();
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				try {
+					if (null != getSelectedServer()) {
+						treeViewer.setInput(getSelectedServer());
+					} else {
+						treeViewer.getTree().removeAll();
+					}
+				} catch (Exception e) {
+					Debug.log(getClass(), e);
+				}
+				articleEventListnerRegistry.addListener(getArticleListener());
+			}
+		});
+	}
+
+	/**
+	 * select content provider for the view
+	 */
+	private void selectContentProvider() {
+		if (combo.getSelectionIndex() == 1) {
+			treeViewer
+					.setContentProvider(new ThisUserArticlesContentProvider(
+							treeViewer));
+		} else {
+			treeViewer
+					.setContentProvider(new MarkedArticlesContentProvider(
+							treeViewer));
+		}
+	}
+
+	/**
+	 * get new article listener 
+	 */
+	private IArticleEventListner getArticleListener(){
+		return this;
 	}
 
 }

@@ -23,10 +23,10 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 
 /**
- * This class is responsible for providing the "Ask A Question" wizard. 
+ * This class is responsible for providing the "Ask A Question" wizard.
  * 
  * @author isuru
- *
+ * 
  */
 public class AskAQuestionWizard extends Wizard {
 
@@ -37,7 +37,6 @@ public class AskAQuestionWizard extends Wizard {
 		super();
 		setNeedsProgressMonitor(true);
 		setWindowTitle("Ask a Question");
-		
 	}
 
 	@Override
@@ -62,28 +61,51 @@ public class AskAQuestionWizard extends Wizard {
 
 		INewsgroup group = selectNewsgroupWizardPage.getSelectedNewsgroup();
 
-		// Saving preferences
-		PreferencesUtil.instance().savePluginSettings(
-				"recentSelectedNewsgroup", group.getNewsgroupName());
-		PreferencesUtil.instance().savePluginSettings("recentSelectedServer",
-				group.getServer().getAddress());
+		if (group != null) {
 
-		String subject = composeNewArticleWizardPage.getSubject();
-		String body = composeNewArticleWizardPage.getBodyText();
+			// Saving preferences
+			PreferencesUtil.instance().savePluginSettings(
+					"recentSelectedNewsgroup", group.getNewsgroupName());
+			PreferencesUtil.instance().savePluginSettings(
+					"recentSelectedServer", group.getServer().getAddress());
 
-		IServerStoreFacade serverStoreFacade = ServerStoreFactory.instance()
-				.getServerStoreFacade();
-		try {
-			serverStoreFacade.postNewArticle(new INewsgroup[] { group },
-					subject, body);
-			MessageDialog.openInformation(getShell(), "Article Posted",
-					"Your question is posted to " + group.getNewsgroupName());
-		}  catch (NNTPException e) {
+			String subject = composeNewArticleWizardPage.getSubject();
+			String body = composeNewArticleWizardPage.getBodyText();
+
+			IServerStoreFacade serverStoreFacade = ServerStoreFactory
+					.instance().getServerStoreFacade();
+			try {
+
+				// posting article
+				serverStoreFacade.postNewArticle(new INewsgroup[] { group },
+						subject, body);
+
+				// Subscribe newsgroup
+				if (!group.isSubscribed()
+						&& composeNewArticleWizardPage.doSubscribe()) {
+					serverStoreFacade.subscribeNewsgroup(group);
+				}
+
+				MessageDialog.openInformation(
+						getShell(),
+						"Article Posted",
+						"Your question is posted to "
+								+ group.getNewsgroupName());
+
+			} catch (NNTPException e) {
+				MessageDialog.openError(
+						getShell(),
+						"Problem posting message",
+						"The message could not be posted. \n\r"
+								+ e.getMessage());
+				Debug.log(this.getClass(), e);
+				e.printStackTrace();
+
+			}
+		} else {
 			MessageDialog.openError(getShell(), "Problem posting message",
-					"The message could not be posted. \n\r" + e.getMessage());
-			Debug.log(this.getClass(), e);
-		} 
-
+					"The message could not be posted. \n\r Newsgroup Failure");
+		}
 		return true;
 	}
 

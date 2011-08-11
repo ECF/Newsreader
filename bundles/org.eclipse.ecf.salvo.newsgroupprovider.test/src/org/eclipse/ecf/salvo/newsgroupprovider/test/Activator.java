@@ -9,25 +9,33 @@
  * Contributors:                                                        
  *    Isuru Udana - UI Integration in the Workbench
  *******************************************************************************/
-package org.eclipse.ecf.protocol.nntp.model;
+package org.eclipse.ecf.salvo.newsgroupprovider.test;
 
-public class ArticleEvent implements IArticleEvent{
-	
-	private IArticle[] articles;
-	private boolean isFireNotification;
-	
-	public ArticleEvent(IArticle[] articles, boolean isFireNotification) {
-		this.articles = articles;
-		this.isFireNotification = isFireNotification;
+import org.osgi.framework.BundleActivator;
+import org.osgi.framework.BundleContext;
+
+public class Activator implements BundleActivator {
+
+	private static BundleContext context;
+
+	static BundleContext getContext() {
+		return context;
 	}
 
-	public IArticle[] getArticles(){
-		return articles;
-		
+	/*
+	 * (non-Javadoc)
+	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
+	 */
+	public void start(BundleContext bundleContext) throws Exception {
+		Activator.context = bundleContext;
 	}
 
-	public boolean isFireNotification() {
-		return isFireNotification;
-	}	
+	/*
+	 * (non-Javadoc)
+	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
+	 */
+	public void stop(BundleContext bundleContext) throws Exception {
+		Activator.context = null;
+	}
 
 }

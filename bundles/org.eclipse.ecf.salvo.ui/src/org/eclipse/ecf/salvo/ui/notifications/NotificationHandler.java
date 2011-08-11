@@ -31,14 +31,14 @@ public class NotificationHandler implements IArticleEventListner {
 
 	public void execute(final IArticleEvent event) {
 
-		Display.getDefault().asyncExec(new Runnable() {
-
-			public void run() {
-				AbstractNotificationPopup popup = new SalvoNotificationPopup(
-						display, event.getArticles());
-				popup.open();
-			}
-		});
-
+		if (event.isFireNotification()) {
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					AbstractNotificationPopup popup = new SalvoNotificationPopup(
+							display, event.getArticles());
+					popup.open();
+				}
+			});
+		}
 	}
 }
