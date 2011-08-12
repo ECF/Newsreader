@@ -55,7 +55,7 @@ public final class UpdateRunner implements Runnable {
 						for (int k = 0; k < subscribedNewsgroups.length; k++) {
 							INewsgroup group = subscribedNewsgroups[k];
 							try {
-								facade.syncStoreWithServer(group);
+								facade.syncStoreWithServer(group,false);
 							} catch (Exception e) {
 								Debug.log(this.getClass(), e);
 							}

@@ -1,0 +1,283 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.ecf.salvo.ui" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="org.eclipse.ecf.salvo.ui" id="newsgroupProvider" name="Salvo Newsgroup Provider"/>
+      </appInfo>
+      <documentation>
+         &lt;p&gt;
+This extension point allows other eclipse projects to hook into salvo.
+Other projects can specify their newsgroups. 
+Multiple newsgroups can be added.
+&lt;/p&gt;
+@see Examples
+      </documentation>
+   </annotation>
+
+   <include schemaLocation="schema://org.eclipse.core.expressions/schema/expressionLanguage.exsd"/>
+
+   <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
+      <complexType>
+         <choice>
+            <element ref="newsgroup" minOccurs="1" maxOccurs="unbounded"/>
+         </choice>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="newsgroup">
+      <complexType>
+         <sequence>
+            <element ref="enablement"/>
+         </sequence>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="description" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.ecf.salvo.ui.external.provider.INewsGroupProvider"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         &lt;p&gt;
+&lt;pre&gt;
+&lt;extension
+         point=&quot;org.eclipse.ecf.salvo.ui.newsgroupProvider&quot;&gt;
+      &lt;newsgroup
+            class=&quot;TestNewsgroupProvider&quot;
+            description=&quot;test newsgroup&quot;
+            name=&quot;org.eclipse.ecf.salvo.newsgroupprovider.test.newsgroup1&quot;&gt;
+         &lt;enablement&gt;
+            &lt;with
+                  variable=&quot;activePartId&quot;&gt;
+               &lt;or&gt;
+                  &lt;equals
+                        value=&quot;org.eclipse.ecf.salvo.ui.internal.views.messageView&quot;&gt;
+                  &lt;/equals&gt;
+                  &lt;equals
+                        value=&quot;org.eclipse.ecf.salvo.ui.internal.views.digest.DigestView&quot;&gt;
+                  &lt;/equals&gt;
+               &lt;/or&gt;
+            &lt;/with&gt;
+         &lt;/enablement&gt;
+      &lt;/newsgroup&gt;
+   &lt;/extension&gt;
+   
+&lt;/pre&gt;   
+&lt;/p&gt;
+
+&lt;p&gt;
+&lt;b&gt;Sample implementation INewsgroupProvider&lt;/b&gt;   
+&lt;/p&gt;
+  
+&lt;p&gt;  
+
+&lt;pre&gt;
+
+
+import org.eclipse.ecf.salvo.ui.external.provider.INewsGroupProvider;
+
+public class TestNewsgroupProvider implements INewsGroupProvider {
+
+ private String user;
+ private String password;
+ private String login;
+ private String email;
+ 
+ public TestNewsgroupProvider() {
+ }
+
+ @Override
+ public String getUser() {
+  return user;
+ }
+
+ @Override
+ public String getPassword() {
+  return password;
+ }
+
+ @Override
+ public String getOrganization() {
+  return &quot;eclipse.org&quot;;
+ }
+
+ @Override
+ public String getLogin() {
+  return login;
+ }
+
+ @Override
+ public String getEmail() {
+  return email;
+ }
+
+ @Override
+ public String getServerAddress() {
+  return &quot;news.eclipse.org&quot;;
+ }
+ 
+ @Override
+ public int getServerPort() {
+  return 119;
+ }
+ 
+ @Override
+ public boolean isSecure() {
+  return true;
+ }
+
+ @Override
+ public String getNewsgroupName() {
+  return &quot;eclipse.test&quot;;
+ }
+
+ @Override
+ public String getNewsgroupDescription() {
+  return &quot;For testing purposes&quot;;
+ }
+
+ @Override
+ public boolean initCredentials() {
+  // Initializing credentials. User Input dialog can be defined here
+  
+  user = &quot;Foo Bar&quot;;
+  password = &quot;flinder1f7&quot;;
+  login = &quot;exquisitus&quot;;
+  email = &quot;foo.bar@foobar.org&quot;;
+  
+  return true;
+ }
+
+}
+
+
+&lt;/pre&gt;
+&lt;/p&gt;
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiinfo"/>
+      </appInfo>
+      <documentation>
+         &lt;p&gt;&lt;b&gt; Providing newsgroup Information&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;
+All providers must implement the &lt;code&gt;INewsGroupProvider&lt;/code&gt;. There you can specify information needed to connect to the newsgroup.
+&lt;/p&gt; 
+&lt;p&gt; 
+An User Input dialog can be placed on the &lt;code&gt;initCredentials&lt;/code&gt; method.
+&lt;/p&gt;
+@see Examples
+
+&lt;p&gt;&lt;b&gt; Newsgroup Activation &lt;/b&gt; &lt;/p&gt;
+&lt;p&gt;
+A provider can decide when to activate the newsgroup.
+It is defined using &lt;code&gt;&lt;enablement&gt;&lt;/code&gt; segment.
+&lt;/p&gt;
+
+&lt;pre&gt;
+&lt;enablement&gt;
+	&lt;or&gt;
+		&lt;with
+			variable=&quot;activePartId&quot;&gt;
+			&lt;equals
+				value=&quot;org.eclipse.ecf.salvo.ui.internal.views.messageView&quot;&gt;
+			&lt;/equals&gt;
+		&lt;/with&gt;
+		&lt;with
+			variable=&quot;activeEditorId&quot;&gt;
+			&lt;equals
+				value=&quot;org.eclipse.ecf.salvo.ui.articlepanel&quot;&gt;
+			&lt;/equals&gt;
+		&lt;/with&gt;
+		&lt;with
+			variable=&quot;activePerspectiveId&quot;&gt;
+			&lt;equals
+				value=&quot;org.eclipse.ecf.salvo.application.perspective&quot;&gt;
+			&lt;/equals&gt;
+		&lt;/with&gt;
+	&lt;/or&gt;
+&lt;/enablement&gt;
+&lt;/pre&gt;
+
+&lt;p&gt;&lt;b&gt; variables&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;activePartId - Active Part Id&lt;/p&gt;
+&lt;p&gt;activeEditorId - Active Editor Id&lt;/p&gt;
+&lt;p&gt;activePerspectiveId - Active Perspective Id&lt;/p&gt;
+      </documentation>
+   </annotation>
+
+
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         Copyright (c) 2011 University Of Moratuwa
+                                                                      
+ All rights reserved. This program and the accompanying materials     
+ are made available under the terms of the Eclipse Public License v1.0
+ which accompanies this distribution, and is available at             
+ http://www.eclipse.org/legal/epl-v10.html                            
+                                                                      
+ Contributors:                                                        
+     Isuru Udana - UI Integration in the Workbench
+      </documentation>
+   </annotation>
+
+</schema>

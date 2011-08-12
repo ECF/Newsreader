@@ -30,6 +30,7 @@ Import-Package: org.apache.james.mime4j,
  
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.ecf.salvo.ui,
+ org.eclipse.ecf.salvo.ui.external.provider,
  org.eclipse.ecf.salvo.ui.internal;x-internal:=true,
  org.eclipse.ecf.salvo.ui.internal.adapters;x-internal:=true,
  org.eclipse.ecf.salvo.ui.internal.dialogs;x-internal:=true,
