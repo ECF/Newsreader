@@ -87,12 +87,12 @@ public class HookedNewsgroupProvider {
 		if (activeEditorPart != null) {
 			context.addVariable("activeEditorId", activeEditorPart.getSite()
 					.getId());
+		} else { // when no editor is active
+			context.addVariable("activeEditorId", "NO_ACTIVE_EDITOR"); // assign a dummy value to activeEditorId 
 		}
 
-		if (activePerspective != null) {
-			context.addVariable("activePerspectiveId",
+		context.addVariable("activePerspectiveId",
 					activePerspective.getId());
-		}
 
 		return context;
 	}
