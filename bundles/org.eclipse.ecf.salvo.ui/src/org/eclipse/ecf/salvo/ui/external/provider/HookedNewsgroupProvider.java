@@ -13,10 +13,10 @@ package org.eclipse.ecf.salvo.ui.external.provider;
 
 import java.util.ArrayList;
 
-import org.eclipse.core.expressions.EvaluationContext;
 import org.eclipse.core.expressions.EvaluationResult;
 import org.eclipse.core.expressions.Expression;
 import org.eclipse.core.expressions.ExpressionConverter;
+import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
@@ -30,10 +30,8 @@ import org.eclipse.ecf.protocol.nntp.model.IServer;
 import org.eclipse.ecf.protocol.nntp.model.IServerConnection;
 import org.eclipse.ecf.protocol.nntp.model.IServerStoreFacade;
 import org.eclipse.ecf.protocol.nntp.model.NNTPException;
-import org.eclipse.ecf.salvo.ui.internal.Activator;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IPerspectiveDescriptor;
-import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.services.IEvaluationService;
 
 /**
  * This class handles the other projects hooked into salvo by the
@@ -63,38 +61,12 @@ public class HookedNewsgroupProvider {
 	 * 
 	 * @return Evaluation Context to evaluate core expression
 	 */
-	private EvaluationContext getEvaluationContext() {
+	private IEvaluationContext getEvaluationContext() {
 
-		// the active part
-		IWorkbenchPart activePart = Activator.getDefault().getWorkbench()
-				.getActiveWorkbenchWindow().getActivePage().getActivePart();
-
-		// the active editor part
-		IEditorPart activeEditorPart = Activator.getDefault().getWorkbench()
-				.getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-
-		// the active perspective
-		IPerspectiveDescriptor activePerspective = Activator.getDefault()
-				.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-				.getPerspective();
-
-		EvaluationContext context = new EvaluationContext(null, activePart
-				.getSite().getId());
-
-		// Adding context variables
-		context.addVariable("activePartId", activePart.getSite().getId());
-
-		if (activeEditorPart != null) {
-			context.addVariable("activeEditorId", activeEditorPart.getSite()
-					.getId());
-		}
-
-		if (activePerspective != null) {
-			context.addVariable("activePerspectiveId",
-					activePerspective.getId());
-		}
-
-		return context;
+		IEvaluationService evalService = (IEvaluationService) PlatformUI
+				.getWorkbench().getService(IEvaluationService.class);
+		IEvaluationContext currentState = evalService.getCurrentState();
+		return currentState;
 	}
 
 	/**
