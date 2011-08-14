@@ -114,7 +114,7 @@ Multiple newsgroups can be added.
             &lt;/with&gt;
          &lt;/enablement&gt;
       &lt;/newsgroup&gt;
-   &lt;/extension&gt;
+&lt;/extension&gt;
    
 &lt;/pre&gt;   
 &lt;/p&gt;
@@ -232,33 +232,33 @@ It is defined using &lt;code&gt;&lt;enablement&gt;&lt;/code&gt; segment.
 
 &lt;pre&gt;
 &lt;enablement&gt;
-	&lt;or&gt;
-		&lt;with
-			variable=&quot;activePartId&quot;&gt;
-			&lt;equals
-				value=&quot;org.eclipse.ecf.salvo.ui.internal.views.messageView&quot;&gt;
-			&lt;/equals&gt;
-		&lt;/with&gt;
-		&lt;with
-			variable=&quot;activeEditorId&quot;&gt;
-			&lt;equals
-				value=&quot;org.eclipse.ecf.salvo.ui.articlepanel&quot;&gt;
-			&lt;/equals&gt;
-		&lt;/with&gt;
-		&lt;with
-			variable=&quot;activePerspectiveId&quot;&gt;
-			&lt;equals
-				value=&quot;org.eclipse.ecf.salvo.application.perspective&quot;&gt;
-			&lt;/equals&gt;
-		&lt;/with&gt;
-	&lt;/or&gt;
+            &lt;or&gt;
+               &lt;with
+                     variable=&quot;activeWorkbenchWindow.activePerspective&quot;&gt;
+                  &lt;equals
+                        value=&quot;org.eclipse.ecf.salvo.application.perspective&quot;&gt;
+                  &lt;/equals&gt;
+               &lt;/with&gt;
+               &lt;with
+                     variable=&quot;activePartId&quot;&gt;
+                  &lt;equals
+                        value=&quot;org.eclipse.ecf.salvo.ui.internal.views.messageView&quot;&gt;
+                  &lt;/equals&gt;
+               &lt;/with&gt;
+               &lt;with
+                     variable=&quot;activeEditorId&quot;&gt;
+                  &lt;equals
+                        value=&quot;org.eclipse.ecf.salvo.ui.articlepanel&quot;&gt;
+                  &lt;/equals&gt;
+               &lt;/with&gt;
+            &lt;/or&gt;
 &lt;/enablement&gt;
 &lt;/pre&gt;
 
 &lt;p&gt;&lt;b&gt; variables&lt;/b&gt;&lt;/p&gt;
 &lt;p&gt;activePartId - Active Part Id&lt;/p&gt;
 &lt;p&gt;activeEditorId - Active Editor Id&lt;/p&gt;
-&lt;p&gt;activePerspectiveId - Active Perspective Id&lt;/p&gt;
+&lt;p&gt;activeWorkbenchWindow.activePerspective - Active Perspective&lt;/p&gt;
       </documentation>
    </annotation>
 
