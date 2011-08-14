@@ -20,6 +20,12 @@
          <enablement>
             <or>
                <with
+                     variable="activeWorkbenchWindow.activePerspective">
+                  <equals
+                        value="org.eclipse.ecf.salvo.application.perspective">
+                  </equals>
+               </with>
+               <with
                      variable="activePartId">
                   <equals
                         value="org.eclipse.ecf.salvo.ui.internal.views.messageView">
@@ -29,12 +35,6 @@
                      variable="activeEditorId">
                   <equals
                         value="org.eclipse.ecf.salvo.ui.articlepanel">
-                  </equals>
-               </with>
-               <with
-                     variable="activePerspectiveId">
-                  <equals
-                        value="org.eclipse.ecf.salvo.application.perspective">
                   </equals>
                </with>
             </or>
