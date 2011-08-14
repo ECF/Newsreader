@@ -13,7 +13,6 @@ package org.eclipse.ecf.salvo.ui.external.provider;
 
 import java.util.ArrayList;
 
-import org.eclipse.core.expressions.EvaluationContext;
 import org.eclipse.core.expressions.EvaluationResult;
 import org.eclipse.core.expressions.Expression;
 import org.eclipse.core.expressions.ExpressionConverter;
@@ -31,10 +30,6 @@ import org.eclipse.ecf.protocol.nntp.model.IServer;
 import org.eclipse.ecf.protocol.nntp.model.IServerConnection;
 import org.eclipse.ecf.protocol.nntp.model.IServerStoreFacade;
 import org.eclipse.ecf.protocol.nntp.model.NNTPException;
-import org.eclipse.ecf.salvo.ui.internal.Activator;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IPerspectiveDescriptor;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.services.IEvaluationService;
 
