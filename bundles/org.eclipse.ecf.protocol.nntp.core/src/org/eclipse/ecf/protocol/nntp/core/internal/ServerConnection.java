@@ -57,7 +57,7 @@ public class ServerConnection implements IServerConnection {
 			"591 No input received within " + TIMEOUTSECONDS + " seconds \r\n",
 			".\r\n" };
 
-	private ICredentials credentials;
+	private ICredentials credentials; 
 
 	private int batchSize;
 
@@ -635,7 +635,7 @@ public class ServerConnection implements IServerConnection {
 				throw new UnexpectedResponseException(response);
 			}
 
-			sendCommand("Subject: " + article.getSubject());
+			sendCommand("Subject: " + replySubject);
 			sendCommand("Organization: " + server.getOrganization());
 			sendCommand("X-Organization: Salvo");
 			sendCommand("From: " + getUser() + " <" + getEmail() + ">");
