@@ -6,5 +6,4 @@ Bundle-Version: 0.8.0.qualifier
 Bundle-Vendor: Eclipse ECF
 Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.0
 Export-Package: org.eclipse.ecf.services.quotes
-Import-Package: org.eclipse.ecf.remoteservice,
- org.eclipse.equinox.concurrent.future;version="1.0.0"
+Import-Package: org.eclipse.equinox.concurrent.future;version="1.0.0"
