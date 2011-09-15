@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.ecf.salvo.mime4j.feature"
       label="Apache mime4j"
-      version="0.7.0.qualfier"
+      version="0.8.0.qualfier"
       provider-name="Apache Software Foundation James">
 
    <description url="http://www.example.com/description">
