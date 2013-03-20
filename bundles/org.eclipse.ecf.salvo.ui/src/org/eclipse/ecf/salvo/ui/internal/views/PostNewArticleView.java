@@ -122,20 +122,22 @@ public class PostNewArticleView extends ViewPart implements ISaveablePart {
 
 	@Override
 	public void setFocus() {
-		if (!once) {
-			once = true;
-			IViewReference ref = getSite().getPage().findViewReference(
-					"org.eclipse.ecf.salvo.ui.internal.views.postNewArticleView", "1");
-			if (PreferenceModel.instance.getUseDetachedView()) {
-				((WorkbenchPage) getSite().getPage()).getActivePerspective().getPresentation()
-						.detachPart(ref);
-				getViewSite().getShell().setSize(600, 450);
-				getViewSite().getShell().setLocation(location.x + 100, location.y + 100);
-			} else
-				((WorkbenchPage) getSite().getPage()).getActivePerspective().getPresentation()
-						.attachPart(ref);
-
-		}
+		
+		// A hack to detach the view from the workbench 
+//		if (!once) {
+//			once = true;
+//			IViewReference ref = getSite().getPage().findViewReference(
+//					"org.eclipse.ecf.salvo.ui.internal.views.postNewArticleView", "1");
+//			if (PreferenceModel.instance.getUseDetachedView()) {
+//				((WorkbenchPage) getSite().getPage()).getActivePerspective().getPresentation()
+//						.detachPart(ref);
+//				getViewSite().getShell().setSize(600, 450);
+//				getViewSite().getShell().setLocation(location.x + 100, location.y + 100);
+//			} else
+//				((WorkbenchPage) getSite().getPage()).getActivePerspective().getPresentation()
+//						.attachPart(ref);
+//
+//		}
 		subjectText.setFocus();
 	}
 
