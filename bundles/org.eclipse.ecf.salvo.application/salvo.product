@@ -7,7 +7,6 @@
    </configIni>
 
    <launcherArgs>
-      <programArgs>-console</programArgs>
       <vmArgs>-Dsalvo.debug=false
 -Dsalvo.debug.printstacktrace=false
 -Dremovethis.salvo.home=/home/dd</vmArgs>
@@ -38,19 +37,15 @@
       <feature id="org.eclipse.rcp"/>
       <feature id="org.eclipse.ecf.protocol.nntp.model.feature"/>
       <feature id="org.eclipse.ecf.protocol.nntp.store.derby.feature"/>
-      <feature id="org.eclipse.ecf.protocol.nntp.store.filesystem.feature"/>
       <feature id="org.eclipse.ecf.salvo.ui.feature"/>
       <feature id="org.eclipse.ecf.services.quotes.feature"/>
       <feature id="org.eclipse.ecf.provider.nntp.feature"/>
-      <feature id="org.eclipse.platform"/>
-      <feature id="org.eclipse.equinox.p2.user.ui"/>
+      <feature id="org.eclipse.ecf.salvo.rcp.feature"/>
    </features>
 
    <configurations>
-      <plugin id="org.eclipse.ecf.provider.nntp.store.filesystem" autoStart="true" startLevel="2" />
-      <plugin id="org.eclipse.ecf.services.quotes.eclipsetwitter" autoStart="true" startLevel="4" />
-      <plugin id="org.eclipse.ecf.services.quotes.oldskool" autoStart="true" startLevel="4" />
-      <plugin id="org.eclipse.ecf.services.quotes.starwars" autoStart="true" startLevel="4" />
+      <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="2" />
    </configurations>
 
 </product>

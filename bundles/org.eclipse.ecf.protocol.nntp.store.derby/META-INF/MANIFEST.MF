@@ -4,9 +4,7 @@ Bundle-Name: Salvo Dery store
 Bundle-SymbolicName: org.eclipse.ecf.protocol.nntp.store.derby
 Bundle-Version: 0.8.0.qualifier
 Bundle-Vendor: eclipse.org
-Bundle-RequiredExecutionEnvironment: CDC-1.1/Foundation-1.1,
- J2SE-1.5,
- JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.eclipse.ecf.protocol.nntp.core;version="0.6.0",
  org.eclipse.ecf.protocol.nntp.model;version="0.6.0"
 Bundle-ClassPath: .,
@@ -15,3 +13,4 @@ Export-Package: org.eclipse.ecf.protocol.nntp.store.derby,
  org.eclipse.ecf.protocol.nntp.store.derby.internal;x-internal:=true
 Service-Component: OSGI-INF/component.xml
 Require-Bundle: org.eclipse.equinox.ds
+Bundle-ActivationPolicy: lazy

@@ -8,3 +8,4 @@ Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1
 Service-Component: OSGI-INF/starWarsQuotesService.xml
 Export-Package: org.eclipse.ecf.services.quotes.starwars
 Import-Package: org.eclipse.ecf.services.quotes
+Bundle-ActivationPolicy: lazy

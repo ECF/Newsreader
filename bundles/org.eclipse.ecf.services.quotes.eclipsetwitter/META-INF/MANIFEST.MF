@@ -7,3 +7,4 @@ Bundle-Vendor: Eclipse ECF
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Import-Package: org.eclipse.ecf.services.quotes
 Service-Component: OSGI-INF/quoteService.xml
+Bundle-ActivationPolicy: lazy

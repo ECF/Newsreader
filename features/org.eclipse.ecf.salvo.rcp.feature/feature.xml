@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.eclipse.ecf.provider.nntp.feature"
-      label="ECF NNTP Provider"
-      version="0.8.0.qualifier"
-      provider-name="Eclipse ECF">
+      id="org.eclipse.ecf.salvo.rcp.feature"
+      label="Salvo RCP Geature"
+      version="1.0.0.qualifier">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
@@ -17,19 +16,22 @@
       [Enter License Description here.]
    </license>
 
-   <includes
-         id="org.eclipse.ecf.protocol.nntp.model.feature"
-         version="0.0.0"/>
-
    <plugin
-         id="org.eclipse.ecf.protocol.nntp.core"
+         id="org.eclipse.ui.forms"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.ecf.provider.nntp.security"
+         id="org.eclipse.ui.navigator"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ui.views"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -40,6 +42,21 @@
          download-size="0"
          install-size="0"
          version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.security.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.security.win32.x86_64"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
          unpack="false"/>
 
 </feature>
