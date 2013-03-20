@@ -34,13 +34,16 @@
    </plugins>
 
    <features>
-      <feature id="org.eclipse.rcp"/>
       <feature id="org.eclipse.ecf.protocol.nntp.model.feature"/>
       <feature id="org.eclipse.ecf.protocol.nntp.store.derby.feature"/>
       <feature id="org.eclipse.ecf.salvo.ui.feature"/>
       <feature id="org.eclipse.ecf.services.quotes.feature"/>
       <feature id="org.eclipse.ecf.provider.nntp.feature"/>
       <feature id="org.eclipse.ecf.salvo.rcp.feature"/>
+      <feature id="org.eclipse.emf.common"/>
+      <feature id="org.eclipse.emf.ecore"/>
+      <feature id="org.eclipse.e4.rcp"/>
+      <feature id="org.eclipse.ecf.salvo.mime4j.feature"/>
    </features>
 
    <configurations>
