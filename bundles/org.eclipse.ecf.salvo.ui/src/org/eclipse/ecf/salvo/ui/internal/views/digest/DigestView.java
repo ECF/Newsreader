@@ -76,7 +76,7 @@ public class DigestView extends ViewPart implements IArticleEventListner,
 	
 	public DigestView() {
 
-		context = Activator.getDefault().getBundle().getBundleContext();
+		context = Activator.getDefault().getBundleContext();
 		context.addServiceListener(this); // listening to store
 											// register/unregister
 

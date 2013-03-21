@@ -140,9 +140,10 @@ public class SignaturePreferencePage extends PreferencePage implements
 
 	private void initTables() {
 		try {
-			ServiceReference[] x = Activator.getDefault().getBundle()
-					.getBundleContext().getAllServiceReferences(
-							QuoteService.class.getName(), null);
+			ServiceReference[] x = Activator
+					.getDefault()
+					.getBundleContext()
+					.getAllServiceReferences(QuoteService.class.getName(), null);
 			if (x != null)
 				for (int i = 0; i < x.length; i++) {
 					Button b = new Button(grpQuoteServices, SWT.RADIO);

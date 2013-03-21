@@ -1,9 +1,10 @@
 package org.eclipse.ecf.salvo.ui.internal.preferences;
 
+import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.ecf.protocol.nntp.core.Debug;
 import org.eclipse.ecf.protocol.nntp.model.SALVO;
-import org.eclipse.ecf.salvo.ui.internal.Activator;
-import org.eclipse.jface.preference.IPreferenceStore;
+import org.osgi.service.prefs.BackingStoreException;
+import org.osgi.service.prefs.Preferences;
 
 public class PreferenceModel {
 
@@ -11,20 +12,30 @@ public class PreferenceModel {
 
 	public final static PreferenceModel instance = new PreferenceModel();
 
-	private IPreferenceStore store;
+	private Preferences preferences;
 
 	protected PreferenceModel() {
-		store = Activator.getDefault().getPreferenceStore();
-		store.setDefault("useDetachedView", true);
+		preferences = ConfigurationScope.INSTANCE
+				.getNode("org.eclipse.ecf.salvo.ui");
+		preferences.putBoolean("useDetachedView", true);
+		flush();
+	}
+
+	private void flush() {
+		try {
+			preferences.flush();
+		} catch (BackingStoreException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void setViewPerGroup(boolean viewPerGroup) {
 		Debug.log(getClass(), "setViewPerGroup(" + viewPerGroup + ")");
-		store.setValue(VIEW_PER_GROUP, viewPerGroup);
+		preferences.putBoolean(VIEW_PER_GROUP, viewPerGroup);
 	}
 
 	public boolean getViewPerGroup() {
-		return store.getBoolean(VIEW_PER_GROUP);
+		return preferences.getBoolean(VIEW_PER_GROUP, false);
 	}
 
 	/**
@@ -35,51 +46,41 @@ public class PreferenceModel {
 	public String getSignature() {
 		String result = "";
 
-		result = store.getString("signature");
+		result = preferences.get("signature", "");
 		if (result.equals("")) {
-			result = "--" + SALVO.CRLF + SALVO.CRLF + "Best Regards," + SALVO.CRLF + "${NAME}" + SALVO.CRLF
-					+ "-- ${QUOTE}";
+			result = "--" + SALVO.CRLF + SALVO.CRLF + "Best Regards,"
+					+ SALVO.CRLF + "${NAME}" + SALVO.CRLF + "-- ${QUOTE}";
 			setSignature(result);
 		}
 		return result;
 	}
 
 	public void setUseSignature(boolean useSignature) {
-		store.setValue("useSignature", useSignature);
+		preferences.putBoolean("useSignature", useSignature);
+		flush();
 	}
 
-	/**
-	 * Retrieves the Signature from the preferences
-	 * 
-	 * @return
-	 */
 	public boolean getUseSignature() {
-		return store.getBoolean("useSignature");
+		return preferences.getBoolean("useSignature", false);
 	}
 
 	public void setSignature(String signature) {
-		store.setValue("signature", signature);
+		preferences.put("signature", signature);
 	}
 
-	/**
-	 * Retrieves the Signature from the preferences
-	 * 
-	 * @return
-	 */
 	public boolean getUseDetachedView() {
-		return store.getBoolean("useDetachedView");
+		return preferences.getBoolean("useDetachedView", false);
 	}
 
 	public void setUseDetachedView(boolean useDetached) {
-		store.setValue("useDetachedView", useDetached);
+		preferences.putBoolean("useDetachedView", useDetached);
 	}
 
 	public void setQuoteService(String element) {
-		store.setValue("quoteService", element);
+		preferences.put("quoteService", element);
 	}
 
 	public String getQuoteService() {
-		return store.getString("quoteService");
+		return preferences.get("quoteService", "");
 	}
-	
 }

@@ -6,6 +6,7 @@ import org.eclipse.ecf.salvo.ui.internal.Activator;
 import org.eclipse.ecf.salvo.ui.internal.preferences.PreferenceModel;
 import org.eclipse.ecf.services.quotes.QuoteService;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 
@@ -22,7 +23,7 @@ public class SignatureProvider {
 		if(service.length() == 0)
 			return "";
 
-		BundleContext bundleContext = Activator.getDefault().getBundle().getBundleContext();
+		BundleContext bundleContext = Activator.getDefault().getBundleContext();
 		ServiceReference[] srvRefs;
 		try {
 			srvRefs = bundleContext.getServiceReferences(QuoteService.class.getName(), "(component.name=" + service+")");
