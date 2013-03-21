@@ -11,28 +11,25 @@
  *******************************************************************************/
 package org.eclipse.ecf.salvo.ui.internal.handlers;
 
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.ecf.protocol.nntp.core.Debug;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.workbench.modeling.EModelService;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
+import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
 
+public class PostNewArticleHandler {
 
-public class PostNewArticleHandler extends AbstractHandler {
-
-	public Object execute(ExecutionEvent event) throws ExecutionException {
-		
-		try {
-			HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().showView(
-					"org.eclipse.ecf.salvo.ui.internal.views.postNewArticleView", "1" ,
-					IWorkbenchPage.VIEW_ACTIVATE);
-		} catch (PartInitException e) {
-			Debug.log(getClass(), e);
-		}
-		
-		return null;
+	@Execute
+	public void execute(EModelService modelService, EPartService partService)
+			throws ExecutionException {
+		//
+		// List<MPart> elements = modelService.findElements(null,
+		// "org.eclipse.ecf.salvo.ui.internal.views.postNewArticleView",
+		// MPart.class, null);
+		MPart part = partService
+				.createPart("org.eclipse.ecf.salvo.ui.internal.views.postNewArticleView");
+		partService.showPart(part, PartState.ACTIVATE);
 	}
 
 }

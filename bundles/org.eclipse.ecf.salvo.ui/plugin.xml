@@ -530,5 +530,21 @@
             label="signature message ">
       </keyword>
    </extension>
+   <extension
+         point="org.eclipse.core.expressions.definitions">
+      <definition
+            id="org.eclipse.ecf.salvo.ui.definition.selected">
+         <with
+               variable="selection">
+            <iterate
+                  ifEmpty="false">
+               <test
+                     property="org.eclipse.ecf.salvo.ui.hasNewsgroup"
+                     value="true">
+               </test>
+            </iterate>
+         </with>
+      </definition>
+   </extension>
 
 </plugin>

@@ -11,7 +11,21 @@
  *******************************************************************************/
 package org.eclipse.ecf.salvo.ui.internal.views;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.Focus;
+import org.eclipse.e4.ui.di.Persist;
+import org.eclipse.e4.ui.di.UISynchronize;
+import org.eclipse.e4.ui.model.application.ui.MDirtyable;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.services.IServiceConstants;
+import org.eclipse.e4.ui.workbench.modeling.EModelService;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.ecf.protocol.nntp.core.ServerStoreFactory;
 import org.eclipse.ecf.protocol.nntp.model.IArticle;
 import org.eclipse.ecf.protocol.nntp.model.INewsgroup;
@@ -22,7 +36,6 @@ import org.eclipse.ecf.salvo.ui.internal.preferences.PreferenceModel;
 import org.eclipse.ecf.salvo.ui.internal.provider.SignatureProvider;
 import org.eclipse.ecf.salvo.ui.internal.resources.ISalvoResource;
 import org.eclipse.ecf.salvo.ui.tools.SelectionUtil;
-import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
@@ -32,19 +45,18 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.ISaveablePart;
-import org.eclipse.ui.IViewReference;
-import org.eclipse.ui.actions.ActionFactory;
-import org.eclipse.ui.handlers.IHandlerService;
-import org.eclipse.ui.internal.WorkbenchPage;
-import org.eclipse.ui.part.ViewPart;
 
-public class PostNewArticleView extends ViewPart implements ISaveablePart {
+public class PostNewArticleView {
 
 	private Text bodyText;
 
-	private boolean dirty = false;
+	@Inject
+	MDirtyable dirty;
+
+	@Inject
+	UISynchronize sync;
 
 	private Text subjectText;
 
@@ -54,23 +66,27 @@ public class PostNewArticleView extends ViewPart implements ISaveablePart {
 
 	private Point location;
 
+	private ISalvoResource activeResource;
+
 	public PostNewArticleView() {
 
 	}
 
-	@Override
+	@PreDestroy
 	public void dispose() {
 	}
 
-	@Override
-	public void createPartControl(Composite parent) {
+	@PostConstruct
+	public void createPartControl(Composite parent, final MPart part,
+			final MDirtyable dirty) {
 
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
 		{
 			Composite group = new Composite(composite, SWT.NONE);
 			group.setLayout(new GridLayout(2, false));
-			group.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
+			group.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false,
+					1, 1));
 			{
 				Label lblSubject = new Label(group, SWT.NONE);
 				lblSubject.setBounds(0, 0, 55, 15);
@@ -78,70 +94,60 @@ public class PostNewArticleView extends ViewPart implements ISaveablePart {
 			}
 			{
 				subjectText = new Text(group, SWT.BORDER);
-				subjectText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+				subjectText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
+						true, false, 1, 1));
 				subjectText.addKeyListener(new KeyAdapter() {
 
 					@Override
 					public void keyReleased(KeyEvent e) {
-						setPartName(subjectText.getText());
-						dirty = true;
-						firePropertyChange(PROP_DIRTY);
+						part.setLabel(subjectText.getText());
+						dirty.setDirty(true);
 					}
 				});
 			}
 		}
 		bodyText = new Text(composite, SWT.BORDER | SWT.MULTI | SWT.WRAP);
-		bodyText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		bodyText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
+				1));
 		bodyText.addKeyListener(new KeyAdapter() {
 
 			@Override
 			public void keyReleased(KeyEvent e) {
-				dirty = true;
-				firePropertyChange(PROP_DIRTY);
+				dirty.setDirty(true);
 			}
 		});
 
 		location = composite.getShell().getLocation();
 
-		ISalvoResource resource = (ISalvoResource) SelectionUtil
-				.getFirstObjectFromCurrentSelection(ISalvoResource.class);
 
-		if (resource != null && resource.getObject() instanceof IArticle) {
-			newsgroup = ((IArticle) resource.getObject()).getNewsgroup();
-		} else if (resource != null && resource.getObject() instanceof INewsgroup) {
-			newsgroup = (INewsgroup) resource.getObject();
+		if (activeResource != null && activeResource.getObject() instanceof IArticle) {
+			newsgroup = ((IArticle) activeResource.getObject()).getNewsgroup();
+		} else if (activeResource != null
+				&& activeResource.getObject() instanceof INewsgroup) {
+			newsgroup = (INewsgroup) activeResource.getObject();
 		}
-
-		IHandlerService handlerService = (IHandlerService) getViewSite().getService(IHandlerService.class);
-		handlerService.activateHandler("org.eclipse.ui.file.save", new ActionHandler(ActionFactory.SAVE
-				.create(getSite().getWorkbenchWindow())));
 
 		bodyText.setText(SALVO.CRLF + SignatureProvider.getSignature(newsgroup));
 
 	}
 
-	@Override
-	public void setFocus() {
-		
-		// A hack to detach the view from the workbench 
-//		if (!once) {
-//			once = true;
-//			IViewReference ref = getSite().getPage().findViewReference(
-//					"org.eclipse.ecf.salvo.ui.internal.views.postNewArticleView", "1");
-//			if (PreferenceModel.instance.getUseDetachedView()) {
-//				((WorkbenchPage) getSite().getPage()).getActivePerspective().getPresentation()
-//						.detachPart(ref);
-//				getViewSite().getShell().setSize(600, 450);
-//				getViewSite().getShell().setLocation(location.x + 100, location.y + 100);
-//			} else
-//				((WorkbenchPage) getSite().getPage()).getActivePerspective().getPresentation()
-//						.attachPart(ref);
-//
-//		}
+	@Focus
+	public void setFocus(MPart part, EPartService partService,
+			EModelService service) {
+
+		// A hack to detach the view from the workbench
+		if (!once) {
+			once = true;
+			if (PreferenceModel.instance.getUseDetachedView()) {
+				service.detach(part, 100, 100, 300, 300);
+			}
+		}
 		subjectText.setFocus();
 	}
 
-	public void doSave(IProgressMonitor monitor) {
+	@Persist
+	public void doSave(IProgressMonitor monitor, Shell shell, final MPart part,
+			final EPartService partService) {
 
 		final StringBuffer buffer = new StringBuffer(bodyText.getText());
 
@@ -165,40 +171,31 @@ public class PostNewArticleView extends ViewPart implements ISaveablePart {
 
 		monitor.subTask("Posting to newsgroup " + newsgroup.getNewsgroupName());
 		monitor.worked(1);
-		IServerStoreFacade serverStoreFacade = ServerStoreFactory.instance().getServerStoreFacade();
+		IServerStoreFacade serverStoreFacade = ServerStoreFactory.instance()
+				.getServerStoreFacade();
 		monitor.worked(1);
 
 		try {
-			serverStoreFacade.postNewArticle(new INewsgroup[] { newsgroup }, subjectText.getText(), buffer
-					.toString());
+			serverStoreFacade.postNewArticle(new INewsgroup[] { newsgroup },
+					subjectText.getText(), buffer.toString());
 		} catch (NNTPException e) {
-			MessageDialog.openError(getViewSite().getShell(), "Problem posting message",
+			MessageDialog.openError(shell, "Problem posting message",
 					"The message could not be posted. \n\r" + e.getMessage());
 		}
 		monitor.done();
-		dirty = false;
-		firePropertyChange(PROP_DIRTY);
+		dirty.setDirty(false);
 		final PostNewArticleView view = this;
-		getViewSite().getShell().getDisplay().asyncExec(new Runnable() {
+		sync.asyncExec(new Runnable() {
 			public void run() {
-				getViewSite().getPage().hideView(view);
+				partService.hidePart(part, true);
 			}
 		});
 
 	}
 
-	public void doSaveAs() {
-	}
-
-	public boolean isDirty() {
-		return dirty;
-	}
-
-	public boolean isSaveAsAllowed() {
-		return false;
-	}
-
-	public boolean isSaveOnCloseNeeded() {
-		return true;
+	@Inject
+	public void selectionChanged(
+			@Optional @Named(IServiceConstants.ACTIVE_SELECTION) ISalvoResource resource) {
+		this.activeResource = resource;
 	}
 }
