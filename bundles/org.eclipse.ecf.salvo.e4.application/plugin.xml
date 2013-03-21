@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.eclipse.e4.ui.workbench.swt.E4Application"
+            name="org.eclipse.ecf.salvo.e4.application">
+         <property
+               value="true"
+               name="clearPersistedState">
+         </property>
+         <property
+               value="platform:/plugin/org.eclipse.ecf.salvo.e4.application/css/default.css"
+               name="applicationCSS">
+         </property>
+         <property
+               name="appName"
+               value="org.eclipse.ecf.salvo.e4.application">
+         </property>
+      </product>
+   </extension>
+
+</plugin>
