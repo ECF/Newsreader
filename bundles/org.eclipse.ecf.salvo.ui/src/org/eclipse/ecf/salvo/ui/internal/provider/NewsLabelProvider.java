@@ -16,17 +16,13 @@ import java.util.HashSet;
 import org.eclipse.ecf.protocol.nntp.core.Debug;
 import org.eclipse.ecf.salvo.ui.internal.Activator;
 import org.eclipse.ecf.salvo.ui.internal.resources.ISalvoResource;
-import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
+import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.IMemento;
-import org.eclipse.ui.navigator.ICommonContentExtensionSite;
-import org.eclipse.ui.navigator.ICommonLabelProvider;
-import org.eclipse.ui.navigator.IDescriptionProvider;
 
-public class NewsLabelProvider implements IDescriptionProvider,
-		IStyledLabelProvider, ICommonLabelProvider {
+public class NewsLabelProvider implements IStyledLabelProvider , ITableLabelProvider{
 
 	private final HashSet<Object> checkedItems;
 
@@ -39,9 +35,8 @@ public class NewsLabelProvider implements IDescriptionProvider,
 	}
 
 	public Image getImage(Object element) {
-		if(checkedItems != null && checkedItems.contains(element))
-			return Activator.getDefault().getImageRegistry().get(
-			"follow.gif");
+		if (checkedItems != null && checkedItems.contains(element))
+			return Activator.getDefault().getImageRegistry().get("follow.gif");
 		return null;
 	}
 
@@ -50,7 +45,8 @@ public class NewsLabelProvider implements IDescriptionProvider,
 		ISalvoResource res = (ISalvoResource) element;
 		Debug.log(this.getClass(), res.getName());
 
-		StyledString ss = new StyledString(res.getName(), StyledString.QUALIFIER_STYLER);
+		StyledString ss = new StyledString(res.getName(),
+				StyledString.QUALIFIER_STYLER);
 
 		return ss;
 	}
@@ -79,23 +75,17 @@ public class NewsLabelProvider implements IDescriptionProvider,
 		return ((ISalvoResource) anElement).getName();
 	}
 
-	public void init(ICommonContentExtensionSite config) {
-		// TODO Auto-generated method stub
-
-	}
-
 	public String getText(Object element) {
 		return getDescription(element);
 	}
 
-	public void restoreState(IMemento memento) {
-		// TODO Auto-generated method stub
-
+	@Override
+	public Image getColumnImage(Object element, int columnIndex) {
+		return getImage(element);
 	}
 
-	public void saveState(IMemento memento) {
-		// TODO Auto-generated method stub
-
+	@Override
+	public String getColumnText(Object element, int columnIndex) {
+		return getText(element);
 	}
-
 }

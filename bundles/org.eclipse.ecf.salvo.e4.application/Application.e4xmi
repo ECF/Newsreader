@@ -1,18 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <application:Application xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:advanced="http://www.eclipse.org/ui/2010/UIModel/application/ui/advanced" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_8nq3oJGrEeK69v4j7kXIOA" elementId="org.eclipse.e4.ide.application">
-  <children xsi:type="basic:TrimmedWindow" xmi:id="_8nq3oZGrEeK69v4j7kXIOA" label="org.eclipse.ecf.salvo.e4.application" width="500" height="400">
+  <children xsi:type="basic:TrimmedWindow" xmi:id="_8nq3oZGrEeK69v4j7kXIOA" label="org.eclipse.ecf.salvo.e4.application" x="100" y="100" width="1000" height="600">
     <children xsi:type="advanced:PerspectiveStack" xmi:id="_kQHogJGsEeK69v4j7kXIOA" elementId="org.eclipse.ecf.salvo.e4.application.perspectivestack.0">
       <children xsi:type="advanced:Perspective" xmi:id="_ms1ikJGsEeK69v4j7kXIOA" elementId="org.eclipse.ecf.salvo.application.perspective" label="Salvo Newsreader" iconURI="platform:/plugin/org.eclipse.ecf.salvo.application/icons/icon_news.gif">
         <children xsi:type="basic:PartSashContainer" xmi:id="_p6gYcJGsEeK69v4j7kXIOA" elementId="org.eclipse.ecf.salvo.e4.application.partsashcontainer.0" horizontal="true">
-          <children xsi:type="basic:PartSashContainer" xmi:id="_rBw7cJGsEeK69v4j7kXIOA" elementId="org.eclipse.ecf.salvo.e4.application.partsashcontainer.1">
-            <children xsi:type="basic:PartStack" xmi:id="_7cSXsJGtEeK69v4j7kXIOA" elementId="org.eclipse.ecf.salvo.e4.application.partstack.0"/>
-            <children xsi:type="basic:PartStack" xmi:id="_9APdwJGtEeK69v4j7kXIOA" elementId="org.eclipse.ecf.salvo.e4.application.partstack.2"/>
+          <children xsi:type="basic:PartSashContainer" xmi:id="_rBw7cJGsEeK69v4j7kXIOA" elementId="org.eclipse.ecf.salvo.e4.application.partsashcontainer.1" containerData="30">
+            <children xsi:type="basic:PartStack" xmi:id="_7cSXsJGtEeK69v4j7kXIOA" elementId="org.eclipse.ecf.salvo.e4.application.partstack.servers" containerData="60"/>
+            <children xsi:type="basic:PartStack" xmi:id="_9APdwJGtEeK69v4j7kXIOA" elementId="org.eclipse.ecf.salvo.e4.application.partstack.properties" containerData="40">
+              <children xsi:type="basic:Part" xmi:id="_XoW7oJL9EeKOIeKKV0vSLg" elementId="org.eclipse.ecf.salvo.ui.internal.views.digest.DigestView" contributionURI="bundleclass://org.eclipse.ecf.salvo.ui/org.eclipse.ecf.salvo.ui.internal.views.digest.DigestView" label="News Digest View" iconURI="platform:/plugin/org.eclipse.ecf.salvo.ui/icons/icon_news.gif" closeable="true">
+                <tags>View</tags>
+                <tags>categoryTag:org.eclipse.ecf.salvo.ui.category1</tags>
+                <menus xsi:type="menu:PopupMenu" xmi:id="_ZDCw8JL9EeKOIeKKV0vSLg" elementId="org.eclipse.ecf.salvo.e4.application.popupmenu.0"/>
+                <toolbar xmi:id="_XoW7oZL9EeKOIeKKV0vSLg"/>
+              </children>
+            </children>
           </children>
-          <children xsi:type="basic:PartSashContainer" xmi:id="_rsfTcJGsEeK69v4j7kXIOA" elementId="org.eclipse.ecf.salvo.e4.application.partsashcontainer.2">
-            <children xsi:type="basic:PartStack" xmi:id="_8NubsJGtEeK69v4j7kXIOA" elementId="org.eclipse.ecf.salvo.e4.application.partstack.1"/>
-            <children xsi:type="basic:PartStack" xmi:id="_9eSrsJGtEeK69v4j7kXIOA" elementId="org.eclipse.ecf.salvo.e4.application.partstack.3">
+          <children xsi:type="basic:PartSashContainer" xmi:id="_rsfTcJGsEeK69v4j7kXIOA" elementId="org.eclipse.ecf.salvo.e4.application.partsashcontainer.2" containerData="70">
+            <children xsi:type="basic:PartStack" xmi:id="_8NubsJGtEeK69v4j7kXIOA" elementId="org.eclipse.ecf.salvo.e4.application.partstack.editors" containerData="60"/>
+            <children xsi:type="basic:PartStack" xmi:id="_9eSrsJGtEeK69v4j7kXIOA" elementId="org.eclipse.ecf.salvo.e4.application.partstack.messages" containerData="40">
               <children xsi:type="basic:Part" xmi:id="_XFfIUJGuEeK69v4j7kXIOA" elementId="org.eclipse.ecf.salvo.ui.internal.views.messageView" contributionURI="bundleclass://org.eclipse.ecf.salvo.ui/org.eclipse.ecf.salvo.ui.internal.views.MessageView" label="MessageView" iconURI="platform:/plugin/org.eclipse.ecf.salvo.ui/icons/messages.gif" closeable="true">
-                <toolbar xmi:id="_XFfIUZGuEeK69v4j7kXIOA"/>
+                <toolbar xmi:id="_XFfIUZGuEeK69v4j7kXIOA">
+                  <children xsi:type="menu:HandledToolItem" xmi:id="_gx7hwJJZEeKctsDPUUlpCA" elementId="org.eclipse.ecf.salvo.e4.application.handledtoolitem.2" iconURI="platform:/plugin/org.eclipse.ecf.salvo.ui/icons/reply.gif" command="_KDb5MJGsEeK69v4j7kXIOA">
+                    <menu xmi:id="_NKDb4JJcEeKctsDPUUlpCA" elementId="org.eclipse.ecf.salvo.e4.application.menu.0">
+                      <children xsi:type="menu:HandledMenuItem" xmi:id="_Q3TwwJJcEeKctsDPUUlpCA" elementId="org.eclipse.ecf.salvo.e4.application.handledmenuitem.2" iconURI="platform:/plugin/org.eclipse.ecf.salvo.ui/icons/replymail.gif" command="_KDh_0JGsEeK69v4j7kXIOA"/>
+                    </menu>
+                  </children>
+                </toolbar>
               </children>
             </children>
           </children>
@@ -29,24 +42,38 @@
       <children xsi:type="menu:ToolBar" xmi:id="__4MZgJI1EeKqB7tU_ERXFA" elementId="org.eclipse.ecf.salvo.ui.articlepanel.toolbar">
         <children xsi:type="menu:HandledToolItem" xmi:id="_VDyioJI4EeKqB7tU_ERXFA" elementId="org.eclipse.ecf.salvo.e4.application.handledtoolitem.save" iconURI="platform:/plugin/org.eclipse.ecf.salvo.e4.application/icons/save_edit.gif" command="_UyAd0JIyEeKqB7tU_ERXFA"/>
         <children xsi:type="menu:HandledToolItem" xmi:id="_Tz818JI5EeKqB7tU_ERXFA" elementId="org.eclipse.ecf.salvo.e4.application.handledtoolitem.0" iconURI="platform:/plugin/org.eclipse.ecf.salvo.ui/icons/new_news.gif" command="_KDuNEJGsEeK69v4j7kXIOA"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_Uls5YJLxEeKOIeKKV0vSLg" elementId="org.eclipse.ecf.salvo.e4.application.handledtoolitem.3" iconURI="platform:/plugin/org.eclipse.ecf.salvo.ui/icons/addserver.gif" command="_KDI-QJGsEeK69v4j7kXIOA"/>
       </children>
     </trimBars>
   </children>
-  <handlers xmi:id="_RbivMJGsEeK69v4j7kXIOA" elementId="org.eclipse.ecf.salvo.e4.application.handler.0" contributionURI="bundleclass://org.eclipse.ecf.salvo.ui/org.eclipse.ecf.salvo.ui.internal.handlers.AddServer" command="_KDI-QJGsEeK69v4j7kXIOA"/>
-  <handlers xmi:id="_RcaR4JGsEeK69v4j7kXIOA" elementId="org.eclipse.ecf.salvo.e4.application.handler.1" contributionURI="bundleclass://org.eclipse.ecf.salvo.ui/org.eclipse.ecf.salvo.ui.internal.handlers.UnsubscribeHandler" command="_KDPr8JGsEeK69v4j7kXIOA"/>
-  <handlers xmi:id="_RcntQJGsEeK69v4j7kXIOA" elementId="org.eclipse.ecf.salvo.e4.application.handler.2" contributionURI="bundleclass://org.eclipse.ecf.salvo.ui/org.eclipse.ecf.salvo.ui.internal.handlers.OpenArticlePanel" command="_KDVykJGsEeK69v4j7kXIOA"/>
-  <handlers xmi:id="_Rcua8JGsEeK69v4j7kXIOA" elementId="org.eclipse.ecf.salvo.e4.application.handler.3" contributionURI="bundleclass://org.eclipse.ecf.salvo.ui/org.eclipse.ecf.salvo.ui.internal.handlers.ReplyToGroupHandler" command="_KDb5MJGsEeK69v4j7kXIOA"/>
-  <handlers xmi:id="_Rc0hkJGsEeK69v4j7kXIOA" elementId="org.eclipse.ecf.salvo.e4.application.handler.4" contributionURI="bundleclass://org.eclipse.ecf.salvo.ui/org.eclipse.ecf.salvo.ui.internal.handlers.ChangeServer" command="_KDoGcJGsEeK69v4j7kXIOA"/>
-  <handlers xmi:id="_Rc6oMJGsEeK69v4j7kXIOA" elementId="org.eclipse.ecf.salvo.e4.application.handler.5" contributionURI="bundleclass://org.eclipse.ecf.salvo.ui/org.eclipse.ecf.salvo.ui.internal.handlers.PostNewArticleHandler" command="_KDuNEJGsEeK69v4j7kXIOA"/>
-  <handlers xmi:id="_RdAu0JGsEeK69v4j7kXIOA" elementId="org.eclipse.ecf.salvo.e4.application.handler.6" contributionURI="bundleclass://org.eclipse.ecf.salvo.ui/org.eclipse.ecf.salvo.ui.internal.handlers.MarkArticle" command="_KD7BYJGsEeK69v4j7kXIOA"/>
+  <handlers xmi:id="_RbivMJGsEeK69v4j7kXIOA" elementId="org.eclipse.ecf.salvo.e4.application.handler.addNewsServer" contributionURI="bundleclass://org.eclipse.ecf.salvo.ui/org.eclipse.ecf.salvo.ui.internal.handlers.AddServer" command="_KDI-QJGsEeK69v4j7kXIOA"/>
+  <handlers xmi:id="_RcaR4JGsEeK69v4j7kXIOA" elementId="org.eclipse.ecf.salvo.e4.application.handler.unsubscribe" contributionURI="bundleclass://org.eclipse.ecf.salvo.ui/org.eclipse.ecf.salvo.ui.internal.handlers.UnsubscribeHandler" command="_KDPr8JGsEeK69v4j7kXIOA"/>
+  <handlers xmi:id="_RcntQJGsEeK69v4j7kXIOA" elementId="org.eclipse.ecf.salvo.e4.application.handler.open" contributionURI="bundleclass://org.eclipse.ecf.salvo.ui/org.eclipse.ecf.salvo.ui.internal.handlers.OpenArticlePanel" command="_KDVykJGsEeK69v4j7kXIOA"/>
+  <handlers xmi:id="_Rcua8JGsEeK69v4j7kXIOA" elementId="org.eclipse.ecf.salvo.e4.application.handler.replytogroup" contributionURI="bundleclass://org.eclipse.ecf.salvo.ui/org.eclipse.ecf.salvo.ui.internal.handlers.ReplyToGroupHandler" command="_KDb5MJGsEeK69v4j7kXIOA"/>
+  <handlers xmi:id="_Rc0hkJGsEeK69v4j7kXIOA" elementId="org.eclipse.ecf.salvo.e4.application.handler.changeNewsServer" contributionURI="bundleclass://org.eclipse.ecf.salvo.ui/org.eclipse.ecf.salvo.ui.internal.handlers.ChangeServer" command="_KDoGcJGsEeK69v4j7kXIOA"/>
+  <handlers xmi:id="_Rc6oMJGsEeK69v4j7kXIOA" elementId="org.eclipse.ecf.salvo.e4.application.handler.newArticle" contributionURI="bundleclass://org.eclipse.ecf.salvo.ui/org.eclipse.ecf.salvo.ui.internal.handlers.PostNewArticleHandler" command="_KDuNEJGsEeK69v4j7kXIOA"/>
+  <handlers xmi:id="_RdAu0JGsEeK69v4j7kXIOA" elementId="org.eclipse.ecf.salvo.e4.application.handler.mark" contributionURI="bundleclass://org.eclipse.ecf.salvo.ui/org.eclipse.ecf.salvo.ui.internal.handlers.MarkArticle" command="_KD7BYJGsEeK69v4j7kXIOA"/>
   <handlers xmi:id="_S5s4YJIyEeKqB7tU_ERXFA" elementId="org.eclipse.ecf.salvo.e4.application.handler.quit" contributionURI="bundleclass://org.eclipse.ecf.salvo.e4.application/org.eclipse.ecf.salvo.e4.application.QuitHandler" command="_Upn94JIyEeKqB7tU_ERXFA"/>
   <handlers xmi:id="_uH7kQJIyEeKqB7tU_ERXFA" elementId="org.eclipse.ecf.salvo.e4.application.handler.save" contributionURI="bundleclass://org.eclipse.ecf.salvo.e4.application/org.eclipse.ecf.salvo.e4.application.SaveHandler" command="_UyAd0JIyEeKqB7tU_ERXFA"/>
   <handlers xmi:id="_xuy9QJIyEeKqB7tU_ERXFA" elementId="org.eclipse.ecf.salvo.e4.application.handler.about" contributionURI="bundleclass://org.eclipse.ecf.salvo.e4.application/org.eclipse.ecf.salvo.e4.application.AboutHandler" command="_Utvo4JIyEeKqB7tU_ERXFA"/>
+  <bindingTables xmi:id="_-HCU8JLlEeKOIeKKV0vSLg" elementId="org.eclipse.ecf.salvo.e4.application.bindingtable.1" bindingContext="_YeJoEJLlEeKOIeKKV0vSLg">
+    <bindings xmi:id="_CuN7cJLmEeKOIeKKV0vSLg" elementId="org.eclipse.ecf.salvo.e4.application.keybinding.save" keySequence="M1+S" command="_UyAd0JIyEeKqB7tU_ERXFA"/>
+    <bindings xmi:id="_F8J3EJLmEeKOIeKKV0vSLg" elementId="org.eclipse.ecf.salvo.e4.application.keybinding.quit" keySequence="M1+Q" command="_Upn94JIyEeKqB7tU_ERXFA"/>
+  </bindingTables>
+  <rootContext xmi:id="_YeJoEJLlEeKOIeKKV0vSLg" elementId="org.eclipse.ui.contexts.dialogAndWindow" name="Windows and Dialogs"/>
+  <rootContext xmi:id="_3Hfv8JLlEeKOIeKKV0vSLg" elementId="org.eclipse.ui.contexts.dialog" name="Dialogs"/>
+  <rootContext xmi:id="_7JF9IJLlEeKOIeKKV0vSLg" elementId="org.eclipse.ui.contexts.window" name="Windows"/>
   <descriptors xmi:id="_Aln7sJJAEeKctsDPUUlpCA" elementId="org.eclipse.ecf.salvo.ui.internal.views.postNewArticleView" label="New Article" iconURI="platform:/plugin/org.eclipse.ecf.salvo.ui/icons/new_news.gif" allowMultiple="true" closeable="true" dirtyable="true" contributionURI="bundleclass://org.eclipse.ecf.salvo.ui/org.eclipse.ecf.salvo.ui.internal.views.PostNewArticleView">
     <toolbar xmi:id="_Aln7sZJAEeKctsDPUUlpCA">
       <children xsi:type="menu:HandledToolItem" xmi:id="_EweykJJAEeKctsDPUUlpCA" elementId="org.eclipse.ecf.salvo.e4.application.handledtoolitem.1" command="_UyAd0JIyEeKqB7tU_ERXFA"/>
     </toolbar>
   </descriptors>
+  <descriptors xmi:id="_SkOfMJJUEeKctsDPUUlpCA" elementId="org.eclipse.ecf.salvo.ui.internal.views.replyView" label="Reply" iconURI="platform:/plugin/org.eclipse.ecf.salvo.ui/icons/reply.gif" closeable="true" contributionURI="bundleclass://org.eclipse.ecf.salvo.ui/org.eclipse.ecf.salvo.ui.internal.views.ReplyView">
+    <toolbar xmi:id="_SkOfMZJUEeKctsDPUUlpCA"/>
+  </descriptors>
+  <menuContributions xmi:id="_YluYQJL8EeKOIeKKV0vSLg" elementId="org.eclipse.ecf.salvo.ui.treeviewer.popupmenu">
+    <children xsi:type="menu:HandledMenuItem" xmi:id="_c7I5UJL8EeKOIeKKV0vSLg" command="_KDoGcJGsEeK69v4j7kXIOA"/>
+  </menuContributions>
   <commands xmi:id="_KA3tYJGsEeK69v4j7kXIOA" elementId="org.eclipse.ecf.salvo.subscribe" commandName="Subscribe" description="Subscribe" category="_D7QaAJGsEeK69v4j7kXIOA"/>
   <commands xmi:id="_KDI-QJGsEeK69v4j7kXIOA" elementId="org.eclipse.ecf.salvo.ui.addserver" commandName="Add News Server" description="Add News Server" category="_D7QaAJGsEeK69v4j7kXIOA"/>
   <commands xmi:id="_KDPr8JGsEeK69v4j7kXIOA" elementId="org.eclipse.ecf.salvo.ui.command.unsubscribe" commandName="Unsubscribe" category="_D7QaAJGsEeK69v4j7kXIOA"/>

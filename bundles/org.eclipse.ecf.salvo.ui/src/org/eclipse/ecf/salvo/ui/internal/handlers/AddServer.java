@@ -11,26 +11,19 @@
  *******************************************************************************/
 package org.eclipse.ecf.salvo.ui.internal.handlers;
 
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.ecf.salvo.ui.wizards.NewNewsServerWizard;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.swt.widgets.Shell;
 
+public class AddServer {
 
-public class AddServer extends AbstractHandler {
-
-	public Object execute(ExecutionEvent event) throws ExecutionException {
-
+	@Execute
+	public void execute(Shell shell) throws ExecutionException {
 		NewNewsServerWizard wizard = new NewNewsServerWizard();
-
-		WizardDialog dialog = new WizardDialog(HandlerUtil
-				.getActiveShell(event), wizard);
+		WizardDialog dialog = new WizardDialog(shell, wizard);
 		dialog.create();
 		dialog.open();
-
-		return null;
 	}
-
 }

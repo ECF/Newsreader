@@ -17,18 +17,15 @@ import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
+import org.eclipse.ecf.salvo.ui.internal.views.PostNewArticleView;
 
 public class PostNewArticleHandler {
 
 	@Execute
 	public void execute(EModelService modelService, EPartService partService)
 			throws ExecutionException {
-		//
-		// List<MPart> elements = modelService.findElements(null,
-		// "org.eclipse.ecf.salvo.ui.internal.views.postNewArticleView",
-		// MPart.class, null);
-		MPart part = partService
-				.createPart("org.eclipse.ecf.salvo.ui.internal.views.postNewArticleView");
+
+		MPart part = partService.createPart(PostNewArticleView.ID);
 		partService.showPart(part, PartState.ACTIVATE);
 	}
 

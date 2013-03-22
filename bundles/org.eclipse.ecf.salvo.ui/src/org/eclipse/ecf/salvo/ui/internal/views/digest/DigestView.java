@@ -12,6 +12,13 @@
 
 package org.eclipse.ecf.salvo.ui.internal.views.digest;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.inject.Inject;
+
+import org.eclipse.e4.ui.di.Focus;
+import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
+import org.eclipse.e4.ui.workbench.swt.modeling.EMenuService;
 import org.eclipse.ecf.protocol.nntp.core.ArticleEventListnersFactory;
 import org.eclipse.ecf.protocol.nntp.core.Debug;
 import org.eclipse.ecf.protocol.nntp.core.ServerStoreFactory;
@@ -31,11 +38,12 @@ import org.eclipse.ecf.salvo.ui.tools.PreferencesUtil;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
@@ -52,8 +60,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.part.ViewPart;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceListener;
@@ -63,17 +69,21 @@ import org.osgi.framework.ServiceListener;
  * articles the user interested in
  * 
  */
-public class DigestView extends ViewPart implements IArticleEventListner,
-		ServiceListener, IStoreEventListener {
+public class DigestView implements IArticleEventListner, ServiceListener,
+		IStoreEventListener {
+
+	@Inject
+	ESelectionService service;
+	
+	
 
 	public static final String ID = "org.eclipse.ecf.salvo.ui.internal.views.digest.DigestView";
-	private final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
 	private TreeViewer treeViewer;
 	private Combo combo;
 	private Action selectServerAction;
 	private BundleContext context;
 	private IArticleEventListnersRegistry articleEventListnerRegistry;
-	
+
 	public DigestView() {
 
 		context = Activator.getDefault().getBundleContext();
@@ -85,8 +95,8 @@ public class DigestView extends ViewPart implements IArticleEventListner,
 			store.addListener(this, SALVO.EVENT_SUBSCRIBE_UNSUBSCRIBE);
 		}
 
-		 articleEventListnerRegistry = ArticleEventListnersFactory
-				.instance().getRegistry();
+		articleEventListnerRegistry = ArticleEventListnersFactory.instance()
+				.getRegistry();
 		articleEventListnerRegistry.addListener(this);
 
 	}
@@ -97,11 +107,13 @@ public class DigestView extends ViewPart implements IArticleEventListner,
 	 * @param parent
 	 *            Parent composite
 	 */
-	@Override
-	public void createPartControl(Composite parent) {
+	@PostConstruct
+	public void createPartControl(Composite parent, EMenuService menuservice) {
+		
 
-		Composite container = toolkit.createComposite(parent, SWT.NONE);
-		toolkit.paintBordersFor(container);
+		menuservice.registerContextMenu(parent, "org.eclipse.ecf.salvo.ui.internal.views.digest.DigestView.popup");
+		
+		Composite container = new Composite(parent, SWT.None);
 		container.setLayout(new GridLayout(2, false));
 
 		new Label(container, SWT.NONE);
@@ -109,8 +121,6 @@ public class DigestView extends ViewPart implements IArticleEventListner,
 			combo = new Combo(container, SWT.READ_ONLY);
 			combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
 					1, 1));
-			toolkit.adapt(combo);
-			toolkit.paintBordersFor(combo);
 
 			combo.add("Show Threads I am following");
 			combo.add("Show My Articles");
@@ -140,8 +150,14 @@ public class DigestView extends ViewPart implements IArticleEventListner,
 			Tree tree = treeViewer.getTree();
 			tree.setLinesVisible(true);
 			tree.setHeaderVisible(true);
-			getSite().setSelectionProvider(treeViewer);
-			toolkit.paintBordersFor(tree);
+			treeViewer
+					.addSelectionChangedListener(new ISelectionChangedListener() {
+
+						@Override
+						public void selectionChanged(SelectionChangedEvent event) {
+							service.setPostSelection(event.getSelection());
+						}
+					});
 
 			TreeColumnLayout treeColumnLayout = new TreeColumnLayout();
 			{
@@ -173,14 +189,11 @@ public class DigestView extends ViewPart implements IArticleEventListner,
 		}
 
 		createActions();
-		initializeToolBar();
-		initializeMenu();
 		initializeContextMenu();
 	}
 
+	@PreDestroy
 	public void dispose() {
-		toolkit.dispose();
-		super.dispose();
 	}
 
 	/**
@@ -204,22 +217,6 @@ public class DigestView extends ViewPart implements IArticleEventListner,
 	}
 
 	/**
-	 * Initialize the toolbar.
-	 */
-	private void initializeToolBar() {
-		IToolBarManager tbm = getViewSite().getActionBars().getToolBarManager();
-		tbm.add(selectServerAction);
-	}
-
-	/**
-	 * Initialize the menu.
-	 */
-	private void initializeMenu() {
-		IMenuManager manager = getViewSite().getActionBars().getMenuManager();
-		manager.add(selectServerAction);
-	}
-
-	/**
 	 * Initialize the context menu.
 	 */
 	private void initializeContextMenu() {
@@ -237,7 +234,6 @@ public class DigestView extends ViewPart implements IArticleEventListner,
 		treeViewer.getControl().setMenu(menu);
 
 		// Register menu for extension.
-		getSite().registerContextMenu(menuMgr, treeViewer);
 
 	}
 
@@ -248,8 +244,9 @@ public class DigestView extends ViewPart implements IArticleEventListner,
 		mgr.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
-	@Override
+	@Focus
 	public void setFocus() {
+		combo.setFocus();
 	}
 
 	/**
@@ -362,20 +359,18 @@ public class DigestView extends ViewPart implements IArticleEventListner,
 	 */
 	private void selectContentProvider() {
 		if (combo.getSelectionIndex() == 1) {
-			treeViewer
-					.setContentProvider(new ThisUserArticlesContentProvider(
-							treeViewer));
+			treeViewer.setContentProvider(new ThisUserArticlesContentProvider(
+					treeViewer));
 		} else {
-			treeViewer
-					.setContentProvider(new MarkedArticlesContentProvider(
-							treeViewer));
+			treeViewer.setContentProvider(new MarkedArticlesContentProvider(
+					treeViewer));
 		}
 	}
 
 	/**
-	 * get new article listener 
+	 * get new article listener
 	 */
-	private IArticleEventListner getArticleListener(){
+	private IArticleEventListner getArticleListener() {
 		return this;
 	}
 

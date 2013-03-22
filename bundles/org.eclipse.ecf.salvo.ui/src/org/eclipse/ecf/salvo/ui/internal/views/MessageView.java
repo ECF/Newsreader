@@ -99,6 +99,7 @@ public class MessageView implements ISelectionProvider {
 
 	private Label description;
 
+	@Override
 	public void addSelectionChangedListener(ISelectionChangedListener listener) {
 		listeners.add(listener);
 	}

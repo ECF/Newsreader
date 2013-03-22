@@ -11,30 +11,32 @@
  *******************************************************************************/
 package org.eclipse.ecf.salvo.ui.internal.handlers;
 
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
+import javax.annotation.PostConstruct;
+import javax.inject.Named;
+
+import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.ecf.protocol.nntp.model.IServer;
 import org.eclipse.ecf.salvo.ui.internal.resources.ISalvoResource;
-import org.eclipse.ecf.salvo.ui.tools.SelectionUtil;
 import org.eclipse.ecf.salvo.ui.wizards.NewNewsServerWizard;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.swt.widgets.Shell;
 
+public class ChangeServer {
 
-public class ChangeServer extends AbstractHandler {
+	@Execute
+	public Object execute(
+			@Optional @Named(IServiceConstants.ACTIVE_SELECTION) ISalvoResource resource,
+			Shell shell) {
 
-	public Object execute(ExecutionEvent event) throws ExecutionException {
-
-		ISalvoResource resource = (ISalvoResource) SelectionUtil.getFirstObjectFromSelection(HandlerUtil
-				.getCurrentSelection(event), ISalvoResource.class);
 		if (resource.getObject() instanceof IServer) {
-			NewNewsServerWizard wizard = new NewNewsServerWizard((IServer) resource.getObject());
-			WizardDialog dialog = new WizardDialog(HandlerUtil.getActiveShell(event), wizard);
+			NewNewsServerWizard wizard = new NewNewsServerWizard(
+					(IServer) resource.getObject());
+			WizardDialog dialog = new WizardDialog(shell, wizard);
 			dialog.create();
 			dialog.open();
 		}
 		return null;
 	}
-
 }

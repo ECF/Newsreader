@@ -13,6 +13,10 @@ import org.osgi.framework.ServiceReference;
 public class SignatureProvider {
 
 	public static String getSignature(INewsgroup newsgroup) {
+		
+		if(newsgroup == null){
+			return "---";
+		}
 
 		PreferenceModel prefs = PreferenceModel.instance;
 		String quote = prefs.getSignature();

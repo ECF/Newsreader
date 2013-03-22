@@ -35,7 +35,6 @@ import org.eclipse.ecf.protocol.nntp.model.SALVO;
 import org.eclipse.ecf.salvo.ui.internal.preferences.PreferenceModel;
 import org.eclipse.ecf.salvo.ui.internal.provider.SignatureProvider;
 import org.eclipse.ecf.salvo.ui.internal.resources.ISalvoResource;
-import org.eclipse.ecf.salvo.ui.tools.SelectionUtil;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
@@ -49,6 +48,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 public class PostNewArticleView {
+
+	public static final String ID = "org.eclipse.ecf.salvo.ui.internal.views.postNewArticleView";
 
 	private Text bodyText;
 

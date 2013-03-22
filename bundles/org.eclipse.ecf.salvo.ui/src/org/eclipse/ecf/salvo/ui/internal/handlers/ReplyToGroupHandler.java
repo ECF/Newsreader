@@ -11,35 +11,17 @@
  *******************************************************************************/
 package org.eclipse.ecf.salvo.ui.internal.handlers;
 
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.ecf.protocol.nntp.core.Debug;
-import org.eclipse.ecf.protocol.nntp.model.IArticle;
-import org.eclipse.ecf.salvo.ui.internal.resources.ISalvoResource;
-import org.eclipse.ecf.salvo.ui.tools.SelectionUtil;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
+import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
+import org.eclipse.ecf.salvo.ui.internal.views.ReplyView;
 
+public class ReplyToGroupHandler {
 
-public class ReplyToGroupHandler extends AbstractHandler {
-
-	public Object execute(ExecutionEvent event) throws ExecutionException {
-
-		ISalvoResource res = (ISalvoResource) SelectionUtil
-				.getFirstObjectFromCurrentSelection(ISalvoResource.class);
-		if (res != null)
-			if (res.getObject() instanceof IArticle) {
-				IArticle article = (IArticle) res.getObject();
-				try {
-					HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().showView(
-							"org.eclipse.ecf.salvo.ui.internal.views.replyView", "" + article.toString(),
-							IWorkbenchPage.VIEW_ACTIVATE);
-				} catch (PartInitException e) {
-					Debug.log(getClass(), e);
-				}
-			}
-		return null;
+	@Execute
+	public void execute(EPartService partService) {
+		MPart part = partService.createPart(ReplyView.ID);
+		partService.showPart(part, PartState.ACTIVATE);
 	}
 }

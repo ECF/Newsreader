@@ -11,9 +11,9 @@
  *******************************************************************************/
 package org.eclipse.ecf.salvo.ui.internal.handlers;
 
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
+import org.eclipse.ecf.protocol.nntp.core.Debug;
 import org.eclipse.ecf.protocol.nntp.core.ServerStoreFactory;
 import org.eclipse.ecf.protocol.nntp.model.INewsgroup;
 import org.eclipse.ecf.protocol.nntp.model.IServer;
@@ -24,13 +24,17 @@ import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.swt.widgets.Shell;
 
-public class UnsubscribeHandler extends AbstractHandler {
+public class UnsubscribeHandler {
 
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	@Execute
+	public void execute(ESelectionService service, Shell shell) {
 
-		ISelection selection = HandlerUtil.getCurrentSelection(event);
+		if (!(service.getSelection() instanceof IStructuredSelection))
+			return;
+
+		ISelection selection = (ISelection) service.getSelection();
 		if (selection instanceof IStructuredSelection) {
 			for (Object selo : ((IStructuredSelection) selection).toArray()) {
 				if (selo instanceof ISalvoResource) {
@@ -39,7 +43,7 @@ public class UnsubscribeHandler extends AbstractHandler {
 
 						MessageDialogWithToggle x = MessageDialogWithToggle
 								.openInformation(
-										HandlerUtil.getActiveShell(event),
+										shell,
 										((IServer) object).getAddress(),
 										"Do you want to unsubscribe from server "
 												+ ((IServer) object)
@@ -48,37 +52,41 @@ public class UnsubscribeHandler extends AbstractHandler {
 										false, null, null);
 						if (x.getReturnCode() == Window.OK) {
 							try {
-								ServerStoreFactory.instance()
+								ServerStoreFactory
+										.instance()
 										.getServerStoreFacade()
 										.unsubscribeServer((IServer) object,
 												x.getToggleState());
 							} catch (StoreException e) {
-								throw new ExecutionException(e.getMessage(), e);
+								MessageDialog.openError(shell, "Problem found",
+										e.getMessage());
+								Debug.log(getClass(), e);
 							}
 						}
 
 					} else if (object instanceof INewsgroup) {
-						boolean x = MessageDialog.openConfirm(HandlerUtil
-								.getActiveShell(event), ((INewsgroup) object)
-								.getNewsgroupName(),
+						boolean x = MessageDialog.openConfirm(
+								shell,
+								((INewsgroup) object).getNewsgroupName(),
 								"Do you want to unsubscribe from group "
 										+ ((INewsgroup) object)
 												.getNewsgroupName() + "?");
 						if (x) {
 							try {
-								ServerStoreFactory.instance()
+								ServerStoreFactory
+										.instance()
 										.getServerStoreFacade()
 										.unsubscribeNewsgroup(
 												(INewsgroup) object, false);
 							} catch (StoreException e) {
-								throw new ExecutionException(e.getMessage(), e);
+								MessageDialog.openError(shell, "Problem found",
+										e.getMessage());
+								Debug.log(getClass(), e);
 							}
 						}
 					}
 				}
 			}
 		}
-
-		return null;
 	}
 }
