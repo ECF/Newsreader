@@ -111,8 +111,8 @@ public class Activator implements BundleActivator, ServiceListener {
 				"*.gif", true);
 		while (entries.hasMoreElements()) {
 			URL url = (URL) entries.nextElement();
-			System.out.println(url.getFile());
-			reg.put(url.getFile(), ImageDescriptor.createFromURL(url));
+			String name = url.getFile().replaceFirst("/icons/", "");
+			reg.put(name, ImageDescriptor.createFromURL(url));
 		}
 	}
 

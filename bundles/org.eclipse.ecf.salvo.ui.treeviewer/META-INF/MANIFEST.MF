@@ -12,10 +12,13 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.4.0",
  org.eclipse.e4.ui.services;bundle-version="1.0.0",
  org.eclipse.swt;bundle-version="3.102.0",
  org.eclipse.jface;bundle-version="3.9.0",
- org.eclipse.e4.ui.workbench.swt;bundle-version="0.12.0"
+ org.eclipse.e4.ui.workbench.swt;bundle-version="0.12.0",
+ org.eclipse.e4.core.contexts
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: javax.annotation;version="1.1.0",
  javax.inject;version="1.0.0",
  org.eclipse.ecf.protocol.nntp.model;version="0.6.0",
+ org.eclipse.ecf.salvo.ui.internal.editor,
  org.eclipse.ecf.salvo.ui.internal.provider,
- org.eclipse.ecf.salvo.ui.internal.resources
+ org.eclipse.ecf.salvo.ui.internal.resources,
+ org.eclipse.ecf.salvo.ui.internal.views

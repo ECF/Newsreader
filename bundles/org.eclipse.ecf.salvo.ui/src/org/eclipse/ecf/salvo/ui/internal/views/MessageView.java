@@ -84,8 +84,7 @@ public class MessageView implements ISelectionProvider {
 
 	@Focus
 	public void setFocus() {
-		description.setFocus();
-
+		parent.getChildren()[0].setFocus();
 	}
 
 	private void initializeToolBar() {

@@ -11,20 +11,28 @@
  *******************************************************************************/
 package org.eclipse.ecf.salvo.ui.internal.editor;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.inject.Inject;
+
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.e4.ui.di.Focus;
+import org.eclipse.e4.ui.di.Persist;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
+import org.eclipse.e4.ui.workbench.modeling.ISelectionListener;
+import org.eclipse.e4.ui.workbench.swt.modeling.EMenuService;
 import org.eclipse.ecf.protocol.nntp.model.IArticle;
 import org.eclipse.ecf.protocol.nntp.model.INewsgroup;
 import org.eclipse.ecf.salvo.ui.internal.Activator;
 import org.eclipse.ecf.salvo.ui.internal.resources.ISalvoResource;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
@@ -37,20 +45,12 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.part.EditorPart;
-
 
 /**
  * This editor fills a lazy table tree with the article information and to the
@@ -60,7 +60,8 @@ import org.eclipse.ui.part.EditorPart;
  * @author wim.jongman@gmail.com
  * 
  */
-public class ArticlePanel extends EditorPart implements ISelectionListener {
+public class ArticlePanel implements ISelectionListener,
+		ISelectionChangedListener {
 
 	public class ArticlePanelSideTableMeasureListener implements Listener {
 
@@ -79,8 +80,8 @@ public class ArticlePanel extends EditorPart implements ISelectionListener {
 	private final class ArticlePanelTreePaintListener implements PaintListener {
 
 		public void paintControl(PaintEvent e) {
-			
-			if(tree.getTopItem() == null)
+
+			if (tree.getTopItem() == null)
 				return;
 
 			try {
@@ -102,7 +103,6 @@ public class ArticlePanel extends EditorPart implements ISelectionListener {
 				// icons in the side tree
 				int counter = 0;
 				while (true) {
-
 
 					// Get the item at the next visible location
 					Point point = new Point(0, counter++ * itemHeight);
@@ -136,32 +136,33 @@ public class ArticlePanel extends EditorPart implements ISelectionListener {
 				// .getItemCount() - 1));
 				// }
 
-				sideTable.pack();
+				sideTable.layout();
+				sideTable.pack(true);
 				sideTable.setVisible(true);
 
 				// tree.setVisible(true);
 			}
 		}
 
-	/**
-	 * Decorate this row.
-	 * 
-	 * @param article
-	 * @param row
-	 * @return
-	 */
+		/**
+		 * Decorate this row.
+		 * 
+		 * @param article
+		 * @param row
+		 * @return
+		 */
 		private Image getImage(IArticle article, int row) {
 
 			if (row == 1)
 				if (!article.isReply() && article.isCommenting()
 						|| article.isMine())
-					return Activator.getDefault().getImageRegistry().get(
-							"messages.gif");
+					return Activator.getDefault().getImageRegistry()
+							.get("messages.gif");
 
 			if (row == 2)
 				if (article.isMarked())
-					return Activator.getDefault().getImageRegistry().get(
-							"follow.gif");
+					return Activator.getDefault().getImageRegistry()
+							.get("follow.gif");
 
 			return null;
 		}
@@ -180,33 +181,19 @@ public class ArticlePanel extends EditorPart implements ISelectionListener {
 
 	private INewsgroup savedNewsgroup;
 
-	@Override
+	@Inject
+	private ESelectionService selectionService;
+
+	private MPart part;
+
+	@Persist
 	public void doSave(IProgressMonitor monitor) {
 	}
 
-	@Override
-	public void doSaveAs() {
-	}
-
-	@Override
-	public void init(IEditorSite site, IEditorInput input)
-			throws PartInitException {
-		setSite(site);
-		setInput(input);
-	}
-
-	@Override
-	public boolean isDirty() {
-		return false;
-	}
-
-	@Override
-	public boolean isSaveAsAllowed() {
-		return false;
-	}
-
-	@Override
-	public void createPartControl(Composite parent) {
+	@PostConstruct
+	public void createPartControl(Composite parent, EMenuService menuService,
+			INewsgroup newsgroup, MPart part) {
+		this.part = part;
 		final GridLayout gridLayout = new GridLayout();
 		gridLayout.horizontalSpacing = 0;
 		gridLayout.verticalSpacing = 0;
@@ -303,47 +290,22 @@ public class ArticlePanel extends EditorPart implements ISelectionListener {
 
 		tree2Composite.setLayout(layout2);
 
-		getSite().setSelectionProvider(treeViewer);
-		addContextMenu(treeViewer);
-		getSite().getWorkbenchWindow().getSelectionService()
-				.addPostSelectionListener(this);
+		selectionService.addPostSelectionListener(this);
+		menuService.registerContextMenu(treeViewer,
+				"org.eclipse.ecf.salvo.ui.articlepanel.popupmenu");
 
-		setInput(((ArticlePanelInput) getEditorInput()).getNewsgroup());
+		treeViewer.addSelectionChangedListener(this);
 
-	}
-
-	private void addContextMenu(TreeViewer viewer) {
-
-		MenuManager menuMgr = new MenuManager();
-		menuMgr.setRemoveAllWhenShown(true);
-		menuMgr.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager mgr) {
-				fillContextMenu(mgr);
-			}
-		});
-
-		// Create menu.
-		Menu menu = menuMgr.createContextMenu(viewer.getControl());
-		viewer.getControl().setMenu(menu);
-
-		// Register menu for extension.
-		getSite().registerContextMenu(menuMgr, viewer);
+		setInput(newsgroup);
 
 	}
 
-	protected void fillContextMenu(IMenuManager mgr) {
-		mgr.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-
+	@PreDestroy
+	public void dispose(ESelectionService selectionService) {
+		selectionService.removePostSelectionListener(this);
 	}
 
-	@Override
-	public void dispose() {
-		getSite().getWorkbenchWindow().getSelectionService()
-				.removePostSelectionListener(this);
-		super.dispose();
-	}
-
-	@Override
+	@Focus
 	public void setFocus() {
 		tree.setFocus();
 	}
@@ -355,8 +317,7 @@ public class ArticlePanel extends EditorPart implements ISelectionListener {
 
 		if (group != savedNewsgroup) {
 			savedNewsgroup = group;
-			((ArticlePanelInput) getEditorInput()).setNewsGroup(group);
-			setPartName(group.getNewsgroupName());
+			part.setLabel(group.getNewsgroupName());
 			treeViewer.getTree().clearAll(true);
 			treeViewer.setInput(group);
 		}
@@ -364,22 +325,27 @@ public class ArticlePanel extends EditorPart implements ISelectionListener {
 
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 
-		if (part == this) {
-			return;
-		}
-
-		if (selection instanceof IStructuredSelection) {
-			if (((IStructuredSelection) selection).getFirstElement() instanceof ISalvoResource) {
-				if (((ISalvoResource) ((IStructuredSelection) selection)
-						.getFirstElement()).getObject() instanceof INewsgroup) {
-					setInput((INewsgroup) ((ISalvoResource) ((IStructuredSelection) selection)
-							.getFirstElement()).getObject());
-				}
-			}
-		}
 	}
 
 	public void updateArticle(ISalvoResource resource) {
 		treeViewer.update(resource, null);
+	}
+
+	@Override
+	public void selectionChanged(SelectionChangedEvent event) {
+		Object object = ((TreeSelection) event.getSelection())
+				.getFirstElement();
+		selectionService.setSelection(object);
+	}
+
+	@Override
+	public void selectionChanged(MPart part, Object selection) {
+		if (part == this.part) {
+			return;
+		}
+
+		if (selection instanceof INewsgroup) {
+			setInput((INewsgroup) selection);
+		}
 	}
 }
