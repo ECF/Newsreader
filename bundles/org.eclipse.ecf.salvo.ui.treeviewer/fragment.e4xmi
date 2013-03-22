@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ASCII"?>
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_yQL80JJjEeKctsDPUUlpCA">
+  <imports xsi:type="commands:Command" xmi:id="_CbQZ0JL_EeKOIeKKV0vSLg" elementId="org.eclipse.ecf.salvo.ui.changeServer"/>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_02ge0JJjEeKctsDPUUlpCA" featurename="children" parentElementId="org.eclipse.ecf.salvo.e4.application.partstack.servers">
+    <elements xsi:type="basic:InputPart" xmi:id="_lPDMUJJkEeKctsDPUUlpCA" elementId="org.eclipse.ecf.salvo.ui.treeviewer.inputpart.0" contributionURI="bundleclass://org.eclipse.ecf.salvo.ui.treeviewer/org.eclipse.ecf.salvo.ui.treeviewer.ServerViewer" label="News Sources" iconURI="platform:/plugin/org.eclipse.ecf.salvo.ui.treeviewer/icons/transmit.gif">
+      <menus xsi:type="menu:PopupMenu" xmi:id="_VK5bsJLyEeKOIeKKV0vSLg" elementId="org.eclipse.ecf.salvo.ui.treeviewer.popupmenu">
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_getb0JL-EeKOIeKKV0vSLg" elementId="org.eclipse.ecf.salvo.ui.treeviewer.handledmenuitem.0" command="_CbQZ0JL_EeKOIeKKV0vSLg"/>
+      </menus>
+      <toolbar xmi:id="_J1UgAJLxEeKOIeKKV0vSLg" elementId="org.eclipse.ecf.salvo.ui.treeviewer.toolbar"/>
+    </elements>
+  </fragments>
+</fragment:ModelFragments>
