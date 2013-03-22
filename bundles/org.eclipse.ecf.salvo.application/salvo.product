@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Salvo Product File" id="org.eclipse.ecf.salvo.application.product" application="org.eclipse.ecf.salvo.application.application" version="0.8.0" useFeatures="true" includeLaunchers="true">
+<product name="Salvo Product File" id="org.eclipse.ecf.salvo.application.producte4" application="org.eclipse.ecf.salvo.application.application" version="0.8.0" useFeatures="true" includeLaunchers="true">
 
    <configIni use="default">
    </configIni>

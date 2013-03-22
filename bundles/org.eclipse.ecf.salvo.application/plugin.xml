@@ -43,10 +43,6 @@
                value="icons/icon_news.gif,icons/news.gif">
          </property>
          <property
-               name="appName"
-               value="Salvo Product File">
-         </property>
-         <property
                name="startupForegroundColor"
                value="FFFFFF">
          </property>
@@ -62,6 +58,39 @@
                name="preferenceCustomization"
                value="plugin_customization.ini">
          </property>
+     
+             <property name="appName" value="Salvo Product File"> </property>
+      </product>
+      </extension>
+                <extension
+         id="producte4"
+         point="org.eclipse.core.runtime.products">
+                <product
+            application="org.eclipse.ecf.salvo.application.application"
+            description="Eclipse Newsreader"
+            name="Salvo Product File">
+              <property name="appName" value="Salvo Product File"> </property>
+    <property name="applicationXMI" value="org.eclipse.ecf.salvo.application/Application.e4xmi"> </property>
+    <property
+          name="windowImages"
+          value="icons/icon_news.gif,icons/news.gif">
+    </property>
+    <property
+          name="startupForegroundColor"
+          value="FFFFFF">
+    </property>
+    <property
+          name="startupMessageRect"
+          value="7,276,440,20">
+    </property>
+    <property
+          name="startupProgressRect"
+          value="5,294,440,15">
+    </property>
+    <property
+          name="preferenceCustomization"
+          value="plugin_customization.ini">
+    </property>
       </product>
    </extension>
 
