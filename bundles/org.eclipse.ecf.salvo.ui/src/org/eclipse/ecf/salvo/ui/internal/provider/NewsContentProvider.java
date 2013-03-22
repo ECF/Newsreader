@@ -14,15 +14,13 @@ package org.eclipse.ecf.salvo.ui.internal.provider;
 import org.eclipse.ecf.protocol.nntp.model.IStoreEvent;
 import org.eclipse.ecf.protocol.nntp.model.IStoreEventListener;
 import org.eclipse.ecf.salvo.ui.internal.resources.ISalvoResource;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IMemento;
-import org.eclipse.ui.navigator.ICommonContentExtensionSite;
-import org.eclipse.ui.navigator.ICommonContentProvider;
 
 
-public class NewsContentProvider implements ICommonContentProvider, IStoreEventListener {
+public class NewsContentProvider implements ITreeContentProvider, IStoreEventListener {
 
 	private Viewer viewer;
 
@@ -73,21 +71,6 @@ public class NewsContentProvider implements ICommonContentProvider, IStoreEventL
 		} else {
 //			ServerStoreFactory.instance().getServerStoreFacade().getStore().removeListener(this);
 		}
-
-	}
-
-	public void init(ICommonContentExtensionSite config) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void restoreState(IMemento memento) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void saveState(IMemento memento) {
-		// TODO Auto-generated method stub
 
 	}
 

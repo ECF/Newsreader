@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.ecf.salvo.ui.wizards;
 
+import org.eclipse.e4.ui.workbench.IWorkbench;
 import org.eclipse.ecf.protocol.nntp.core.Debug;
 import org.eclipse.ecf.protocol.nntp.core.ServerStoreFactory;
 import org.eclipse.ecf.protocol.nntp.model.INewsgroup;
@@ -22,11 +23,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.INewWizard;
-import org.eclipse.ui.IWorkbench;
 
-
-public class SubscribeGroupWizard extends Wizard implements INewWizard {
+public class SubscribeGroupWizard extends Wizard {
 
 	private SubscribeGroupWizardPage page1;
 	private final IServer server;

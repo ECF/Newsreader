@@ -29,7 +29,6 @@ import org.eclipse.ecf.salvo.ui.internal.resources.ISalvoResource;
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.ColumnWeightData;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeSelection;
@@ -50,7 +49,6 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.IWorkbenchPart;
 
 /**
  * This editor fills a lazy table tree with the article information and to the
@@ -321,10 +319,6 @@ public class ArticlePanel implements ISelectionListener,
 			treeViewer.getTree().clearAll(true);
 			treeViewer.setInput(group);
 		}
-	}
-
-	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-
 	}
 
 	public void updateArticle(ISalvoResource resource) {

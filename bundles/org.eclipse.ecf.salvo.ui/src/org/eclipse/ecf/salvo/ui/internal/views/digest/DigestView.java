@@ -36,10 +36,6 @@ import org.eclipse.ecf.salvo.ui.internal.dialogs.SelectServerDialog;
 import org.eclipse.ecf.salvo.ui.tools.ImageUtils;
 import org.eclipse.ecf.salvo.ui.tools.PreferencesUtil;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -55,11 +51,9 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
-import org.eclipse.ui.IWorkbenchActionConstants;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceListener;
@@ -74,8 +68,6 @@ public class DigestView implements IArticleEventListner, ServiceListener,
 
 	@Inject
 	ESelectionService service;
-	
-	
 
 	public static final String ID = "org.eclipse.ecf.salvo.ui.internal.views.digest.DigestView";
 	private TreeViewer treeViewer;
@@ -109,10 +101,7 @@ public class DigestView implements IArticleEventListner, ServiceListener,
 	 */
 	@PostConstruct
 	public void createPartControl(Composite parent, EMenuService menuservice) {
-		
 
-		menuservice.registerContextMenu(parent, "org.eclipse.ecf.salvo.ui.internal.views.digest.DigestView.popup");
-		
 		Composite container = new Composite(parent, SWT.None);
 		container.setLayout(new GridLayout(2, false));
 
@@ -189,7 +178,9 @@ public class DigestView implements IArticleEventListner, ServiceListener,
 		}
 
 		createActions();
-		initializeContextMenu();
+		menuservice
+				.registerContextMenu(parent,
+						"org.eclipse.ecf.salvo.ui.internal.views.digest.DigestView.popup");
 	}
 
 	@PreDestroy
@@ -214,34 +205,6 @@ public class DigestView implements IArticleEventListner, ServiceListener,
 		selectServerAction.setImageDescriptor(ImageUtils.getInstance()
 				.getImageDescriptor("selectServer.gif"));
 
-	}
-
-	/**
-	 * Initialize the context menu.
-	 */
-	private void initializeContextMenu() {
-
-		MenuManager menuMgr = new MenuManager();
-		menuMgr.setRemoveAllWhenShown(true);
-		menuMgr.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager mgr) {
-				fillContextMenu(mgr);
-			}
-		});
-
-		// Create menu.
-		Menu menu = menuMgr.createContextMenu(treeViewer.getControl());
-		treeViewer.getControl().setMenu(menu);
-
-		// Register menu for extension.
-
-	}
-
-	/**
-	 * Fill context menu
-	 */
-	protected void fillContextMenu(IMenuManager mgr) {
-		mgr.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
 	@Focus

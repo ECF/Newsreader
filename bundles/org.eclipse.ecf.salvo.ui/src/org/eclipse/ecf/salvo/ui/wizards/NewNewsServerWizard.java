@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.ecf.salvo.ui.wizards;
 
+import org.eclipse.e4.ui.workbench.IWorkbench;
 import org.eclipse.ecf.protocol.nntp.core.Debug;
 import org.eclipse.ecf.protocol.nntp.core.ServerStoreFactory;
 import org.eclipse.ecf.protocol.nntp.model.INewsgroup;
@@ -24,11 +25,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.INewWizard;
-import org.eclipse.ui.IWorkbench;
 
 
-public class NewNewsServerWizard extends Wizard implements INewWizard {
+public class NewNewsServerWizard extends Wizard  {
 
 	protected NewNewsServerWizardPage page1;
 	protected SubscribeGroupWizardPage page2;
@@ -76,9 +75,6 @@ public class NewNewsServerWizard extends Wizard implements INewWizard {
 		return true;
 	}
 
-	public void init(IWorkbench workbench, IStructuredSelection selection) {
-
-	}
 
 	@Override
 	public void createPageControls(Composite pageContainer) {

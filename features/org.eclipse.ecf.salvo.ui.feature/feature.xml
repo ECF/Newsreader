@@ -22,13 +22,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.ecf.salvo.application"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.ecf.salvo.ui"
          download-size="0"
          install-size="0"
@@ -36,11 +29,17 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.ecf.salvo.ui.navigator"
+         id="org.eclipse.ecf.salvo.e4.application"
          download-size="0"
          install-size="0"
          version="0.0.0"
-         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ecf.salvo.ui.treeviewer"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
          unpack="false"/>
 
 </feature>

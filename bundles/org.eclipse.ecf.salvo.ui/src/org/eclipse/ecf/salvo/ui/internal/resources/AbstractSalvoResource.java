@@ -17,10 +17,9 @@ import java.util.Collection;
 import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.ecf.salvo.ui.internal.provider.IChildProvider;
 import org.eclipse.ecf.salvo.ui.internal.provider.InfertileChildProvider;
-import org.eclipse.ui.IActionFilter;
 
 
-public abstract class AbstractSalvoResource extends PlatformObject implements IActionFilter, ISalvoResource {
+public abstract class AbstractSalvoResource extends PlatformObject implements  ISalvoResource {
 
 	private String name;
 

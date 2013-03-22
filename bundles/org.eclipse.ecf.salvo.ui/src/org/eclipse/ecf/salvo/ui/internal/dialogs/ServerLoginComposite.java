@@ -12,14 +12,11 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 
 public class ServerLoginComposite extends Composite {
 
-	private final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
 	private Text address;
 	private Text port;
 	private Text user;
@@ -42,9 +39,6 @@ public class ServerLoginComposite extends Composite {
 
 		super(parent, style);
 		this.server = server;
-
-		toolkit.adapt(this);
-		toolkit.paintBordersFor(this);
 
 		// ModifyListener editor = new NewNewsServerWizardPageEditor(this);
 

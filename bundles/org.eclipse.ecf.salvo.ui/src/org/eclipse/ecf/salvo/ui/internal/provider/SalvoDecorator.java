@@ -22,7 +22,6 @@ import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
 
 public class SalvoDecorator implements ILightweightLabelDecorator,
 		IStoreEventListener {
@@ -81,14 +80,14 @@ public class SalvoDecorator implements ILightweightLabelDecorator,
 	}
 
 	public void storeEvent(IStoreEvent event) {
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
-				Debug.log(this.getClass(),
-						"Caught store event, firing a decorator event");
-				PlatformUI.getWorkbench().getDecoratorManager().update(
-						"org.eclipse.ecf.salvo.ui.decorator1");
-			}
-		});
+//		Display.getDefault().asyncExec(new Runnable() {
+//			public void run() {
+//				Debug.log(this.getClass(),
+//						"Caught store event, firing a decorator event");
+//				PlatformUI.getWorkbench().getDecoratorManager().update(
+//						"org.eclipse.ecf.salvo.ui.decorator1");
+//			}
+//		});
 
 	}
 

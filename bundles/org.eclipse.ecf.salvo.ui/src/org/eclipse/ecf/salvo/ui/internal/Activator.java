@@ -29,7 +29,6 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceEvent;
@@ -176,9 +175,9 @@ public class Activator implements BundleActivator, ServiceListener {
 			return new ImageRegistry(Display.getCurrent());
 		}
     	
-    	if(PlatformUI.isWorkbenchRunning()) {
-			return new ImageRegistry(PlatformUI.getWorkbench().getDisplay());
-		}
+//    	if(PlatformUI.isWorkbenchRunning()) {
+//			return new ImageRegistry(PlatformUI.getWorkbench().getDisplay());
+//		}
     	
     	//Invalid thread access if it is not the UI Thread 
     	//and the workbench is not created.

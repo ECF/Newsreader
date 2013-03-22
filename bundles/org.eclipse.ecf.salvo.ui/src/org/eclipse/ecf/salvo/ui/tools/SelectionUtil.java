@@ -16,7 +16,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.eclipse.ui.PlatformUI;
 
 public class SelectionUtil {
 
@@ -35,24 +34,25 @@ public class SelectionUtil {
 	}
 
 	public static ISelection getSelection() {
-		return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService().getSelection();
+	//	return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService().getSelection();
+		return null;
 	}
 
 	public static IStructuredSelection getStructuredSelection() {
-		ISelection sel = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService()
-				.getSelection();
-		if (sel instanceof IStructuredSelection) {
-			return (IStructuredSelection) sel;
-		}
+//		ISelection sel = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService()
+//				.getSelection();
+//		if (sel instanceof IStructuredSelection) {
+//			return (IStructuredSelection) sel;
+//		}
 		return StructuredSelection.EMPTY;
 	}
 
 	public static ITreeSelection getTreeSelection() {
-		ISelection sel = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService()
-				.getSelection();
-		if (sel instanceof ITreeSelection) {
-			return (ITreeSelection) sel;
-		}
+//		ISelection sel = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService()
+//				.getSelection();
+//		if (sel instanceof ITreeSelection) {
+//			return (ITreeSelection) sel;
+//		}
 		return TreeSelection.EMPTY;
 	}
 
