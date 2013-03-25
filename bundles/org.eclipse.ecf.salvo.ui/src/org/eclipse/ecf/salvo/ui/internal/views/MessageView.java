@@ -80,6 +80,7 @@ public class MessageView extends ViewPart implements ISelectionListener,
 		// getViewSite().getActionBars().getToolBarManager();
 	}
 
+	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 
 		IArticle newArticle = null;
@@ -172,19 +173,23 @@ public class MessageView extends ViewPart implements ISelectionListener,
 
 	ISelection theSelection = StructuredSelection.EMPTY;
 
+	@Override
 	public void addSelectionChangedListener(ISelectionChangedListener listener) {
 		listeners.add(listener);
 	}
 
+	@Override
 	public ISelection getSelection() {
 		return theSelection;
 	}
 
+	@Override
 	public void removeSelectionChangedListener(
 			ISelectionChangedListener listener) {
 		listeners.remove(listener);
 	}
 
+	@Override
 	public void setSelection(ISelection selection) {
 		theSelection = selection;
 		final SelectionChangedEvent e = new SelectionChangedEvent(this,
