@@ -24,7 +24,9 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.4.1",
  org.eclipse.e4.ui.services;bundle-version="1.0.0",
  org.eclipse.e4.ui.workbench.swt;bundle-version="0.12.0"
 Bundle-Activator: org.eclipse.ecf.salvo.ui.internal.Activator
-Import-Package: org.apache.james.mime4j,
+Import-Package: javax.annotation;version="1.1.0",
+ javax.inject;version="1.0.0",
+ org.apache.james.mime4j,
  org.apache.james.mime4j.codec,
  org.apache.james.mime4j.descriptor,
  org.apache.james.mime4j.parser,
@@ -32,8 +34,6 @@ Import-Package: org.apache.james.mime4j,
  org.eclipse.ecf.protocol.nntp.model;version="0.6.0",
  org.eclipse.ecf.provider.nntp.security,
  org.eclipse.ecf.services.quotes
- 
-Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.ecf.salvo.ui,
  org.eclipse.ecf.salvo.ui.external.provider,
  org.eclipse.ecf.salvo.ui.internal;x-internal:=true,
