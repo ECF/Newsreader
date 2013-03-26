@@ -151,11 +151,11 @@ public class PostNewArticleView extends ViewPart implements ISaveablePart {
 
 		}
 
-		EModelService modelService = (EModelService) getSite().getService(
-				EModelService.class);
-		MPartSashContainerElement part = (MPart) getSite().getService(
-				MPart.class);
-		modelService.detach(part, 100, 100, 200, 300);
+//		EModelService modelService = (EModelService) getSite().getService(
+//				EModelService.class);
+//		MPartSashContainerElement part = (MPart) getSite().getService(
+//				MPart.class);
+//		modelService.detach(part, 100, 100, 200, 300);
 
 		subjectText.setFocus();
 	}
