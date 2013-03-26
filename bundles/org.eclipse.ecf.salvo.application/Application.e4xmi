@@ -5,8 +5,8 @@
       <children xsi:type="advanced:Perspective" xmi:id="_VnmakNSzEeGBn6dQ9VPexA" elementId="test.rcp.perspective" selectedElement="_VnnBgNSzEeGBn6dQ9VPexA" label="My Perspective" iconURI="">
         <tags>Perspective</tags>
         <tags>categoryTag:General</tags>
-        <children xsi:type="basic:PartSashContainer" xmi:id="_VnnBgNSzEeGBn6dQ9VPexA" horizontal="true">
-          <children xsi:type="basic:PartSashContainer" xmi:id="_gAJykJM1EeKOIeKKV0vSLg" elementId="" containerData="10000">
+        <children xsi:type="basic:PartSashContainer" xmi:id="_VnnBgNSzEeGBn6dQ9VPexA" elementId="partsash" horizontal="true">
+          <children xsi:type="basic:PartSashContainer" xmi:id="_gAJykJM1EeKOIeKKV0vSLg" elementId="" containerData="10000" selectedElement="_gAJykpM1EeKOIeKKV0vSLg">
             <children xsi:type="basic:PartStack" xmi:id="_gAJykpM1EeKOIeKKV0vSLg" elementId="org.eclipse.ecf.salvo.application.partstack.sources" containerData="6600">
               <tags>newtablook</tags>
               <tags>org.eclipse.e4.secondaryDataStack</tags>
@@ -77,7 +77,7 @@
       <children xsi:type="menu:ToolControl" xmi:id="_VQKe8NTAEeGTY-uOtVc6Mg" elementId="org.eclipse.ui.HeapStatus" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.StandardTrim"/>
       <children xsi:type="menu:ToolControl" xmi:id="_VQRMoNTAEeGTY-uOtVc6Mg" elementId="org.eclipse.ui.ProgressBar" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.StandardTrim"/>
     </trimBars>
-    <trimBars xmi:id="_YNLBoJM5EeKOIeKKV0vSLg" elementId="org.eclipse.ui.main.toolbar"/>
+    <trimBars xmi:id="_YNLBoJM5EeKOIeKKV0vSLg" elementId="org.eclipse.ui.trim.command1"/>
   </children>
   <bindingTables xmi:id="_VnmafNSzEeGBn6dQ9VPexA" bindingContext="_VnmacdSzEeGBn6dQ9VPexA"/>
   <rootContext xmi:id="_VnmacdSzEeGBn6dQ9VPexA" elementId="org.eclipse.ui.contexts.dialogAndWindow" name="In Dialog and Windows">

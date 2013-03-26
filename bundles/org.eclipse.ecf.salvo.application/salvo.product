@@ -39,11 +39,12 @@
       <feature id="org.eclipse.ecf.salvo.ui.feature"/>
       <feature id="org.eclipse.ecf.services.quotes.feature"/>
       <feature id="org.eclipse.ecf.provider.nntp.feature"/>
-      <feature id="org.eclipse.ecf.salvo.rcp.feature"/>
+      <feature id="org.eclipse.ecf.salvo.mime4j.feature"/>
+      <feature id="org.eclipse.rcp"/>
       <feature id="org.eclipse.emf.common"/>
       <feature id="org.eclipse.emf.ecore"/>
       <feature id="org.eclipse.e4.rcp"/>
-      <feature id="org.eclipse.ecf.salvo.mime4j.feature"/>
+      <feature id="org.eclipse.ecf.salvo.rcp.feature" version="1.0.0.qualifier"/>
    </features>
 
    <configurations>
