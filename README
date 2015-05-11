@@ -18,7 +18,7 @@ Be a Duck
 Salvo will be used for accessing newsgroups and posting and reading articles. Of course, there will be numerous additions to make the Q&A experience in newsgroups as comfortable as possible. Several enhancements, not found in traditional newsreader programs have already been implemented such as subject highlighting for easy recognition of thread participation and offline reading.
 
 Integrate
-How nice would it be if users could ask questions right from the workbench and be notified if answers arrived. There is already a good example of how such a thing would be implemented by the "Report of Bug" feature of Mylyn. Ideally, this project would be part of a new top level project as defined by bug 279383
+How nice would it be if users could ask questions right from the workbench and be notified if answers arrived. There is already a good example of how such a thing would be implemented by the "Report of Bug" feature of Mylyn. Ideally, this project would be part of a new top level project as defined by bug 279383 (IMPLEMENTED)
 
 Be an Eclipse project
 The project is build of several plug-ins and in such a way that the code can be used to access resources without needing the UI so that these parts can be re-used in other projects. The local storage module is currently file system based but could be swapped for a database implementation. The main tree can be integrated in any Navigator framework based view.
